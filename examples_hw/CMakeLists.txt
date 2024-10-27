@@ -270,7 +270,8 @@ if(EXAMPLE STREQUAL "sha256")
         set(EN_STRM 1)
         set(EN_MEM 0)
         set(N_REGIONS 1)
-
+        set(BUILD_STATIC 1)
+        set(BUILD_SHELL 0)
 
         validation_checks_hw()
 
