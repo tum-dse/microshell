@@ -6,16 +6,21 @@ class c_gen;
 
   // Params
   c_struct_t params;
-
+  
+    // Stream type
+  integer strm_type;  
+    
   // Completion
   event done;
   
   //
   // C-tor
   //
-  function new(mailbox gen2drv, input c_struct_t params);
+  function new(mailbox gen2drv, input c_struct_t params, input integer strm_type);
     this.gen2drv = gen2drv;
     this.params = params;
+    // Type
+    this.strm_type = strm_type;
   endfunction
   
   //
@@ -33,6 +38,8 @@ class c_gen;
     for(int i = 0; i < params.n_trs; i++) begin
       trs = new();
       if(!trs.randomize()) $fatal("ERR:  Generator randomization failed");
+      trs.tdata = 0;
+      trs.tid = strm_type;
       trs.tlast = i == params.n_trs-1;
       trs.display("Gen");
       gen2drv.put(trs);

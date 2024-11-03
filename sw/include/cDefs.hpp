@@ -24,7 +24,7 @@ namespace fpga {
 // ======-------------------------------------------------------------------------------
 //#define VERBOSE_DEBUG_1 // Handle
 //#define VERBOSE_DEBUG_2 // Reconfig
-//#define VERBOSE_DEBUG_3 // Perf
+#define VERBOSE_DEBUG_3 // Perf
 
 #ifdef VERBOSE_DEBUG_3
 #define VERBOSE_DEBUG_2

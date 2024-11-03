@@ -38,7 +38,7 @@ class c_drv;
       axis.tkeep <= 0;
       axis.tlast <= 1'b0;
       axis.tid  <= 0;
-      $display("AXISR reset_m() completed.");
+      $display("drv AXISR reset_m() completed.");
   endtask
   
   //
@@ -57,6 +57,8 @@ class c_drv;
       cycle_start();
       while(axis.tready != 1'b1) begin cycle_wait(); cycle_start(); end
       cycle_wait();
+      $display("drv setting axis data %d.", axis.tid);
+
       axis.tdata  <= #TA 0;
       axis.tkeep  <= #TA 0;
       axis.tlast  <= #TA 1'b0;

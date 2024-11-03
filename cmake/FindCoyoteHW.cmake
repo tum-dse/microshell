@@ -98,7 +98,7 @@ set(DDR_AUTO 1 CACHE STRING "Automatic placement of DDRs.")
 set(N_OUTSTANDING 8 CACHE STRING "Number of supported outstanding transactions.")
 set(PMTU_BYTES 4096 CACHE STRING "PMTU size.")
 
-set(COMP_CORES 8 CACHE STRING "Number of compilation cores.")
+set(COMP_CORES 64 CACHE STRING "Number of compilation cores.")
 set(BUILD_OPT 0 CACHE STRING "Build optimizations (significantly longer compilation times).")
 
 set(EN_STATS 1 CACHE STRING "Enable sysfs statistics.")

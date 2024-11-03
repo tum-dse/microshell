@@ -66,10 +66,10 @@ constexpr auto const nRegions = 4;
 constexpr auto const defHuge = true;
 constexpr auto const defMappped = true;
 constexpr auto const defStream = 1;
-constexpr auto const nRepsThr = 10000;
-constexpr auto const nRepsLat = 100;
+constexpr auto const nRepsThr = 1;
+constexpr auto const nRepsLat = 1;
 constexpr auto const defMinSize = 1024;
-constexpr auto const defMaxSize = 1 * 1024 * 1024;
+constexpr auto const defMaxSize = 1024;
 constexpr auto const nBenchRuns = 1;
 
 /**

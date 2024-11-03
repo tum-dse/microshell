@@ -14,7 +14,7 @@ endtask
 
 module tb_user;
 
-    c_struct_t params = { 16, 10 };
+    c_struct_t params = { 1, 10 };
 
     logic aclk = 1'b1;
     logic aresetn = 1'b0;
@@ -72,7 +72,7 @@ module tb_user;
     for(genvar i = 0; i < N_STRM_AXI; i++) begin
         initial begin
             // axis_host_drv[i] = new(axis_host_recv[i], axis_host_send[i], params, "HOST_STREAM");
-            axis_host_drv[i] = new(axis_host_recv[i], axis_host_send[i], 0, params);
+            axis_host_drv[i] = new(axis_host_recv[i], axis_host_send[i], i, params);
         end
     end
 `endif
@@ -160,9 +160,18 @@ module tb_user;
     task env_threads();
         fork
     `ifdef EN_STRM
+//        for(int i = 0; i < N_STRM_AXI; i++) begin
+//            axis_host_drv[i].reset();
+//        end
         for(int i = 0; i < N_STRM_AXI; i++) begin
-            $display("In env_threads()");
+            $display("In env_threads(), i = %d", i);
+            $display("before axis_host_drv[0].done.triggered %d", axis_host_drv[0].done.triggered);
+            $display("before axis_host_drv[1].done.triggered %d", axis_host_drv[1].done.triggered);
+//            $display("before axis_host_drv[2].done.triggered %d", axis_host_drv[2].done.triggered);
             axis_host_drv[i].run();
+            $display("after axis_host_drv[0].done.triggered %d", axis_host_drv[0].done.triggered);
+            $display("after axis_host_drv[1].done.triggered %d", axis_host_drv[1].done.triggered);
+//            $display("after axis_host_drv[2].done.triggered %d", axis_host_drv[2].done.triggered);
         end
     `endif
     `ifdef EN_MEM
@@ -187,9 +196,14 @@ module tb_user;
     // Stream completion
     task env_done();
     `ifdef EN_STRM
-        for(int i = 0; i < N_STRM_AXI; i++) begin
-            $display("In env_threads()");
+        for(int i = N_STRM_AXI - 1; i < N_STRM_AXI; i++) begin
+//        for(int i = 0; i < 1; i++) begin
+            $display("In env_done(), i = %d", i);
+            $display("axis_host_drv[0].done.triggered %d", axis_host_drv[0].done.triggered);
+            $display("axis_host_drv[1].done.triggered %d", axis_host_drv[1].done.triggered);
+//            $display("axis_host_drv[2].done.triggered %d", axis_host_drv[2].done.triggered);
             wait(axis_host_drv[i].done.triggered);
+            $display("In env_done() wait finished");
         end
     `endif
     `ifdef EN_MEM
@@ -212,6 +226,9 @@ module tb_user;
     
     // 
     initial begin
+        for(int i = 0; i < N_STRM_AXI; i++) begin
+            axis_host_drv[i].reset();
+        end
         env_threads();
         env_done();
         $display("All stream runs completed");

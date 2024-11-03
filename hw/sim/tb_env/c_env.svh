@@ -45,7 +45,7 @@ class c_env;
         mon2scb = new();
 
         // Env        
-        gen = new(gen2drv, params);
+        gen = new(gen2drv, params, strm_type);
         // gen = new(gen2drv, strm_type, params);
         drv = new(axis_sink, gen2drv, drv2scb);
         mon = new(axis_src, mon2scb);
@@ -60,6 +60,8 @@ class c_env;
     // Reset
     //
     task reset();
+        $display("c_env reset()");
+
         drv.reset_m();
         mon.reset_s();
         #(AST_PERIOD);
@@ -81,15 +83,18 @@ class c_env;
     // Finish
     //
     task env_done();
+        $display("c_env env_done() before run");
         wait(gen.done.triggered);
+        $display("c_env env_done() after gen.done");
         wait(scb.done.triggered);
+        $display("c_env env_done() after scb.done");
     endtask
     
     //
     // Run
     //
     task run;
-        reset();
+//        reset();
         env_threads();
         env_done();
         if(scb.fail == 0) begin 
@@ -98,6 +103,7 @@ class c_env;
         else begin
             $display("Stream run failed, type: %d", strm_type);
         end
+        $display("about to trigger done");
         -> done;
     endtask
 

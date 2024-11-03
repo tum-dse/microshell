@@ -79,6 +79,36 @@ always_comb rq_wr.tie_off_s();
     //     .axis_sink(axis_host_recv[0]),
     //     .axis_src(axis_host_send[0])
     // );
+//    AXI4SR #(.AXI4S_DATA_BITS(AXI_DATA_BITS)) axis_user_recv [N_STRM_AXI] (aclk);
+//    AXI4SR #(.AXI4S_DATA_BITS(AXI_DATA_BITS)) axis_user_send [N_STRM_AXI] (aclk);
+
+//    logic [N_REGIONS-1:0][7:0]        io_ctrl;
+//    assign io_ctrl[0] = 8'h01;
+//    axis_data_interconnect inst_interconnect (
+//        .aclk(aclk),
+//        .aresetn(aresetn),
+//        .io_ctrl(io_ctrl),
+//        .data_shell_in(axis_host_recv),
+//        .data_shell_out(axis_host_send),
+//        .data_ul_out(axis_user_send),
+//        .data_ul_in(axis_user_recv)
+//    );
+
+//    // Simple tuple adder
+//     stream_adder inst_stream_adder (
+//         .aclk(aclk),
+//         .aresetn(aresetn),
+//         .axis_sink(axis_user_recv[0]),
+//         .axis_src(axis_user_send[0])
+//     );
+   
+//    // Simple tuple adder
+//     stream_adder_2 inst_stream_adder_2 (
+//         .aclk(aclk),
+//         .aresetn(aresetn),
+//         .axis_sink(axis_user_recv[1]),
+//         .axis_src(axis_user_send[1])
+//     );
     for(genvar i = 0; i < N_STRM_AXI; i++) begin
         `AXISR_ASSIGN(axis_host_recv[i], axis_host_send[i])
     end

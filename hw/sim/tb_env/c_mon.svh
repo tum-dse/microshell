@@ -32,7 +32,7 @@ class c_mon;
   // Reset
   task reset_s;
       axis.tready <= 1'b0;
-      $display("AXISR reset_s() completed.");
+      $display("mon AXISR reset_s() completed.");
   endtask
   
   //
@@ -44,15 +44,19 @@ class c_mon;
         trs = new();
         axis.tready <= #TA 1'b1;
         cycle_start();
-        while(axis.tvalid != 1'b1) begin cycle_wait(); cycle_start(); end
+//        while(axis.tvalid != 1'b1) begin cycle_wait(); cycle_start(); end
         cycle_wait();
         axis.tready <= #TA 1'b0;
+        $display("axis.tvalid== 1'b1");
         trs.tdata = axis.tdata;
         trs.tlast = axis.tlast;
+        $display("axis.tid= %d", axis.tid);
+
         trs.tid = axis.tid;
         mon2scb.put(trs);
         trs.display("Mon");
         n_trs++;
+        $display("n_trs is %d", n_trs);
     end
   endtask
   
