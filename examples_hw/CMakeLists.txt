@@ -26,7 +26,7 @@ if(EXAMPLE STREQUAL "static")
     set(N_REGIONS 4)
     set(EN_STRM 1)
     set(EN_MEM 1)
-    set(HBM_SPLIT 0)
+    set(HBM_SPLIT 1)
 
     validation_checks_hw()
 
@@ -244,35 +244,13 @@ if(EXAMPLE STREQUAL "perf_fpga")
     create_hw()
 endif()
 
-# SVM 
-if(EXAMPLE STREQUAL "svm_speech")
-    message("** SVM Speech Recognition Example on U280")
-    set(SHELL_PROBE 1)            
-    set(N_REGIONS 1)              
-    set(EN_STRM 1)               
-    set(N_STRM_AXI 1)            
-    set(EN_MEM 0)              
-    set(EN_PR 0)                 
-    set(BUILD_STATIC 1)
-    set(BUILD_SHELL 0)
-
-    validation_checks_hw()
-
-    load_apps (
-        VFPGA_C0_0 "apps/svm_speech"   
-    )
-
-    create_hw()
-endif()
-
 #SHA
 if(EXAMPLE STREQUAL "sha256")
         set(EN_STRM 1)
         set(EN_MEM 0)
+        set(N_STRM_AXI 1) 
         set(N_REGIONS 1)
-        set(BUILD_STATIC 1)
-        set(BUILD_SHELL 0)
-
+        
         validation_checks_hw()
 
         load_apps (
@@ -286,9 +264,8 @@ endif()
 if(EXAMPLE STREQUAL "md5")
         set(EN_STRM 1)
         set(N_REGIONS 1)
+        set(N_STRM_AXI 1) 
         set(EN_MEM 0)
-        set(BUILD_STATIC 1)
-        set(BUILD_SHELL 0)
 
         validation_checks_hw()
 
@@ -297,4 +274,37 @@ if(EXAMPLE STREQUAL "md5")
         )
 
         create_hw()
+endif()
+
+# SVM 
+if(EXAMPLE STREQUAL "svm_speech")
+    message("** SVM Speech Recognition Example on U280")
+    set(SHELL_PROBE 1)           
+    set(N_REGIONS 1)             
+    set(EN_STRM 1)               
+    set(N_STRM_AXI 1)            
+    set(EN_MEM 0)                
+    set(EN_PR 0)                 
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/svm_speech"    
+    )
+
+    create_hw()
+endif()
+
+# test 
+if(EXAMPLE STREQUAL "test")
+    set(SHELL_PROBE 1)           
+    set(N_REGIONS 1)             
+    set(EN_STRM 1)               
+    set(N_STRM_AXI 1)            
+    set(EN_MEM 0)                
+    set(EN_PR 0)                 
+
+    validation_checks_hw()
+
+    create_hw()
 endif()
