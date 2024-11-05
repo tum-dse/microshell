@@ -1,33 +1,3 @@
-/*
-Copyright (C) 2014 John Leitch (johnleitch@outlook.com)
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-**********************************************************************
-
-This module is an unrolled and pipelined implementation of the main 
-loop of MD5. Instantiators input a 512-bit message chunk (wb) along 
-with four initialization values (a0, b0, c0, and d0), and the module 
-outputs the results of the 64 MD5 operations (a64, b64, c64, and d64).
- 
- Note that this module performs the MD5 operations exclusively; it 
- does not pad the message, append the length, or perform the 
- arithmetic operations that follow the four functions.
-
-**********************************************************************
-
-*/
 `define CopyChunkWords(__lhs, __rhs) \
   __lhs[0] <= __rhs[0];         \
   __lhs[1] <= __rhs[1];         \

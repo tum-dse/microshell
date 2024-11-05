@@ -1,48 +1,12 @@
 // Interface declarations
 import lynxTypes::*;
 
-// Internal interface declarations
 AXI4SR axis_sink_int ();
 AXI4SR axis_src_int ();
-
+	
 // Stream routing with proper interface connections
-`ifdef EN_STRM
-    `ifdef EN_MEM
-        axisr_reg_slice inst_reg_slice_sink (
-            .aclk(aclk),
-            .aresetn(aresetn),
-            .s_axis_tvalid(axis_host_recv[0].tvalid),
-            .s_axis_tready(axis_host_recv[0].tready),
-            .s_axis_tdata(axis_host_recv[0].tdata),
-            .s_axis_tlast(axis_host_recv[0].tlast),
-            .s_axis_tkeep(axis_host_recv[0].tkeep),
-            .s_axis_tid(axis_host_recv[0].tid),
-            .m_axis_tvalid(axis_sink_int.tvalid),
-            .m_axis_tready(axis_sink_int.tready),
-            .m_axis_tdata(axis_sink_int.tdata),
-            .m_axis_tlast(axis_sink_int.tlast),
-            .m_axis_tkeep(axis_sink_int.tkeep),
-            .m_axis_tid(axis_sink_int.tid)
-        );
-
-        axisr_reg_slice inst_reg_slice_src (
-            .aclk(aclk),
-            .aresetn(aresetn),
-            .s_axis_tvalid(axis_src_int.tvalid),
-            .s_axis_tready(axis_src_int.tready),
-            .s_axis_tdata(axis_src_int.tdata),
-            .s_axis_tlast(axis_src_int.tlast),
-            .s_axis_tkeep(axis_src_int.tkeep),
-            .s_axis_tid(axis_src_int.tid),
-            .m_axis_tvalid(axis_host_send[0].tvalid),
-            .m_axis_tready(axis_host_send[0].tready),
-            .m_axis_tdata(axis_host_send[0].tdata),
-            .m_axis_tlast(axis_host_send[0].tlast),
-            .m_axis_tkeep(axis_host_send[0].tkeep),
-            .m_axis_tid(axis_host_send[0].tid)
-        );
-    `endif
-`endif
+axisr_reg inst_reg_sink (.aclk(aclk),.aresetn(aresetn),.s_axis(axis_host_recv[0]),.m_axis(axis_sink_int));
+axisr_reg inst_reg_src (.aclk(aclk),.aresetn(aresetn),.s_axis(axis_src_int),.m_axis(axis_host_send[0]));
 
 // Data stream signals
 logic rd_tvalid;
@@ -84,7 +48,7 @@ quick_fifo #(
     .FIFO_WIDTH(512),
     .FIFO_DEPTH_BITS(9),
     .FIFO_ALMOSTFULL_THRESHOLD(508)
-) InDataFIFO (
+) indatafifo (
     .clk(aclk),
     .reset_n(aresetn),
     .din(idf_din),
@@ -170,4 +134,13 @@ Md5Core md5_core (
     .c64(md5_c),
     .d64(md5_d)
 );
+
+// Tie-off unused
+always_comb axi_ctrl.tie_off_s();
+always_comb notify.tie_off_m();
+always_comb sq_rd.tie_off_m();
+always_comb sq_wr.tie_off_m();
+always_comb cq_rd.tie_off_s();
+always_comb cq_wr.tie_off_s();
+
 

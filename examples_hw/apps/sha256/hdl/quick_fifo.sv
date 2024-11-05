@@ -1,27 +1,3 @@
-
-/*
- * Copyright 2019 - 2020 Systems Group, ETH Zurich
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
-
 module quick_fifo #(
     parameter FIFO_WIDTH = 32,
     parameter FIFO_DEPTH_BITS = 8,
@@ -31,16 +7,16 @@ module quick_fifo #(
     input  wire                         reset_n,
     
     input  wire                         we,              // input   write enable
-    input  wire [FIFO_WIDTH - 1:0]      din,            // input   write data with configurable width
+    input  wire [FIFO_WIDTH - 1:0]      din,             // input   write data with configurable width
 
     input  wire                         re,              // input   read enable    
     output reg                          valid,           // dout valid
-    output reg  [FIFO_WIDTH - 1:0]      dout,           // output  read data with configurable width    
+    output reg  [FIFO_WIDTH - 1:0]      dout,            // output  read data with configurable width    
 
-    output reg  [FIFO_DEPTH_BITS - 1:0] count,              // output  FIFOcount
-    output reg                          empty,              // output  FIFO empty
-    output reg                          full,               // output  FIFO full                
-    output reg                          almostfull         // output  configurable programmable full/ almost full    
+    output reg  [FIFO_DEPTH_BITS - 1:0] count,           // output  FIFOcount
+    output reg                          empty,           // output  FIFO empty
+    output reg                          full,            // output  FIFO full                
+    output reg                          almostfull       // output  configurable programmable full/ almost full    
 );
         
     reg  [FIFO_DEPTH_BITS - 1:0]        rp = 0;
@@ -60,15 +36,14 @@ module quick_fifo #(
     
     assign remem     = (re & valid_t1 & valid_t2) | ~(valid_t1 & valid_t2);
     assign wemem     = we & ~full;
-
     assign remem_valid = remem & ~mem_empty;
     
         
-    bram #(.DATA_WIDTH(FIFO_WIDTH),
-           .ADDR_WIDTH(FIFO_DEPTH_BITS)) fifo_mem( 
+    bram #(.DATA_WIDTH(FIFO_WIDTH),.ADDR_WIDTH(FIFO_DEPTH_BITS)) 
+    fifo_mem( 
         .clk        (clk),
         .we         (wemem),
-		.re 		(remem),
+	.re 	    (remem),
         .raddr      (rp),
         .waddr      (wp),
         .din        (din),

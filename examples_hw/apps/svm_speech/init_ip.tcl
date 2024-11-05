@@ -3,22 +3,17 @@ create_ip -name axis_dwidth_converter -vendor xilinx.com -library ip -version 1.
 set_property -dict [list \
     CONFIG.S_TDATA_NUM_BYTES {64} \
     CONFIG.M_TDATA_NUM_BYTES {4} \
+    CONFIG.TID_WIDTH {4} \
+    CONFIG.HAS_TLAST {1} \
 ] [get_ips dwidth_converter_512_32]
 
 create_ip -name axis_dwidth_converter -vendor xilinx.com -library ip -version 1.1 -module_name dwidth_converter_32_512
 set_property -dict [list \
     CONFIG.S_TDATA_NUM_BYTES {4} \
     CONFIG.M_TDATA_NUM_BYTES {64} \
+    CONFIG.TID_WIDTH {4} \
+    CONFIG.HAS_TLAST {1} \
 ] [get_ips dwidth_converter_32_512]
-
-# Create AXI Crossbar (for SVM control)
-create_ip -name axi_crossbar -vendor xilinx.com -library ip -version 2.1 -module_name axi_crossbar_0
-set_property -dict [list \
-    CONFIG.NUM_SI {1} \
-    CONFIG.NUM_MI {1} \
-    CONFIG.PROTOCOL {AXI4LITE} \
-    CONFIG.CONNECTIVITY_MODE {SASD} \
-] [get_ips axi_crossbar_0]
 
 # Create Clock Wizard
 create_ip -name clk_wiz -vendor xilinx.com -library ip -version 6.0 -module_name clk_wiz_0

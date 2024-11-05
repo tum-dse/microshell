@@ -1,23 +1,13 @@
-// Modified version of https://github.com/utcs-scea/amorphos-fsrf/tree/main/hw/design/sha
+// Interface declarations
+import lynxTypes::*;
 
 AXI4SR axis_sink_int ();
 AXI4SR axis_src_int ();
 
-`ifdef EN_STRM
-    `ifdef EN_MEM
-        // Memory stream routing
-        axisr_reg_rtl inst_reg_slice_sink (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_card_recv[0]), .m_axis(axis_sink_int));
-        axisr_reg_rtl inst_reg_slice_src (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int), .m_axis(axis_card_send[0]));
-    `else
-        // Host stream routing
-        axisr_reg_rtl inst_reg_slice_sink (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_card_recv[1]), .m_axis(axis_sink_int));
-        axisr_reg_rtl inst_reg_slice_src (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int), .m_axis(axis_card_send[1]));
-    `endif
-`else
-    // Card routing
-    axisr_reg_rtl inst_reg_slice_sink (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_card_recv[2]), .m_axis(axis_sink_int));
-    axisr_reg_rtl inst_reg_slice_src (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int), .m_axis(axis_card_send[2]));
-`endif
+// Host stream routing
+axisr_reg inst_reg_sink (.aclk(aclk),.aresetn(aresetn),.s_axis(axis_host_recv[0]),.m_axis(axis_sink_int));
+axisr_reg inst_reg_src (.aclk(aclk),.aresetn(aresetn),.s_axis(axis_src_int),.m_axis(axis_host_send[0]));
+
 
 wire                                rd_tvalid;
 wire                                rd_tlast;
@@ -58,24 +48,21 @@ assign idf_din   = rd_tdata;
 // Can't read more data if the queue is full
 assign axis_sink_int.tready = !idf_full;
 
-quick_fifo  #(.FIFO_WIDTH(512),     // data      
-			.FIFO_DEPTH_BITS(9),
-			.FIFO_ALMOSTFULL_THRESHOLD(508)
-	) InDataFIFO 
-	(
-		.clk                (aclk),
-		.reset_n            (aresetn),
-		.din                (rd_tdata),
-		.we                 (idf_wrreq),
-
-		.re                 (idf_rdreq),
-		.dout               (idf_dout),
-		.empty              (idf_empty),
-		.valid              (idf_valid),
-		.full               (idf_full),
-		.count              (),
-		.almostfull         ()
-	);
+quick_fifo #(.FIFO_WIDTH(512),.FIFO_DEPTH_BITS(9),.FIFO_ALMOSTFULL_THRESHOLD(508)) 
+InDataFIFO 
+(
+  .clk                (aclk),
+  .reset_n            (aresetn),
+  .din                (rd_tdata),
+  .we                 (idf_wrreq),
+  .re                 (idf_rdreq),
+  .dout               (idf_dout),
+  .empty              (idf_empty),
+  .valid              (idf_valid),
+  .full               (idf_full),
+  .count              (),
+  .almostfull         ()
+);
 
 //// SHA256 core
 // state and signals
@@ -228,3 +215,11 @@ end
 // `endif
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Tie-off unused
+always_comb axi_ctrl.tie_off_s();
+always_comb notify.tie_off_m();
+always_comb sq_rd.tie_off_m();
+always_comb sq_wr.tie_off_m();
+always_comb cq_rd.tie_off_s();
+always_comb cq_wr.tie_off_s();
