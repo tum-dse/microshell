@@ -244,6 +244,38 @@ if(EXAMPLE STREQUAL "perf_fpga")
     create_hw()
 endif()
 
+#HLL
+if(EXAMPLE STREQUAL "hll")
+        set(EN_STRM 1)
+        set(EN_MEM 0)
+        set(N_STRM_AXI 1) 
+        set(N_REGIONS 1)
+        
+        validation_checks_hw()
+
+        load_apps (
+            VFPGA_C0_0 "apps/hyperloglog"
+        )
+
+        create_hw()
+endif()
+
+#AES
+if(EXAMPLE STREQUAL "aes")
+        set(EN_STRM 1)
+        set(EN_MEM 0)
+        set(N_STRM_AXI 1) 
+        set(N_REGIONS 1)
+        
+        validation_checks_hw()
+
+        load_apps (
+            VFPGA_C0_0 "apps/aes_ecb"
+        )
+
+        create_hw()
+endif()
+
 #SHA
 if(EXAMPLE STREQUAL "sha256")
         set(EN_STRM 1)
@@ -276,10 +308,24 @@ if(EXAMPLE STREQUAL "md5")
         create_hw()
 endif()
 
-# SVM 
-if(EXAMPLE STREQUAL "svm_speech")
-    message("** SVM Speech Recognition Example on U280")
-    set(SHELL_PROBE 1)           
+#CONV
+if(EXAMPLE STREQUAL "conv")
+        set(EN_STRM 1)
+        set(N_REGIONS 1)
+        set(N_STRM_AXI 1) 
+        set(EN_MEM 0)
+
+        validation_checks_hw()
+
+        load_apps (
+           VFPGA_C0_0 "apps/conv"
+        )
+
+        create_hw()
+endif()
+
+# Speech_recognition 
+if(EXAMPLE STREQUAL "speech")       
     set(N_REGIONS 1)             
     set(EN_STRM 1)               
     set(N_STRM_AXI 1)            
@@ -289,7 +335,24 @@ if(EXAMPLE STREQUAL "svm_speech")
     validation_checks_hw()
 
     load_apps (
-        VFPGA_C0_0 "apps/svm_speech"    
+        VFPGA_C0_0 "apps/speech"    
+    )
+
+    create_hw()
+endif()
+
+# FFT
+if(EXAMPLE STREQUAL "fft")         
+    set(N_REGIONS 1)             
+    set(EN_STRM 1)               
+    set(N_STRM_AXI 1)            
+    set(EN_MEM 0)                
+    set(EN_PR 0)                 
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/fft"    
     )
 
     create_hw()
