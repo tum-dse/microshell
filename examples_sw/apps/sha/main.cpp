@@ -32,9 +32,9 @@ constexpr auto const defDevice = 0;
 constexpr auto const targetVfid = 0;  
 constexpr auto const defReps = 1;
 constexpr auto const defSize = 64 * 1024;  // 64KB default
-constexpr auto const defDW = 4;            // 32-bit for MD5
-constexpr auto const MD5_DIGEST_LENGTH = 16;  // MD5 produces 128-bit (16-byte) hash
-	
+constexpr auto const defDW = 4;            // 32-bit for SHA
+constexpr auto const SHA256_DIGEST_LENGTH = 32;  // SHA256 produces 256-bit (32-byte) hash
+
 int main(int argc, char *argv[])  
 {
     // Signal handler setup
@@ -47,8 +47,8 @@ int main(int argc, char *argv[])
     // Read arguments
     boost::program_options::options_description programDescription("Options:");
     programDescription.add_options()
-      ("size,s", boost::program_options::value<uint32_t>(), "Data size")
-      ("reps,r", boost::program_options::value<uint32_t>(), "Number of reps")
+        ("size,s", boost::program_options::value<uint32_t>(), "Data size")
+        ("reps,r", boost::program_options::value<uint32_t>(), "Number of reps");
     
     boost::program_options::variables_map commandLineArgs;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, programDescription), commandLineArgs);
@@ -56,12 +56,12 @@ int main(int argc, char *argv[])
 
     uint32_t size = defSize;
     uint32_t n_reps = defReps;
-    
+
     if(commandLineArgs.count("size") > 0) size = commandLineArgs["size"].as<uint32_t>();
     if(commandLineArgs.count("reps") > 0) n_reps = commandLineArgs["reps"].as<uint32_t>();
-    
+
     uint32_t n_pages_host = (size + hugePageSize - 1) / hugePageSize;
-    uint32_t n_pages_rslt = (n_reps * MD5_DIGEST_LENGTH + pageSize - 1) / pageSize;
+    uint32_t n_pages_rslt = (n_reps * SHA256_DIGEST_LENGTH + pageSize - 1) / pageSize;
 
     PR_HEADER("PARAMS");
     std::cout << "vFPGA ID: " << targetVfid << std::endl;
@@ -70,11 +70,10 @@ int main(int argc, char *argv[])
     std::cout << "Number of reps: " << n_reps << std::endl;
 
     try {
-    	    
         // Initialize thread
         std::unique_ptr<cThread<std::any>> cthread(new cThread<std::any>(targetVfid, getpid(), defDevice));
         cthread->start();
-        
+
         // Memory allocation
         std::vector<uint32_t*> inputData(n_reps, nullptr);
         unsigned char* hashResults = nullptr;
@@ -104,11 +103,11 @@ int main(int argc, char *argv[])
 
         // Benchmark setup
         cBench bench(1);
-        PR_HEADER("MD5 HASHING");
+        PR_HEADER("SHA256 HASHING");
 
         // Clear any previous completions
         cthread->clearCompleted();
-        
+
         auto benchmark_thr = [&]() {
             // Queue all transfers
             for(int i = 0; i < n_reps; i++) {
@@ -118,8 +117,8 @@ int main(int argc, char *argv[])
                 sg.local.src_stream = strmHost;
                 sg.local.src_dest = targetVfid;
 
-                sg.local.dst_addr = &hashResults[i * MD5_DIGEST_LENGTH];
-                sg.local.dst_len = MD5_DIGEST_LENGTH;
+                sg.local.dst_addr = &hashResults[i * SHA256_DIGEST_LENGTH];
+                sg.local.dst_len = SHA256_DIGEST_LENGTH;
                 sg.local.dst_stream = strmHost;
                 sg.local.dst_dest = targetVfid;
 
@@ -144,7 +143,7 @@ int main(int argc, char *argv[])
         };
 
         bench.runtime(benchmark_thr);
-        
+
         // Print results
         std::cout << std::fixed << std::setprecision(2);
         std::cout << "Size: " << std::setw(8) << size << ", thr: " 
@@ -154,16 +153,16 @@ int main(int argc, char *argv[])
         // Print hash results
         for(int i = 0; i < n_reps; i++) {
             std::cout << "Hash " << i << ": ";
-            for(int j = 0; j < MD5_DIGEST_LENGTH; j++) {
+            for(int j = 0; j < SHA256_DIGEST_LENGTH; j++) {
                 std::cout << std::hex << std::setw(2) << std::setfill('0') 
-                         << static_cast<int>(hashResults[i * MD5_DIGEST_LENGTH + j]);
+                         << static_cast<int>(hashResults[i * SHA256_DIGEST_LENGTH + j]);
             }
             std::cout << std::dec << std::endl;
         }
         
         // Print debug info
         cthread->printDebug();
-                
+
         // Cleanup
         for(int i = 0; i < n_reps; i++) {
             if(inputData[i]) {
