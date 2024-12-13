@@ -57,23 +57,59 @@ endif()
 if(EXAMPLE STREQUAL "streaming_server")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/streaming_service/server")
     message("** Example: Streaming service - Server (Coyote daemon)")
-    include_directories(${TARGET_DIR}/../include ${TARGET_DIR}/include)
 endif()
 
 if(EXAMPLE STREQUAL "streaming_client")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/streaming_service/client")
     message("** Example: Streaming service - Client")
-    include_directories(${TARGET_DIR}/../include)
 endif()
 
+# HLL example
+if(EXAMPLE STREQUAL "hll")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/hll")
+    message("** Example: HLL (Coyote daemon)")
+endif()
+
+# AES example
+if(EXAMPLE STREQUAL "aes")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/aes")
+    message("** Example: AES-ECB (Coyote daemon)")
+endif()
+
+# MD5 example
+if(EXAMPLE STREQUAL "md5")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/md5")
+    message("** Example: MD5 (Coyote daemon)")
+endif()
+
+# SHA example
+if(EXAMPLE STREQUAL "sha")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/sha")
+    message("** Example: SHA (Coyote daemon)")
+endif()
+
+# CONV example
+if(EXAMPLE STREQUAL "conv")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/conv")
+    message("** Example: Conv (Coyote daemon)")
+endif()
+
+# FFT example
+if(EXAMPLE STREQUAL "fft")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/fft")
+    message("** Example: FFT (Coyote daemon)")
+endif()
+
+# Speech example
+if(EXAMPLE STREQUAL "speech")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech")
+    message("** Example: Speech Recognition (Coyote daemon)")
+endif()
+
+#Multithreading
 if(EXAMPLE STREQUAL "multithreading")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/multithreading")
     message("** Example: Multithreading")
-endif()
-
-if(EXAMPLE STREQUAL "svm")
-    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/multithreading_svm")
-    message("** Example: SVM Multithreading")
 endif()
 
 # Kmeans example (unified memory)

@@ -26,7 +26,7 @@ if(EXAMPLE STREQUAL "static")
     set(N_REGIONS 2)
     set(EN_STRM 1)
     set(EN_MEM 1)
-    set(HBM_SPLIT 0)
+    set(HBM_SPLIT 1)
 
     validation_checks_hw()
 
@@ -248,21 +248,130 @@ if(EXAMPLE STREQUAL "perf_fpga")
     create_hw()
 endif()
 
-# SVM 
-if(EXAMPLE STREQUAL "svm_speech")
-    message("** SVM Speech Recognition Example on U280")
-    set(SHELL_PROBE 1)            # Enable ILA for debug
-    set(N_REGIONS 1)              # Single vFPGA region
-    set(EN_STRM 1)               # Enable streaming interfaces
-    set(N_STRM_AXI 1)            # One AXI-Stream interface pair
-    set(EN_MEM 0)                # No memory interface needed
-    set(EN_PR 0)                 # No partial reconfiguration
+#HLL
+if(EXAMPLE STREQUAL "hll")
+        set(EN_STRM 1)
+        set(EN_MEM 0)
+        set(N_STRM_AXI 1) 
+        set(N_REGIONS 1)
+        
+        validation_checks_hw()
+
+        load_apps (
+            VFPGA_C0_0 "apps/hyperloglog"
+        )
+
+        create_hw()
+endif()
+
+#AES
+if(EXAMPLE STREQUAL "aes")
+        set(EN_STRM 1)
+        set(EN_MEM 0)
+        set(N_STRM_AXI 1) 
+        set(N_REGIONS 1)
+        
+        validation_checks_hw()
+
+        load_apps (
+            VFPGA_C0_0 "apps/aes_ecb"
+        )
+
+        create_hw()
+endif()
+
+#SHA
+if(EXAMPLE STREQUAL "sha256")
+        set(EN_STRM 1)
+        set(EN_MEM 0)
+        set(N_STRM_AXI 1) 
+        set(N_REGIONS 1)
+        
+        validation_checks_hw()
+
+        load_apps (
+            VFPGA_C0_0 "apps/sha256"
+        )
+
+        create_hw()
+endif()
+
+#MD5
+if(EXAMPLE STREQUAL "md5")
+        set(EN_STRM 1)
+        set(N_REGIONS 1)
+        set(N_STRM_AXI 1) 
+        set(EN_MEM 0)
+
+        validation_checks_hw()
+
+        load_apps (
+           VFPGA_C0_0 "apps/md5"
+        )
+
+        create_hw()
+endif()
+
+#CONV
+if(EXAMPLE STREQUAL "conv")
+        set(EN_STRM 1)
+        set(N_REGIONS 1)
+        set(N_STRM_AXI 1) 
+        set(EN_MEM 0)
+
+        validation_checks_hw()
+
+        load_apps (
+           VFPGA_C0_0 "apps/conv"
+        )
+
+        create_hw()
+endif()
+
+# Speech_recognition 
+if(EXAMPLE STREQUAL "speech")       
+    set(N_REGIONS 1)             
+    set(EN_STRM 1)               
+    set(N_STRM_AXI 1)            
+    set(EN_MEM 0)                
+    set(EN_PR 0)                 
 
     validation_checks_hw()
 
     load_apps (
-        VFPGA_C0_0 "apps/svm_speech"    # Load SVM application
+        VFPGA_C0_0 "apps/speech"    
     )
+
+    create_hw()
+endif()
+
+# FFT
+if(EXAMPLE STREQUAL "fft")         
+    set(N_REGIONS 1)             
+    set(EN_STRM 1)               
+    set(N_STRM_AXI 1)            
+    set(EN_MEM 0)                
+    set(EN_PR 0)                 
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/fft"    
+    )
+
+    create_hw()
+endif()
+
+# test 
+if(EXAMPLE STREQUAL "test")
+    set(SHELL_PROBE 1)           
+    set(N_REGIONS 1)             
+    set(EN_STRM 1)               
+    set(N_STRM_AXI 1)            
+    set(EN_MEM 0)                
+    set(EN_PR 0)                 
+
+    validation_checks_hw()
 
     create_hw()
 endif()
