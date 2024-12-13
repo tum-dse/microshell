@@ -1,0 +1,470 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Wed Nov 27 16:22:23 2024
+# Process ID: 267757
+# Current directory: /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/bd_2f3d_xsdbm_0_synth_1
+# Command line: vivado -log bd_2f3d_xsdbm_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source bd_2f3d_xsdbm_0.tcl
+# Log file: /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/bd_2f3d_xsdbm_0_synth_1/bd_2f3d_xsdbm_0.vds
+# Journal file: /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/bd_2f3d_xsdbm_0_synth_1/vivado.jou
+# Running On: amy, OS: Linux, CPU Frequency: 2650.054 MHz, CPU Physical cores: 32, Host memory: 2143237 MB
+#-----------------------------------------------------------
+source bd_2f3d_xsdbm_0.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/scratch/anubhav/Coyote/examples_hw/build_hw_8/iprepo'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/share/xilinx/Vivado/2022.1/data/ip'.
+Command: synth_design -top bd_2f3d_xsdbm_0 -part xcu280-fsvh2892-2L-e -incremental_mode off -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcu280'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcu280'
+INFO: [Device 21-403] Loading part xcu280-fsvh2892-2L-e
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 268751
+WARNING: [Synth 8-9501] generate block is allowed only inside loop and conditional generate in SystemVerilog mode [/share/xilinx/Vivado/2022.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:4023]
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:07 . Memory (MB): peak = 3643.145 ; gain = 345.766 ; free physical = 209942 ; free virtual = 270980
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'bd_2f3d_xsdbm_0' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/synth/bd_2f3d_xsdbm_0.v:53]
+INFO: [Synth 8-6157] synthesizing module 'FDRE' [/share/xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:27836]
+INFO: [Synth 8-6155] done synthesizing module 'FDRE' (0#1) [/share/xilinx/Vivado/2022.1/scripts/rt/data/unisim_comp.v:27836]
+INFO: [Synth 8-6155] done synthesizing module 'bd_2f3d_xsdbm_0' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/synth/bd_2f3d_xsdbm_0.v:53]
+WARNING: [Synth 8-3848] Net update_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:1]
+WARNING: [Synth 8-3848] Net capture_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:2]
+WARNING: [Synth 8-3848] Net reset_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:3]
+WARNING: [Synth 8-3848] Net runtest_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:4]
+WARNING: [Synth 8-3848] Net tms_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:5]
+WARNING: [Synth 8-3848] Net tck_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:6]
+WARNING: [Synth 8-3848] Net tdi_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:7]
+WARNING: [Synth 8-3848] Net sel_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:8]
+WARNING: [Synth 8-3848] Net shift_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:9]
+WARNING: [Synth 8-3848] Net drck_0 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:10]
+WARNING: [Synth 8-3848] Net update_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:12]
+WARNING: [Synth 8-3848] Net capture_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:13]
+WARNING: [Synth 8-3848] Net reset_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:14]
+WARNING: [Synth 8-3848] Net runtest_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:15]
+WARNING: [Synth 8-3848] Net tms_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:16]
+WARNING: [Synth 8-3848] Net tck_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:17]
+WARNING: [Synth 8-3848] Net tdi_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:18]
+WARNING: [Synth 8-3848] Net sel_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:19]
+WARNING: [Synth 8-3848] Net shift_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:20]
+WARNING: [Synth 8-3848] Net drck_1 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:21]
+WARNING: [Synth 8-3848] Net update_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:23]
+WARNING: [Synth 8-3848] Net capture_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:24]
+WARNING: [Synth 8-3848] Net reset_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:25]
+WARNING: [Synth 8-3848] Net runtest_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:26]
+WARNING: [Synth 8-3848] Net tms_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:27]
+WARNING: [Synth 8-3848] Net tck_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:28]
+WARNING: [Synth 8-3848] Net tdi_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:29]
+WARNING: [Synth 8-3848] Net sel_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:30]
+WARNING: [Synth 8-3848] Net shift_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:31]
+WARNING: [Synth 8-3848] Net drck_2 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:32]
+WARNING: [Synth 8-3848] Net update_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:34]
+WARNING: [Synth 8-3848] Net capture_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:35]
+WARNING: [Synth 8-3848] Net reset_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:36]
+WARNING: [Synth 8-3848] Net runtest_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:37]
+WARNING: [Synth 8-3848] Net tms_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:38]
+WARNING: [Synth 8-3848] Net tck_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:39]
+WARNING: [Synth 8-3848] Net tdi_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:40]
+WARNING: [Synth 8-3848] Net sel_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:41]
+WARNING: [Synth 8-3848] Net shift_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:42]
+WARNING: [Synth 8-3848] Net drck_3 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:43]
+WARNING: [Synth 8-3848] Net update_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:45]
+WARNING: [Synth 8-3848] Net capture_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:46]
+WARNING: [Synth 8-3848] Net reset_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:47]
+WARNING: [Synth 8-3848] Net runtest_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:48]
+WARNING: [Synth 8-3848] Net tms_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:49]
+WARNING: [Synth 8-3848] Net tck_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:50]
+WARNING: [Synth 8-3848] Net tdi_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:51]
+WARNING: [Synth 8-3848] Net sel_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:52]
+WARNING: [Synth 8-3848] Net shift_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:53]
+WARNING: [Synth 8-3848] Net drck_4 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:54]
+WARNING: [Synth 8-3848] Net update_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:56]
+WARNING: [Synth 8-3848] Net capture_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:57]
+WARNING: [Synth 8-3848] Net reset_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:58]
+WARNING: [Synth 8-3848] Net runtest_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:59]
+WARNING: [Synth 8-3848] Net tms_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:60]
+WARNING: [Synth 8-3848] Net tck_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:61]
+WARNING: [Synth 8-3848] Net tdi_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:62]
+WARNING: [Synth 8-3848] Net sel_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:63]
+WARNING: [Synth 8-3848] Net shift_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:64]
+WARNING: [Synth 8-3848] Net drck_5 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:65]
+WARNING: [Synth 8-3848] Net update_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:67]
+WARNING: [Synth 8-3848] Net capture_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:68]
+WARNING: [Synth 8-3848] Net reset_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:69]
+WARNING: [Synth 8-3848] Net runtest_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:70]
+WARNING: [Synth 8-3848] Net tms_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:71]
+WARNING: [Synth 8-3848] Net tck_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:72]
+WARNING: [Synth 8-3848] Net tdi_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:73]
+WARNING: [Synth 8-3848] Net sel_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:74]
+WARNING: [Synth 8-3848] Net shift_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:75]
+WARNING: [Synth 8-3848] Net drck_6 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:76]
+WARNING: [Synth 8-3848] Net update_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:78]
+WARNING: [Synth 8-3848] Net capture_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:79]
+WARNING: [Synth 8-3848] Net reset_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:80]
+WARNING: [Synth 8-3848] Net runtest_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:81]
+WARNING: [Synth 8-3848] Net tms_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:82]
+WARNING: [Synth 8-3848] Net tck_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:83]
+WARNING: [Synth 8-3848] Net tdi_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:84]
+WARNING: [Synth 8-3848] Net sel_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:85]
+WARNING: [Synth 8-3848] Net shift_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:86]
+WARNING: [Synth 8-3848] Net drck_7 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:87]
+WARNING: [Synth 8-3848] Net update_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:89]
+WARNING: [Synth 8-3848] Net capture_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:90]
+WARNING: [Synth 8-3848] Net reset_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:91]
+WARNING: [Synth 8-3848] Net runtest_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:92]
+WARNING: [Synth 8-3848] Net tms_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:93]
+WARNING: [Synth 8-3848] Net tck_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:94]
+WARNING: [Synth 8-3848] Net tdi_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:95]
+WARNING: [Synth 8-3848] Net sel_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:96]
+WARNING: [Synth 8-3848] Net shift_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:97]
+WARNING: [Synth 8-3848] Net drck_8 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:98]
+WARNING: [Synth 8-3848] Net update_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:100]
+WARNING: [Synth 8-3848] Net capture_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:101]
+WARNING: [Synth 8-3848] Net reset_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:102]
+WARNING: [Synth 8-3848] Net runtest_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:103]
+WARNING: [Synth 8-3848] Net tms_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:104]
+WARNING: [Synth 8-3848] Net tck_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:105]
+WARNING: [Synth 8-3848] Net tdi_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:106]
+WARNING: [Synth 8-3848] Net sel_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:107]
+WARNING: [Synth 8-3848] Net shift_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:108]
+WARNING: [Synth 8-3848] Net drck_9 in module/entity xsdbm_v3_0_0_xsdbm_id does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/hdl/verilog/xsdbm_v3_0_0_bs_ports.vh:109]
+INFO: [Common 17-14] Message 'Synth 8-3848' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+WARNING: [Synth 8-7129] Port update_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_0 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port update_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_1 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port update_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_2 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port update_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_3 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port update_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_4 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port update_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_5 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port update_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_6 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port update_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_7 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port update_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_8 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port update_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port capture_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port reset_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port runtest_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tms_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tck_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port tdi_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sel_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port shift_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+WARNING: [Synth 8-7129] Port drck_9 in module xsdbm_v3_0_0_xsdbm_id is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:09 ; elapsed = 00:00:12 . Memory (MB): peak = 3806.004 ; gain = 508.625 ; free physical = 208675 ; free virtual = 269713
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:09 ; elapsed = 00:00:12 . Memory (MB): peak = 3823.816 ; gain = 526.438 ; free physical = 208635 ; free virtual = 269673
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:12 . Memory (MB): peak = 3823.816 ; gain = 526.438 ; free physical = 208635 ; free virtual = 269673
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3829.754 ; gain = 0.000 ; free physical = 208516 ; free virtual = 269554
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/bd_2f3d_xsdbm_0_ooc.xdc] for cell 'inst'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/bd_2f3d_xsdbm_0_ooc.xdc] for cell 'inst'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/constraints/xsdbm_cc_early.xdc] for cell 'inst'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/constraints/xsdbm_cc_early.xdc] for cell 'inst'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/bd_2f3d_xsdbm_0_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/bd_2f3d_xsdbm_0_synth_1/dont_touch.xdc]
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/constraints/xsdbm_cc_late.xdc] for cell 'inst'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/constraints/xsdbm_cc_late.xdc] for cell 'inst'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/constraints/xsdbm_gc_late.xdc] for cell 'inst'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.gen/sources_1/ip/debug_bridge_dynamic/bd_0/ip/ip_0/constraints/xsdbm_gc_late.xdc] for cell 'inst'
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3971.410 ; gain = 0.000 ; free physical = 204103 ; free virtual = 265141
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3971.410 ; gain = 0.000 ; free physical = 204095 ; free virtual = 265133
+INFO: [Designutils 20-5008] Incremental synthesis strategy off
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:20 ; elapsed = 00:00:24 . Memory (MB): peak = 3971.410 ; gain = 674.031 ; free physical = 198776 ; free virtual = 259814
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xcu280-fsvh2892-2L-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:20 ; elapsed = 00:00:24 . Memory (MB): peak = 3971.410 ; gain = 674.031 ; free physical = 198744 ; free virtual = 259782
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = SOFT for inst. (constraint file  /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/bd_2f3d_xsdbm_0_synth_1/dont_touch.xdc, line 6).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:20 ; elapsed = 00:00:24 . Memory (MB): peak = 3971.410 ; gain = 674.031 ; free physical = 198666 ; free virtual = 259704
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:20 ; elapsed = 00:00:24 . Memory (MB): peak = 3971.410 ; gain = 674.031 ; free physical = 197646 ; free virtual = 258685
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 10    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 9024 (col length:94)
+BRAMs: 4032 (col length: RAMB18 288 RAMB36 144)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:21 ; elapsed = 00:00:25 . Memory (MB): peak = 3971.410 ; gain = 674.031 ; free physical = 197248 ; free virtual = 258286
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:31 ; elapsed = 00:00:38 . Memory (MB): peak = 4125.184 ; gain = 827.805 ; free physical = 197324 ; free virtual = 258362
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:31 ; elapsed = 00:00:38 . Memory (MB): peak = 4125.184 ; gain = 827.805 ; free physical = 197324 ; free virtual = 258362
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:31 ; elapsed = 00:00:38 . Memory (MB): peak = 4145.223 ; gain = 847.844 ; free physical = 197276 ; free virtual = 258315
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+INFO: [Synth 8-3295] tying undriven pin CAPTURE_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin UPDATE_temp_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin UPDATE_temp_i_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin UPDATE_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin SHIFT_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin RESET_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin TDI_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin SEL_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin DRCK_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin TDO_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin RUNTEST_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin TCK_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin TMS_inferred:in0 to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[31] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[30] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[29] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[28] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[27] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[26] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[25] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[24] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[23] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[22] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[21] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[20] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[19] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[18] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[17] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[16] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[15] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[14] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[13] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[12] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[11] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[10] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[9] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[8] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[7] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[6] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[5] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[4] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[3] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[2] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[1] to constant 0
+INFO: [Synth 8-3295] tying undriven pin bscanid_inferred:in0[0] to constant 0
+INFO: [Synth 8-3295] tying undriven pin id_state_inferred:in0[1] to constant 0
+INFO: [Synth 8-3295] tying undriven pin id_state_inferred:in0[0] to constant 0
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:35 ; elapsed = 00:00:42 . Memory (MB): peak = 4151.160 ; gain = 853.781 ; free physical = 197074 ; free virtual = 258113
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:35 ; elapsed = 00:00:42 . Memory (MB): peak = 4151.160 ; gain = 853.781 ; free physical = 197075 ; free virtual = 258113
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:35 ; elapsed = 00:00:42 . Memory (MB): peak = 4151.160 ; gain = 853.781 ; free physical = 197074 ; free virtual = 258113
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:35 ; elapsed = 00:00:42 . Memory (MB): peak = 4151.160 ; gain = 853.781 ; free physical = 197074 ; free virtual = 258113
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:35 ; elapsed = 00:00:42 . Memory (MB): peak = 4151.160 ; gain = 853.781 ; free physical = 197075 ; free virtual = 258113
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:35 ; elapsed = 00:00:42 . Memory (MB): peak = 4151.160 ; gain = 853.781 ; free physical = 197075 ; free virtual = 258113
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-----+------+
+|      |Cell |Count |
++------+-----+------+
+|1     |LUT1 |    47|
+|2     |FDRE |    11|
++------+-----+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:35 ; elapsed = 00:00:42 . Memory (MB): peak = 4151.160 ; gain = 853.781 ; free physical = 197075 ; free virtual = 258113
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 994 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:28 ; elapsed = 00:00:35 . Memory (MB): peak = 4151.160 ; gain = 706.188 ; free physical = 197067 ; free virtual = 258106
+Synthesis Optimization Complete : Time (s): cpu = 00:00:35 ; elapsed = 00:00:42 . Memory (MB): peak = 4151.168 ; gain = 853.781 ; free physical = 197075 ; free virtual = 258113
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4151.168 ; gain = 0.000 ; free physical = 197119 ; free virtual = 258158
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4228.785 ; gain = 0.000 ; free physical = 196815 ; free virtual = 257853
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete, checksum: 602a1743
+INFO: [Common 17-83] Releasing license: Synthesis
+70 Infos, 202 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:49 ; elapsed = 00:00:54 . Memory (MB): peak = 4228.785 ; gain = 1307.703 ; free physical = 196840 ; free virtual = 257878
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/bd_2f3d_xsdbm_0_synth_1/bd_2f3d_xsdbm_0.dcp' has been generated.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP bd_2f3d_xsdbm_0, cache-ID = 73b16e585f97889e
+INFO: [Coretcl 2-1174] Renamed 2 cell refs.
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/bd_2f3d_xsdbm_0_synth_1/bd_2f3d_xsdbm_0.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file bd_2f3d_xsdbm_0_utilization_synth.rpt -pb bd_2f3d_xsdbm_0_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Nov 27 16:23:30 2024...

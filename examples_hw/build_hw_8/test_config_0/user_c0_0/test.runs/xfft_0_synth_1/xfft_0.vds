@@ -1,0 +1,596 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Wed Nov 27 16:30:09 2024
+# Process ID: 280779
+# Current directory: /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/xfft_0_synth_1
+# Command line: vivado -log xfft_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source xfft_0.tcl
+# Log file: /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/xfft_0_synth_1/xfft_0.vds
+# Journal file: /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/xfft_0_synth_1/vivado.jou
+# Running On: amy, OS: Linux, CPU Frequency: 1499.140 MHz, CPU Physical cores: 32, Host memory: 2143237 MB
+#-----------------------------------------------------------
+source xfft_0.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/scratch/anubhav/Coyote/examples_hw/build_hw_8/iprepo'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/share/xilinx/Vivado/2022.1/data/ip'.
+Command: synth_design -top xfft_0 -part xcu280-fsvh2892-2L-e -incremental_mode off -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcu280'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcu280'
+INFO: [Device 21-403] Loading part xcu280-fsvh2892-2L-e
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 281299
+WARNING: [Synth 8-9501] generate block is allowed only inside loop and conditional generate in SystemVerilog mode [/share/xilinx/Vivado/2022.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:4023]
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 3639.145 ; gain = 343.797 ; free physical = 194523 ; free virtual = 255532
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'xfft_0' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/xfft_0/synth/xfft_0.vhd:83]
+	Parameter C_XDEVICEFAMILY bound to: virtexuplusHBM - type: string 
+	Parameter C_PART bound to: xcu280-fsvh2892-2L-e - type: string 
+	Parameter C_S_AXIS_CONFIG_TDATA_WIDTH bound to: 16 - type: integer 
+	Parameter C_S_AXIS_DATA_TDATA_WIDTH bound to: 64 - type: integer 
+	Parameter C_M_AXIS_DATA_TDATA_WIDTH bound to: 64 - type: integer 
+	Parameter C_M_AXIS_DATA_TUSER_WIDTH bound to: 1 - type: integer 
+	Parameter C_M_AXIS_STATUS_TDATA_WIDTH bound to: 1 - type: integer 
+	Parameter C_THROTTLE_SCHEME bound to: 1 - type: integer 
+	Parameter C_CHANNELS bound to: 1 - type: integer 
+	Parameter C_NFFT_MAX bound to: 14 - type: integer 
+	Parameter C_ARCH bound to: 1 - type: integer 
+	Parameter C_HAS_NFFT bound to: 0 - type: integer 
+	Parameter C_USE_FLT_PT bound to: 1 - type: integer 
+	Parameter C_INPUT_WIDTH bound to: 32 - type: integer 
+	Parameter C_TWIDDLE_WIDTH bound to: 24 - type: integer 
+	Parameter C_OUTPUT_WIDTH bound to: 32 - type: integer 
+	Parameter C_HAS_SCALING bound to: 1 - type: integer 
+	Parameter C_HAS_BFP bound to: 0 - type: integer 
+	Parameter C_HAS_ROUNDING bound to: 0 - type: integer 
+	Parameter C_HAS_ACLKEN bound to: 0 - type: integer 
+	Parameter C_HAS_ARESETN bound to: 1 - type: integer 
+	Parameter C_HAS_OVFLO bound to: 0 - type: integer 
+	Parameter C_HAS_NATURAL_INPUT bound to: 1 - type: integer 
+	Parameter C_HAS_NATURAL_OUTPUT bound to: 1 - type: integer 
+	Parameter C_HAS_CYCLIC_PREFIX bound to: 0 - type: integer 
+	Parameter C_HAS_XK_INDEX bound to: 0 - type: integer 
+	Parameter C_DATA_MEM_TYPE bound to: 1 - type: integer 
+	Parameter C_TWIDDLE_MEM_TYPE bound to: 1 - type: integer 
+	Parameter C_BRAM_STAGES bound to: 0 - type: integer 
+	Parameter C_REORDER_MEM_TYPE bound to: 1 - type: integer 
+	Parameter C_USE_HYBRID_RAM bound to: 0 - type: integer 
+	Parameter C_OPTIMIZE_GOAL bound to: 0 - type: integer 
+	Parameter C_CMPY_TYPE bound to: 1 - type: integer 
+	Parameter C_BFLY_TYPE bound to: 0 - type: integer 
+INFO: [Synth 8-3491] module 'xfft_v9_1_8' declared at '/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/xfft_0/hdl/xfft_v9_1_vh_rfs.vhd:103739' bound to instance 'U0' of component 'xfft_v9_1_8' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/xfft_0/synth/xfft_0.vhd:191]
+INFO: [Synth 8-256] done synthesizing module 'xfft_0' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/xfft_0/synth/xfft_0.vhd:83]
+WARNING: [Synth 8-7129] Port a[3] in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[2] in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[1] in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[0] in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port aclr in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port aset in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ainit in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sclr in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sset in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sinit in module c_shift_ram_v12_0_14_legacy__parameterized19 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[15] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[14] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[13] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[12] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[11] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[10] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[9] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[8] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[7] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[6] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[5] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[4] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[3] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[2] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[1] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[0] in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port COMBI_SCLR in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port DEPTHx2 in module shift_ram__parameterized39 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Q1 in module shift_ram__parameterized41 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D1 in module shift_ram__parameterized41 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port COMBI_SCLR in module shift_ram__parameterized41 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port DEPTHx2 in module shift_ram__parameterized41 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port EXTRA_CLR in module fp_shift_ram_clr_op__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port EXTRA_CLR_BLANK in module fp_shift_ram_clr_op__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[4] in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[3] in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[2] in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[1] in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[0] in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port aclr in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port aset in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ainit in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sclr in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sset in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port sinit in module c_shift_ram_v12_0_14_legacy__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[15] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[14] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[13] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[12] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[11] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[10] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[9] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[8] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[7] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[6] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[5] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[4] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[3] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[2] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[1] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[0] in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port COMBI_SCLR in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port DEPTHx2 in module shift_ram__parameterized40 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port EXTRA_CLR in module fp_shift_ram_clr_op is either unconnected or has no load
+WARNING: [Synth 8-7129] Port EXTRA_CLR_BLANK in module fp_shift_ram_clr_op is either unconnected or has no load
+WARNING: [Synth 8-7129] Port AINIT in module c_reg_fd_v12_0_6_viv is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ACLR in module c_reg_fd_v12_0_6_viv is either unconnected or has no load
+WARNING: [Synth 8-7129] Port ASET in module c_reg_fd_v12_0_6_viv is either unconnected or has no load
+WARNING: [Synth 8-7129] Port SINIT in module c_reg_fd_v12_0_6_viv is either unconnected or has no load
+WARNING: [Synth 8-7129] Port SSET in module c_reg_fd_v12_0_6_viv is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[3] in module c_shift_ram_v12_0_14_legacy is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[2] in module c_shift_ram_v12_0_14_legacy is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[1] in module c_shift_ram_v12_0_14_legacy is either unconnected or has no load
+WARNING: [Synth 8-7129] Port a[0] in module c_shift_ram_v12_0_14_legacy is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[15] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[14] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[13] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[12] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[11] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[10] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[9] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[8] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[7] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[6] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[5] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[4] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[3] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[2] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[1] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D[0] in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port COMBI_SCLR in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port DEPTHx2 in module shift_ram__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Q1 in module shift_ram__parameterized38 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D1 in module shift_ram__parameterized38 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port COMBI_SCLR in module shift_ram__parameterized38 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port DEPTHx2 in module shift_ram__parameterized38 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Q1 in module shift_ram__parameterized37 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port D1 in module shift_ram__parameterized37 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port COMBI_SCLR in module shift_ram__parameterized37 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port DEPTHx2 in module shift_ram__parameterized37 is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:29 ; elapsed = 00:00:38 . Memory (MB): peak = 4088.652 ; gain = 793.305 ; free physical = 196082 ; free virtual = 257092
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:30 ; elapsed = 00:00:39 . Memory (MB): peak = 4106.465 ; gain = 811.117 ; free physical = 196239 ; free virtual = 257249
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:30 ; elapsed = 00:00:39 . Memory (MB): peak = 4106.465 ; gain = 811.117 ; free physical = 196239 ; free virtual = 257248
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.29 ; elapsed = 00:00:00.31 . Memory (MB): peak = 4112.402 ; gain = 0.000 ; free physical = 196882 ; free virtual = 257891
+INFO: [Netlist 29-17] Analyzing 2207 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/xfft_0/xfft_0_ooc.xdc] for cell 'U0'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/xfft_0/xfft_0_ooc.xdc] for cell 'U0'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/xfft_0_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/xfft_0_synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 4279.059 ; gain = 0.000 ; free physical = 211691 ; free virtual = 272700
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 239 instances were transformed.
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 18 instances
+  FDE => FDRE: 112 instances
+  RAMB18 => RAMB18E2: 109 instances
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.87 ; elapsed = 00:00:00.29 . Memory (MB): peak = 4279.059 ; gain = 0.000 ; free physical = 211305 ; free virtual = 272314
+INFO: [Designutils 20-5008] Incremental synthesis strategy off
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:47 ; elapsed = 00:00:56 . Memory (MB): peak = 4279.059 ; gain = 983.711 ; free physical = 209202 ; free virtual = 270211
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xcu280-fsvh2892-2L-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:47 ; elapsed = 00:00:56 . Memory (MB): peak = 4279.059 ; gain = 983.711 ; free physical = 209225 ; free virtual = 270234
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = SOFT for U0. (constraint file  /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/xfft_0_synth_1/dont_touch.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:47 ; elapsed = 00:00:56 . Memory (MB): peak = 4279.059 ; gain = 983.711 ; free physical = 209289 ; free virtual = 270298
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:51 ; elapsed = 00:01:02 . Memory (MB): peak = 4279.059 ; gain = 983.711 ; free physical = 207225 ; free virtual = 268234
+---------------------------------------------------------------------------------
+INFO: [Synth 8-223] decloning instance 'U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/gen_start_dly' (shift_ram__parameterized1) to 'U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/gen_fwd_inv_we_out'
+INFO: [Synth 8-223] decloning instance 'fp_convert_to_block_fp:/fpo/DELAY_DIVIDE_BY_ZERO' (delay__parameterized13) to 'fp_convert_to_block_fp:/fpo/DELAY_ACCUM_OVERFLOW'
+INFO: [Synth 8-223] decloning instance 'fp_convert_to_block_fp:/fpo/DELAY_DIVIDE_BY_ZERO' (delay__parameterized13) to 'fp_convert_to_block_fp:/fpo/DELAY_ACCUM_INPUT_OVERFLOW'
+INFO: [Synth 8-223] decloning instance 'U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/delay_line4_for_rfd' (shift_ram__parameterized11) to 'U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/has_bfp.delay_rfd_for_scale_select'
+INFO: [Synth 8-223] decloning instance 'fp_convert_to_fp:/fpo/FIX_TO_FLT_OP.SPD.OP/ROUND/EXTRA_LSB_BIT_DEL' (delay__parameterized13) to 'fp_convert_to_fp:/fpo/FIX_TO_FLT_OP.SPD.OP/ROUND/EXTRA_LSB_RND1_DEL'
+INFO: [Synth 8-223] decloning instance 'fp_convert_to_fp:/fpo/FIX_TO_FLT_OP.SPD.OP/ROUND/EXP_INC_DELAY' (delay__parameterized13) to 'fp_convert_to_fp:/fpo/FIX_TO_FLT_OP.SPD.OP/ROUND/EXP_INC_RND1_DELAY'
+INFO: [Synth 8-223] decloning instance 'fp_convert_to_fp:/fpo/DELAY_INVALID_OP' (delay__parameterized13) to 'fp_convert_to_fp:/fpo/DELAY_DIVIDE_BY_ZERO'
+INFO: [Synth 8-223] decloning instance 'fp_convert_to_fp:/fpo/DELAY_INVALID_OP' (delay__parameterized13) to 'fp_convert_to_fp:/fpo/DELAY_OVERFLOW'
+INFO: [Synth 8-223] decloning instance 'fp_convert_to_fp:/fpo/DELAY_INVALID_OP' (delay__parameterized13) to 'fp_convert_to_fp:/fpo/DELAY_UNDERFLOW'
+INFO: [Synth 8-223] decloning instance 'fp_convert_to_fp:/fpo/DELAY_INVALID_OP' (delay__parameterized13) to 'fp_convert_to_fp:/fpo/DELAY_ACCUM_OVERFLOW'
+INFO: [Synth 8-223] decloning instance 'fp_convert_to_fp:/fpo/DELAY_INVALID_OP' (delay__parameterized13) to 'fp_convert_to_fp:/fpo/DELAY_ACCUM_INPUT_OVERFLOW'
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 9024 (col length:94)
+BRAMs: 4032 (col length: RAMB18 288 RAMB36 144)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-6040] Register sin_addr_2s_comp/use_output_reg.D_OUT_reg driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+WARNING: [Synth 8-6040] Register cos_addr_2s_comp/use_output_reg.D_OUT_reg driving address of a ROM cannot be packed in BRAM/URAM because of presence of initial value.
+INFO: [Synth 8-3332] Sequential element (FLT_TO_FIX_OP.SPD.OP/COND_DET/MANT_CARRY.MANT_ALL_ZERO_DET/CARRY_ZERO_DET/CHAIN_GEN[3].CARRYS_DEL.NEED_DEL.CARRYS_FD) is unused and will be removed from module floating_point_v7_0_20_viv__1.
+INFO: [Synth 8-3332] Sequential element (FLT_TO_FIX_OP.SPD.OP/COND_DET/MANT_CARRY.MANT_ALL_ZERO_DET/CARRY_ZERO_DET/CHAIN_GEN[3].CARRYS_DEL.NEED_DEL.CARRYS_FD) is unused and will be removed from module floating_point_v7_0_20_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/max_rank_flops[1].max_rank_ff) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/twiddle_address_generator/N_MAX_P4.p4/tw2_reg_loop[0].tw2_reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[37].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[36].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[35].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[5].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[4].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[3].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[2].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[1].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[0].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[37].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[36].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[35].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[5].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[4].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[3].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[2].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[1].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_0i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[0].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[37].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[36].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[35].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[5].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[4].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[3].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[2].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[1].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[0].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[37].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[36].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[35].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[5].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[4].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[3].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[2].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[1].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_1i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[0].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[37].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[36].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[35].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[5].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[4].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[3].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[2].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[1].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[0].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[37].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[36].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[35].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[5].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[4].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[3].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[2].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[1].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_2i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[0].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[37].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[36].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[35].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[5].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[4].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[3].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[2].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[1].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3r/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[0].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[37].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[36].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[35].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[5].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[4].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[3].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[2].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[1].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+INFO: [Synth 8-3332] Sequential element (xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/pe/scaler_gen.scaler_3i/scale_mux/four_inputs.use_lut6.no_lut_sclr.four_to_one_mux[0].latency1.reg) is unused and will be removed from module xfft_v9_1_8_viv.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:00 ; elapsed = 00:01:13 . Memory (MB): peak = 4279.059 ; gain = 983.711 ; free physical = 195450 ; free virtual = 256459
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:11 ; elapsed = 00:01:26 . Memory (MB): peak = 4279.059 ; gain = 983.711 ; free physical = 196044 ; free virtual = 257053
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:01:15 ; elapsed = 00:01:30 . Memory (MB): peak = 4295.090 ; gain = 999.742 ; free physical = 195744 ; free virtual = 256753
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:01:18 ; elapsed = 00:01:37 . Memory (MB): peak = 4295.090 ; gain = 999.742 ; free physical = 194981 ; free virtual = 255990
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:01:22 ; elapsed = 00:01:41 . Memory (MB): peak = 4295.090 ; gain = 999.742 ; free physical = 193864 ; free virtual = 254873
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:22 ; elapsed = 00:01:41 . Memory (MB): peak = 4295.090 ; gain = 999.742 ; free physical = 193864 ; free virtual = 254873
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:24 ; elapsed = 00:01:43 . Memory (MB): peak = 4295.090 ; gain = 999.742 ; free physical = 193988 ; free virtual = 254997
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:24 ; elapsed = 00:01:43 . Memory (MB): peak = 4295.090 ; gain = 999.742 ; free physical = 193965 ; free virtual = 254974
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:24 ; elapsed = 00:01:43 . Memory (MB): peak = 4295.090 ; gain = 999.742 ; free physical = 193966 ; free virtual = 254975
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:25 ; elapsed = 00:01:43 . Memory (MB): peak = 4295.090 ; gain = 999.742 ; free physical = 193964 ; free virtual = 254973
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+DSP Final Report (the ' indicates corresponding REG is set)
++------------------------+----------------------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name             | DSP Mapping                      | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++------------------------+----------------------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|dsp_244                 | (not(C'+((D'+A'')'*B'')'))'      | 27     | 17     | 46     | 27     | 17     | 2    | 2    | 2    | 2    | 1     | 1    | 1    | 
+|dsp_244                 | (not(PCIN>>17+((D'+A')'*B'')'))' | 0      | 18     | -      | 27     | 45     | 1    | 2    | -    | 2    | 1     | 1    | 1    | 
+|dsp__parameterized0_242 | (C+(A''*B')')'                   | 27     | 17     | 19     | -      | 17     | 2    | 1    | 1    | -    | -     | 1    | 1    | 
+|dsp__parameterized0_242 | (PCIN>>17+(A'*B'')')'            | 0      | 18     | -      | -      | 45     | 1    | 2    | -    | -    | -     | 1    | 1    | 
+|dsp__parameterized1_238 | (C'+((D'-A'')'*B'')')'           | 27     | 17     | 46     | 27     | 17     | 2    | 2    | 2    | 2    | 1     | 1    | 1    | 
+|dsp__parameterized1_238 | (PCIN>>17+((D'-A')'*B'')')'      | 0      | 18     | -      | 27     | 45     | 1    | 2    | -    | 2    | 1     | 1    | 1    | 
+|dsp_225                 | (not(C'+((D'+A'')'*B'')'))'      | 27     | 17     | 46     | 27     | 17     | 2    | 2    | 2    | 2    | 1     | 1    | 1    | 
+|dsp_225                 | (not(PCIN>>17+((D'+A')'*B'')'))' | 0      | 18     | -      | 27     | 45     | 1    | 2    | -    | 2    | 1     | 1    | 1    | 
+|dsp__parameterized0_223 | (C+(A''*B')')'                   | 27     | 17     | 19     | -      | 17     | 2    | 1    | 1    | -    | -     | 1    | 1    | 
+|dsp__parameterized0_223 | (PCIN>>17+(A'*B'')')'            | 0      | 18     | -      | -      | 45     | 1    | 2    | -    | -    | -     | 1    | 1    | 
+|dsp__parameterized1_216 | (C'+((D'-A'')'*B'')')'           | 27     | 17     | 46     | 27     | 17     | 2    | 2    | 2    | 2    | 1     | 1    | 1    | 
+|dsp__parameterized1_216 | (PCIN>>17+((D'-A')'*B'')')'      | 0      | 18     | -      | 27     | 45     | 1    | 2    | -    | 2    | 1     | 1    | 1    | 
+|dsp                     | (not(C'+((D'+A'')'*B'')'))'      | 27     | 17     | 46     | 27     | 17     | 2    | 2    | 2    | 2    | 1     | 1    | 1    | 
+|dsp                     | (not(PCIN>>17+((D'+A')'*B'')'))' | 0      | 18     | -      | 27     | 45     | 1    | 2    | -    | 2    | 1     | 1    | 1    | 
+|dsp__parameterized0     | (C+(A''*B')')'                   | 27     | 17     | 19     | -      | 17     | 2    | 1    | 1    | -    | -     | 1    | 1    | 
+|dsp__parameterized0     | (PCIN>>17+(A'*B'')')'            | 0      | 18     | -      | -      | 45     | 1    | 2    | -    | -    | -     | 1    | 1    | 
+|dsp__parameterized1     | (C'+((D'-A'')'*B'')')'           | 27     | 17     | 46     | 27     | 17     | 2    | 2    | 2    | 2    | 1     | 1    | 1    | 
+|dsp__parameterized1     | (PCIN>>17+((D'-A')'*B'')')'      | 0      | 18     | -      | 27     | 45     | 1    | 2    | -    | 2    | 1     | 1    | 1    | 
++------------------------+----------------------------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+----------------+------+
+|      |Cell            |Count |
++------+----------------+------+
+|1     |CARRY8          |    58|
+|2     |DSP_ALU         |    18|
+|3     |DSP_A_B_DATA    |    18|
+|6     |DSP_C_DATA      |    18|
+|8     |DSP_MULTIPLIER  |    18|
+|10    |DSP_M_DATA      |    18|
+|11    |DSP_OUTPUT      |    18|
+|12    |DSP_PREADD      |    18|
+|13    |DSP_PREADD_DATA |    18|
+|15    |LUT1            |   164|
+|16    |LUT2            |  1068|
+|17    |LUT3            |  1293|
+|18    |LUT4            |   215|
+|19    |LUT5            |   159|
+|20    |LUT6            |  1295|
+|21    |MUXCY           |   972|
+|22    |MUXF7           |   114|
+|23    |MUXF8           |     2|
+|24    |RAMB18          |   109|
+|25    |RAMB36E2        |     9|
+|28    |SRL16E          |   748|
+|29    |SRLC32E         |    58|
+|30    |XORCY           |   901|
+|31    |FDE             |   108|
+|32    |FDRE            |  6036|
+|33    |FDSE            |    43|
++------+----------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:25 ; elapsed = 00:01:43 . Memory (MB): peak = 4295.090 ; gain = 999.742 ; free physical = 193970 ; free virtual = 254979
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 2544 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:12 ; elapsed = 00:01:32 . Memory (MB): peak = 4295.090 ; gain = 827.148 ; free physical = 193986 ; free virtual = 254995
+Synthesis Optimization Complete : Time (s): cpu = 00:01:25 ; elapsed = 00:01:43 . Memory (MB): peak = 4295.098 ; gain = 999.742 ; free physical = 193994 ; free virtual = 255003
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.24 ; elapsed = 00:00:00.23 . Memory (MB): peak = 4295.098 ; gain = 0.000 ; free physical = 194295 ; free virtual = 255304
+INFO: [Netlist 29-17] Analyzing 2282 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[0].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[0].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[1].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[1].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[2].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[2].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[3].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[3].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[4].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[4].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[5].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[5].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[0].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.need_extra_rams.extra_ram_loop[0].use_RAMB18.SDP_RAMB18_4x4096 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[0].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[0].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[1].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[1].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[2].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[2].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[3].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[3].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[4].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[4].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[5].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[5].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[1].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.need_extra_rams.extra_ram_loop[0].use_RAMB18.SDP_RAMB18_4x4096 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[0].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[0].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[1].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[1].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[2].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[2].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[3].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[3].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[4].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[4].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[5].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[5].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[2].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.need_extra_rams.extra_ram_loop[0].use_RAMB18.SDP_RAMB18_4x4096 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[0].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[0].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[1].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[1].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[2].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[2].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[3].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[3].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[4].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[4].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[5].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.main_ram_loop[5].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/single_channel.datapath/memories[3].blkmem_gen.use_bram_only.dpms/depth_12_s6_depth_11.need_extra_rams.extra_ram_loop[0].use_RAMB18.SDP_RAMB18_4x4096 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[0].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[0].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[0].use_RAMB18.ram_2k_loop[2].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[0].use_RAMB18.ram_2k_loop[3].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[0].use_RAMB18.ram_2k_loop[4].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[0].use_RAMB18.ram_2k_loop[5].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[0].use_RAMB18.ram_2k_loop[6].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[0].use_RAMB18.ram_2k_loop[7].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[1].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[1].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[1].use_RAMB18.ram_2k_loop[2].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[1].use_RAMB18.ram_2k_loop[3].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[1].use_RAMB18.ram_2k_loop[4].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[1].use_RAMB18.ram_2k_loop[5].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[1].use_RAMB18.ram_2k_loop[6].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[1].use_RAMB18.ram_2k_loop[7].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[2].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[2].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[2].use_RAMB18.ram_2k_loop[2].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[2].use_RAMB18.ram_2k_loop[3].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[2].use_RAMB18.ram_2k_loop[4].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[2].use_RAMB18.ram_2k_loop[5].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[2].use_RAMB18.ram_2k_loop[6].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[2].use_RAMB18.ram_2k_loop[7].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[3].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[3].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[3].use_RAMB18.ram_2k_loop[2].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[3].use_RAMB18.ram_2k_loop[3].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[3].use_RAMB18.ram_2k_loop[4].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[3].use_RAMB18.ram_2k_loop[5].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[3].use_RAMB18.ram_2k_loop[6].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[3].use_RAMB18.ram_2k_loop[7].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[4].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[4].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[4].use_RAMB18.ram_2k_loop[2].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[4].use_RAMB18.ram_2k_loop[3].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[4].use_RAMB18.ram_2k_loop[4].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[4].use_RAMB18.ram_2k_loop[5].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[4].use_RAMB18.ram_2k_loop[6].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[4].use_RAMB18.ram_2k_loop[7].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[5].use_RAMB18.ram_2k_loop[0].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[5].use_RAMB18.ram_2k_loop[1].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[5].use_RAMB18.ram_2k_loop[2].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[5].use_RAMB18.ram_2k_loop[3].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[5].use_RAMB18.ram_2k_loop[4].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[5].use_RAMB18.ram_2k_loop[5].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[5].use_RAMB18.ram_2k_loop[6].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Opt 31-422] The CLOCK_DOMAINS attribute on the BRAM cell U0/i_synth/xfft_inst/floating_point.xfft_inst/get_block_max_exp/delay_mem/blk_ram.use_bram_only.mem/depth_14.main_ram_loop[5].use_RAMB18.ram_2k_loop[7].SDP_RAMB18_9x2048 has been changed from INDEPENDENT to COMMON to match the clocking topology used for the BRAM.
+INFO: [Common 17-14] Message 'Opt 31-422' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4408.363 ; gain = 0.000 ; free physical = 195593 ; free virtual = 256603
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 400 instances were transformed.
+  (CARRY4) => CARRY8: 165 instances
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 18 instances
+  FDE => FDRE: 108 instances
+  RAMB18 => RAMB18E2: 109 instances
+
+Synth Design complete, checksum: 98e995f
+INFO: [Common 17-83] Releasing license: Synthesis
+213 Infos, 104 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:01:43 ; elapsed = 00:01:59 . Memory (MB): peak = 4408.363 ; gain = 1484.312 ; free physical = 196804 ; free virtual = 257813
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/xfft_0_synth_1/xfft_0.dcp' has been generated.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP xfft_0, cache-ID = 78f0f11c20647409
+INFO: [Coretcl 2-1174] Renamed 866 cell refs.
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/xfft_0_synth_1/xfft_0.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file xfft_0_utilization_synth.rpt -pb xfft_0_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Nov 27 16:32:29 2024...

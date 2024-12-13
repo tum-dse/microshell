@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="debug_bridge_dynamic_synth_1" LaunchPart="xcu280-fsvh2892-2L-e" LaunchTime="1732724224">
+  <File Type="VDS-TIMINGSUMMARY" Name="debug_bridge_dynamic_timing_summary_synth.rpt"/>
+  <File Type="RDS-DCP" Name="debug_bridge_dynamic.dcp"/>
+  <File Type="RDS-UTIL-PB" Name="debug_bridge_dynamic_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="debug_bridge_dynamic_utilization_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="debug_bridge_dynamic_timing_summary_synth.pb"/>
+  <File Type="PA-TCL" Name="debug_bridge_dynamic.tcl"/>
+  <File Type="REPORTS-TCL" Name="debug_bridge_dynamic_reports.tcl"/>
+  <File Type="RDS-RDS" Name="debug_bridge_dynamic.vds"/>
+  <File Type="RDS-PROPCONSTRS" Name="debug_bridge_dynamic_drc_synth.rpt"/>
+  <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/debug_bridge_dynamic">
+    <File Path="$PSRCDIR/sources_1/ip/debug_bridge_dynamic/debug_bridge_dynamic.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="debug_bridge_dynamic"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="BlockSrcs" RelSrcDir="$PSRCDIR/debug_bridge_dynamic">
+    <File Path="$PSRCDIR/sources_1/ip/debug_bridge_dynamic/debug_bridge_dynamic.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="debug_bridge_dynamic"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
+    <Filter Type="Utils"/>
+    <Config>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022">
+      <Desc>Vivado Synthesis Defaults</Desc>
+    </StratHandle>
+    <Step Id="synth_design"/>
+  </Strategy>
+</GenRun>

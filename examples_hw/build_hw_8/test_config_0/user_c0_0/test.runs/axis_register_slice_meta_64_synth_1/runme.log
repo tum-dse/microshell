@@ -1,0 +1,277 @@
+
+*** Running vivado
+    with args -log axis_register_slice_meta_64.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source axis_register_slice_meta_64.tcl
+
+
+****** Vivado v2022.1 (64-bit)
+  **** SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+  **** IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+
+source axis_register_slice_meta_64.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/scratch/anubhav/Coyote/examples_hw/build_hw_8/iprepo'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/share/xilinx/Vivado/2022.1/data/ip'.
+Command: synth_design -top axis_register_slice_meta_64 -part xcu280-fsvh2892-2L-e -incremental_mode off -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcu280'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcu280'
+INFO: [Device 21-403] Loading part xcu280-fsvh2892-2L-e
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 283918
+WARNING: [Synth 8-9501] generate block is allowed only inside loop and conditional generate in SystemVerilog mode [/share/xilinx/Vivado/2022.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:4023]
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 3636.180 ; gain = 343.797 ; free physical = 193724 ; free virtual = 254733
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'axis_register_slice_meta_64' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/synth/axis_register_slice_meta_64.v:53]
+INFO: [Synth 8-6157] synthesizing module 'axis_register_slice_v1_1_26_axis_register_slice' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/hdl/axis_register_slice_v1_1_vl_rfs.v:2837]
+INFO: [Synth 8-6157] synthesizing module 'axis_infrastructure_v1_1_0_util_axis2vector' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/hdl/axis_infrastructure_v1_1_vl_rfs.v:809]
+INFO: [Synth 8-6155] done synthesizing module 'axis_infrastructure_v1_1_0_util_axis2vector' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/hdl/axis_infrastructure_v1_1_vl_rfs.v:809]
+INFO: [Synth 8-6157] synthesizing module 'axis_register_slice_v1_1_26_axisc_register_slice' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/hdl/axis_register_slice_v1_1_vl_rfs.v:1935]
+INFO: [Synth 8-6155] done synthesizing module 'axis_register_slice_v1_1_26_axisc_register_slice' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/hdl/axis_register_slice_v1_1_vl_rfs.v:1935]
+INFO: [Synth 8-6157] synthesizing module 'axis_infrastructure_v1_1_0_util_vector2axis' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/hdl/axis_infrastructure_v1_1_vl_rfs.v:991]
+INFO: [Synth 8-6155] done synthesizing module 'axis_infrastructure_v1_1_0_util_vector2axis' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/hdl/axis_infrastructure_v1_1_vl_rfs.v:991]
+INFO: [Synth 8-6155] done synthesizing module 'axis_register_slice_v1_1_26_axis_register_slice' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/hdl/axis_register_slice_v1_1_vl_rfs.v:2837]
+INFO: [Synth 8-6155] done synthesizing module 'axis_register_slice_meta_64' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/synth/axis_register_slice_meta_64.v:53]
+WARNING: [Synth 8-7129] Port ACLK2X in module axis_register_slice_v1_1_26_axisc_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TSTRB[7] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TSTRB[6] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TSTRB[5] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TSTRB[4] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TSTRB[3] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TSTRB[2] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TSTRB[1] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TSTRB[0] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TKEEP[7] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TKEEP[6] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TKEEP[5] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TKEEP[4] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TKEEP[3] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TKEEP[2] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TKEEP[1] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TKEEP[0] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TLAST in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TID[0] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TDEST[0] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+WARNING: [Synth 8-7129] Port TUSER[0] in module axis_infrastructure_v1_1_0_util_axis2vector is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 3703.086 ; gain = 410.703 ; free physical = 195417 ; free virtual = 256427
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 3720.898 ; gain = 428.516 ; free physical = 195474 ; free virtual = 256483
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 3720.898 ; gain = 428.516 ; free physical = 195474 ; free virtual = 256483
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3720.898 ; gain = 0.000 ; free physical = 195473 ; free virtual = 256482
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/axis_register_slice_meta_64_ooc.xdc] for cell 'inst'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/axis_register_slice_meta_64_ooc.xdc] for cell 'inst'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/axis_register_slice_meta_64_synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/axis_register_slice_meta_64_synth_1/dont_touch.xdc]
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/axis_register_slice_meta_64_clocks.xdc] for cell 'inst'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_64/axis_register_slice_meta_64_clocks.xdc] for cell 'inst'
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3892.492 ; gain = 0.000 ; free physical = 195950 ; free virtual = 256959
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.02 . Memory (MB): peak = 3892.492 ; gain = 0.000 ; free physical = 195958 ; free virtual = 256967
+INFO: [Designutils 20-5008] Incremental synthesis strategy off
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 3892.492 ; gain = 600.109 ; free physical = 195971 ; free virtual = 256980
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xcu280-fsvh2892-2L-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 3892.492 ; gain = 600.109 ; free physical = 195979 ; free virtual = 256988
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = SOFT for inst. (constraint file  /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/axis_register_slice_meta_64_synth_1/dont_touch.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 3892.492 ; gain = 600.109 ; free physical = 195979 ; free virtual = 256988
+---------------------------------------------------------------------------------
+INFO: [Synth 8-4490] FSM extraction disabled for register 'state_reg' through user attribute
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:16 ; elapsed = 00:00:18 . Memory (MB): peak = 3892.492 ; gain = 600.109 ; free physical = 195976 ; free virtual = 256985
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Registers : 
+	               64 Bit    Registers := 2     
+	                2 Bit    Registers := 2     
+	                1 Bit    Registers := 2     
++---Muxes : 
+	   2 Input   64 Bit        Muxes := 1     
+	   5 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 2     
+	   4 Input    1 Bit        Muxes := 3     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 9024 (col length:94)
+BRAMs: 4032 (col length: RAMB18 288 RAMB36 144)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7129] Port aclk2x in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tstrb[7] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tstrb[6] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tstrb[5] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tstrb[4] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tstrb[3] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tstrb[2] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tstrb[1] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tstrb[0] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tkeep[7] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tkeep[6] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tkeep[5] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tkeep[4] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tkeep[3] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tkeep[2] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tkeep[1] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tkeep[0] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tlast in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tid[0] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tdest[0] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis_tuser[0] in module axis_register_slice_v1_1_26_axis_register_slice is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 3892.492 ; gain = 600.109 ; free physical = 195825 ; free virtual = 256834
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:27 ; elapsed = 00:00:32 . Memory (MB): peak = 4137.539 ; gain = 845.156 ; free physical = 193868 ; free virtual = 254877
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:27 ; elapsed = 00:00:32 . Memory (MB): peak = 4147.555 ; gain = 855.172 ; free physical = 193869 ; free virtual = 254878
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:27 ; elapsed = 00:00:32 . Memory (MB): peak = 4157.570 ; gain = 865.188 ; free physical = 193872 ; free virtual = 254882
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:31 ; elapsed = 00:00:36 . Memory (MB): peak = 4163.508 ; gain = 871.125 ; free physical = 194341 ; free virtual = 255350
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:31 ; elapsed = 00:00:36 . Memory (MB): peak = 4163.508 ; gain = 871.125 ; free physical = 194341 ; free virtual = 255350
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:31 ; elapsed = 00:00:36 . Memory (MB): peak = 4163.508 ; gain = 871.125 ; free physical = 194341 ; free virtual = 255350
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:31 ; elapsed = 00:00:36 . Memory (MB): peak = 4163.508 ; gain = 871.125 ; free physical = 194341 ; free virtual = 255350
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:31 ; elapsed = 00:00:36 . Memory (MB): peak = 4163.508 ; gain = 871.125 ; free physical = 194333 ; free virtual = 255342
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:31 ; elapsed = 00:00:36 . Memory (MB): peak = 4163.508 ; gain = 871.125 ; free physical = 194333 ; free virtual = 255342
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-----+------+
+|      |Cell |Count |
++------+-----+------+
+|1     |LUT1 |     2|
+|2     |LUT2 |     2|
+|3     |LUT3 |     1|
+|4     |LUT4 |    67|
+|5     |LUT5 |     1|
+|6     |LUT6 |     2|
+|7     |FDRE |   133|
+|8     |FDSE |     1|
++------+-----+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:31 ; elapsed = 00:00:36 . Memory (MB): peak = 4163.508 ; gain = 871.125 ; free physical = 194333 ; free virtual = 255342
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 22 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:25 ; elapsed = 00:00:30 . Memory (MB): peak = 4163.508 ; gain = 699.531 ; free physical = 194323 ; free virtual = 255332
+Synthesis Optimization Complete : Time (s): cpu = 00:00:31 ; elapsed = 00:00:36 . Memory (MB): peak = 4163.516 ; gain = 871.125 ; free physical = 194323 ; free virtual = 255332
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4179.445 ; gain = 0.000 ; free physical = 194632 ; free virtual = 255642
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4242.672 ; gain = 0.000 ; free physical = 194664 ; free virtual = 255674
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete, checksum: f5456dc2
+INFO: [Common 17-83] Releasing license: Synthesis
+28 Infos, 44 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:45 ; elapsed = 00:00:48 . Memory (MB): peak = 4242.672 ; gain = 1321.586 ; free physical = 194646 ; free virtual = 255656
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/axis_register_slice_meta_64_synth_1/axis_register_slice_meta_64.dcp' has been generated.
+INFO: [Coretcl 2-1648] Added synthesis output to IP cache for IP axis_register_slice_meta_64, cache-ID = 3157ce9bc1490cdc
+INFO: [Coretcl 2-1174] Renamed 2 cell refs.
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/axis_register_slice_meta_64_synth_1/axis_register_slice_meta_64.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file axis_register_slice_meta_64_utilization_synth.rpt -pb axis_register_slice_meta_64_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Nov 27 16:32:20 2024...

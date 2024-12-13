@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Wed Nov 27 16:20:29 2024
+# Process ID: 263585
+# Current directory: /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/axis_register_slice_meta_16_synth_1
+# Command line: vivado -log axis_register_slice_meta_16.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source axis_register_slice_meta_16.tcl
+# Log file: /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/axis_register_slice_meta_16_synth_1/axis_register_slice_meta_16.vds
+# Journal file: /scratch/anubhav/Coyote/examples_hw/build_hw_8/test_shell/test.runs/axis_register_slice_meta_16_synth_1/vivado.jou
+# Running On: amy, OS: Linux, CPU Frequency: 2117.183 MHz, CPU Physical cores: 32, Host memory: 2143237 MB
+#-----------------------------------------------------------
+source axis_register_slice_meta_16.tcl -notrace

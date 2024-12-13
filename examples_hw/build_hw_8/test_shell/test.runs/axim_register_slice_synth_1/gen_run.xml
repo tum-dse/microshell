@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenRun Id="axim_register_slice_synth_1" LaunchPart="xcu280-fsvh2892-2L-e" LaunchTime="1732724224">
+  <File Type="VDS-TIMINGSUMMARY" Name="axim_register_slice_timing_summary_synth.rpt"/>
+  <File Type="RDS-DCP" Name="axim_register_slice.dcp"/>
+  <File Type="RDS-UTIL-PB" Name="axim_register_slice_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="axim_register_slice_utilization_synth.rpt"/>
+  <File Type="VDS-TIMING-PB" Name="axim_register_slice_timing_summary_synth.pb"/>
+  <File Type="PA-TCL" Name="axim_register_slice.tcl"/>
+  <File Type="REPORTS-TCL" Name="axim_register_slice_reports.tcl"/>
+  <File Type="RDS-RDS" Name="axim_register_slice.vds"/>
+  <File Type="RDS-PROPCONSTRS" Name="axim_register_slice_drc_synth.rpt"/>
+  <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/axim_register_slice">
+    <File Path="$PSRCDIR/sources_1/ip/axim_register_slice/axim_register_slice.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="axim_register_slice"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="constrs_in" Type="BlockSrcs" RelSrcDir="$PSRCDIR/axim_register_slice">
+    <File Path="$PSRCDIR/sources_1/ip/axim_register_slice/axim_register_slice.xci">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <Config>
+      <Option Name="TopModule" Val="axim_register_slice"/>
+      <Option Name="UseBlackboxStub" Val="1"/>
+    </Config>
+  </FileSet>
+  <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
+    <Filter Type="Utils"/>
+    <Config>
+      <Option Name="TopAutoSet" Val="TRUE"/>
+    </Config>
+  </FileSet>
+  <Strategy Version="1" Minor="2">
+    <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2022">
+      <Desc>Vivado Synthesis Defaults</Desc>
+    </StratHandle>
+    <Step Id="synth_design"/>
+  </Strategy>
+</GenRun>

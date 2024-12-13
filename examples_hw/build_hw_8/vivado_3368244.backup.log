@@ -1,0 +1,1113 @@
+#-----------------------------------------------------------
+# Vivado v2022.1 (64-bit)
+# SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+# IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+# Start of session at: Wed Nov 27 08:33:42 2024
+# Process ID: 3368244
+# Current directory: /scratch/anubhav/Coyote/examples_hw/build_hw_8
+# Command line: vivado -mode tcl -source /scratch/anubhav/Coyote/examples_hw/build_hw_8/flow_comp.tcl -notrace
+# Log file: /scratch/anubhav/Coyote/examples_hw/build_hw_8/vivado.log
+# Journal file: /scratch/anubhav/Coyote/examples_hw/build_hw_8/vivado.jou
+# Running On: amy, OS: Linux, CPU Frequency: 1500.000 MHz, CPU Physical cores: 32, Host memory: 2143237 MB
+#-----------------------------------------------------------
+source /scratch/anubhav/Coyote/examples_hw/build_hw_8/flow_comp.tcl -notrace
+[1m[36m** Starting shell compilation ...(B[m
+[1m[36m**(B[m
+Command: open_checkpoint /scratch/anubhav/Coyote/examples_hw/build_hw_8/checkpoints/shell_linked.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.04 . Memory (MB): peak = 2915.117 ; gain = 0.000 ; free physical = 238642 ; free virtual = 294729
+INFO: [Device 21-403] Loading part xcu280-fsvh2892-2L-e
+Netlist sorting complete. Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 4076.641 ; gain = 19.000 ; free physical = 236466 ; free virtual = 292554
+INFO: [Netlist 29-17] Analyzing 5424 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 2 CPU seconds
+INFO: [Project 1-479] Netlist was created with Vivado 2022.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'inst_shell/xclk' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+WARNING: [Constraints 18-550] Could not create 'IBUF_LOW_PWR' constraint because net 'inst_static/inst_int_static/clk_wiz_0/clk_in1' is not directly connected to top level port. Synthesis is ignored for IBUF_LOW_PWR but preserved for implementation.
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Constraints 18-4422] SNAPPING_MODE is set so implementation will use the DERIVED_RANGES which may be different then the GRID_RANGES.
+INFO: [Constraints 18-4421] A LAGUNA range, without usable sites, was added to DERIVED_RANGES for purposes of keeping the Programmable Unit together within the reconfigurable pblock.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_debug_bridge/inst/bs_switch/inst/BSCAN_SWITCH.N_EXT_BSCAN.u_bufg_icon_tck' is LOCed to site 'BUFGCE_X0Y73'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/clk_wiz_0/inst/BUFGCE_DIV_CLK2_inst' is LOCed to site 'BUFGCE_DIV_X0Y12'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/clk_wiz_0/inst/clkout1_buf' is LOCed to site 'BUFGCE_X0Y79'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/bufg_gt_sysclk' is LOCed to site 'BUFG_GT_X1Y34'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[0].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y2'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[10].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y64'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[11].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y54'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[12].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y91'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[13].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y95'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[14].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y89'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[15].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y87'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[1].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y23'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[2].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y5'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[3].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y3'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[4].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y44'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[5].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y28'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[6].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y24'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[7].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y41'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[8].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y56'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[9].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y63'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_coreclk' is LOCed to site 'BUFG_GT_X1Y85'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_intclk' is LOCed to site 'BUFG_GT_X1Y84'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_mcapclk' is LOCed to site 'BUFG_GT_X1Y94'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_pclk' is LOCed to site 'BUFG_GT_X1Y93'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_userclk' is LOCed to site 'BUFG_GT_X1Y86'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+INFO: [Project 1-853] Binary constraint restore complete.
+Reading XDEF placement.
+Reading placer database...
+Reading XDEF routing.
+Read XDEF Files: Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 7168.641 ; gain = 192.914 ; free physical = 240831 ; free virtual = 296918
+Restored from archive | CPU: 9.190000 secs | Memory: 177.536652 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 7168.641 ; gain = 192.914 ; free physical = 240831 ; free virtual = 296918
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_debug_bridge/inst/bs_switch/inst/BSCAN_SWITCH.N_EXT_BSCAN.u_bufg_icon_tck' is LOCed to site 'BUFGCE_X0Y73'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/clk_wiz_0/inst/BUFGCE_DIV_CLK2_inst' is LOCed to site 'BUFGCE_DIV_X0Y12'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/clk_wiz_0/inst/clkout1_buf' is LOCed to site 'BUFGCE_X0Y79'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/bufg_gt_sysclk' is LOCed to site 'BUFG_GT_X1Y34'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[0].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y2'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[10].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y64'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[11].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y54'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[12].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y91'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[13].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y95'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[14].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y89'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[15].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y87'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[1].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y23'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[2].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y5'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[3].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y3'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[4].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y44'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[5].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y28'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[6].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y24'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[7].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y41'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[8].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y56'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/gt_wizard.gtwizard_top_i/design_static_xdma_0_0_pcie4c_ip_gt_i/inst/gen_gtwizard_gtye4_top.design_static_xdma_0_0_pcie4c_ip_gt_gtwizard_gtye4_inst/gen_gtwizard_gtye4.gen_cpll_cal_gtye4.gen_cpll_cal_inst[9].gen_inst_cpll_cal.gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_inst/gtwizard_ultrascale_v1_7_13_gtye4_cpll_cal_tx_i/bufg_gt_txoutclkmon_inst' is LOCed to site 'BUFG_GT_X1Y63'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_coreclk' is LOCed to site 'BUFG_GT_X1Y85'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_intclk' is LOCed to site 'BUFG_GT_X1Y84'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_mcapclk' is LOCed to site 'BUFG_GT_X1Y94'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_pclk' is LOCed to site 'BUFG_GT_X1Y93'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+WARNING: [Constraints 18-4434] Global Clock Buffer 'inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/bufg_gt_userclk' is LOCed to site 'BUFG_GT_X1Y86'. Using a LOC constraint to assign the placement of a Global Clock Buffer can result in sub-optimal placement results.
+Resolution: Remove the LOC constraint and use the CLOCK_REGION constraint to assign a Global Clock Buffer to a CLOCK_REGION.
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.04 . Memory (MB): peak = 7168.641 ; gain = 0.000 ; free physical = 240904 ; free virtual = 296992
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 1295 instances were transformed.
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 18 instances
+  RAM16X1D => RAM32X1D (RAMD32(x2)): 7 instances
+  RAM256X1S => RAM256X1S (MUXF7(x2), MUXF8, RAMS64E(x4)): 9 instances
+  RAM32M => RAM32M (RAMD32(x6), RAMS32(x2)): 29 instances
+  RAM32M16 => RAM32M16 (RAMD32(x14), RAMS32(x2)): 1026 instances
+  RAM32X1D => RAM32X1D (RAMD32(x2)): 126 instances
+  RAM64M => RAM64M (RAMD64E(x4)): 2 instances
+  RAM64M8 => RAM64M8 (RAMD64E(x8)): 78 instances
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2022.1 (64-bit) build 3526262
+open_checkpoint: Time (s): cpu = 00:03:41 ; elapsed = 00:02:43 . Memory (MB): peak = 7168.641 ; gain = 4253.523 ; free physical = 240939 ; free virtual = 297027
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xcu280'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcu280'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Project 1-461] DRC finished with 0 Errors, 216 Warnings
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:19 ; elapsed = 00:00:15 . Memory (MB): peak = 7385.719 ; gain = 217.078 ; free physical = 240821 ; free virtual = 296908
+
+Starting Cache Timing Information Task
+Ending Cache Timing Information Task | Checksum: 221e1cf65
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 7385.719 ; gain = 0.000 ; free physical = 240834 ; free virtual = 296921
+
+Starting Logic Optimization Task
+
+Phase 1 Generate And Synthesize Debug Cores
+INFO: [Chipscope 16-329] Generating Script for core instance : inst_shell/inst_debug_bridge_dynamic/inst/xsdbm 
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/share/xilinx/Vivado/2022.1/data/ip'.
+INFO: [IP_Flow 19-3806] Processing IP xilinx.com:ip:xsdbm:3.0 for cell xsdbm_CV.
+get_clocks: Time (s): cpu = 00:01:05 ; elapsed = 00:00:15 . Memory (MB): peak = 7559.469 ; gain = 0.000 ; free physical = 239651 ; free virtual = 295739
+Netlist sorting complete. Time (s): cpu = 00:00:00.21 ; elapsed = 00:00:00.24 . Memory (MB): peak = 7559.469 ; gain = 0.000 ; free physical = 239652 ; free virtual = 295739
+Phase 1 Generate And Synthesize Debug Cores | Checksum: 2a2309fdb
+
+Time (s): cpu = 00:02:41 ; elapsed = 00:02:10 . Memory (MB): peak = 7559.469 ; gain = 44.625 ; free physical = 239785 ; free virtual = 295873
+
+Phase 2 Retarget
+WARNING: [Opt 31-155] Driverless net inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/m_axis_tready is driving LUT input pin I0 which is used by the LUT equation. If the LUT is not removed or a driver added, this warning will become an error. LUT cell name: inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/r0_reg_sel[15]_i_1
+WARNING: [Opt 31-155] Driverless net inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/s_axis_tvalid is driving LUT input pin I0 which is used by the LUT equation. If the LUT is not removed or a driver added, this warning will become an error. LUT cell name: inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/state[0]_i_1
+WARNING: [Opt 31-155] Driverless net inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/m_axis_tready is driving LUT input pin I0 which is used by the LUT equation. If the LUT is not removed or a driver added, this warning will become an error. LUT cell name: inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/state[0]_i_2
+WARNING: [Opt 31-155] Driverless net inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/s_axis_tvalid is driving LUT input pin I0 which is used by the LUT equation. If the LUT is not removed or a driver added, this warning will become an error. LUT cell name: inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/state[1]_i_1
+WARNING: [Opt 31-155] Driverless net inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/s_axis_tvalid is driving LUT input pin I0 which is used by the LUT equation. If the LUT is not removed or a driver added, this warning will become an error. LUT cell name: inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/state[2]_i_1
+WARNING: [Opt 31-155] Driverless net inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/m_axis_tready is driving LUT input pin I5 which is used by the LUT equation. If the LUT is not removed or a driver added, this warning will become an error. LUT cell name: inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/r0_reg_sel[0]_i_1
+WARNING: [Opt 31-155] Driverless net inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/m_axis_tready is driving LUT input pin I4 which is used by the LUT equation. If the LUT is not removed or a driver added, this warning will become an error. LUT cell name: inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/state[1]_i_2
+WARNING: [Opt 31-155] Driverless net inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/m_axis_tready is driving LUT input pin I3 which is used by the LUT equation. If the LUT is not removed or a driver added, this warning will become an error. LUT cell name: inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_send/inst/gen_upsizer_conversion.axisc_upsizer_0/state[2]_i_1
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_dynamic/inst_dyn_crossbar/inst_dyn_crossbar_0/inst/gen_sasd.crossbar_sasd_0/addr_arbiter_inst/m_ready_d[2]_i_2 into driver instance inst_shell/inst_dynamic/inst_dyn_crossbar/inst_dyn_crossbar_0/inst/gen_sasd.crossbar_sasd_0/addr_arbiter_inst/m_ready_d[2]_i_4, which resulted in an inversion of 3 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_dynamic/inst_mmu_top/genblk1[0].inst_mmu_region/inst_fsm_rd/inst_req_i_1 into driver instance inst_shell/inst_dynamic/inst_mmu_top/genblk1[0].inst_mmu_region/inst_fsm_rd/inst_ack_host_buff/inst_fifo/inst_req_i_4, which resulted in an inversion of 3 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/xn_index_counter/cnt_async/i_baseblox.i_baseblox_addsub/no_pipelining.the_addsub/i_lut6.i_lut6_addsub/i_simple_model.carryxor0_i_1 into driver instance inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/xn_index_counter/cnt_async_i_14__0, which resulted in an inversion of 1 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/nat_out_xk_index.no_cyclic_prefix.xk_index_counter/cnt_async/i_baseblox.i_baseblox_addsub/no_pipelining.the_addsub/i_lut6.i_lut6_addsub/i_simple_model.carryxor0_i_1 into driver instance inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/nat_out_xk_index.no_cyclic_prefix.xk_index_counter/cnt_async_i_14, which resulted in an inversion of 1 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/pe_cnt/cnt_async/i_baseblox.i_baseblox_addsub/no_pipelining.the_addsub/i_lut6.i_lut6_addsub/i_simple_model.carryxor0_i_1 into driver instance inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/pe_cnt/cnt_async_i_5, which resulted in an inversion of 1 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/rank_0_cnt/cnt_async/i_baseblox.i_baseblox_addsub/no_pipelining.the_addsub/i_lut6.i_lut6_addsub/i_simple_model.carryxor0_i_1 into driver instance inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/rank_0_cnt/cnt_async_i_3, which resulted in an inversion of 1 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/rn_0_cnt/cnt_async/i_baseblox.i_baseblox_addsub/no_pipelining.the_addsub/i_lut6.i_lut6_addsub/i_simple_model.carryxor0_i_1 into driver instance inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_xfft/U0/i_synth/xfft_inst/floating_point.xfft_inst/fft/non_floating_point.arch_b.xfft_inst/control/control/rn_0_cnt/cnt_async_i_12, which resulted in an inversion of 1 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m00_couplers/auto_cc/inst/gen_clock_conv.gen_async_conv.asyncfifo_axi/inst_fifo_gen/gaxi_full_lite.gread_ch.grdch2.axi_rdch/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gnsckt_wrst.rst_wr_reg2_inst_i_1 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m00_couplers/auto_cc/inst/gen_clock_conv.gen_async_conv.asyncfifo_axi_i_1, which resulted in an inversion of 1 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m00_couplers/auto_ds/inst/gen_downsizer.gen_simple_downsizer.axi_downsizer_inst/USE_WRITE.USE_SPLIT.write_resp_inst/first_mi_word_i_2 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m00_couplers/auto_ds/inst/gen_downsizer.gen_simple_downsizer.axi_downsizer_inst/USE_WRITE.USE_SPLIT.write_resp_inst/s_axi_bvalid_INST_0_i_1, which resulted in an inversion of 5 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m00_couplers/auto_pc/inst/gen_axilite.gen_b2s_conv.axilite_b2s/RD.ar_channel_0/ar_cmd_fsm_0/axaddr_offset_r[0]_i_1__0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m00_couplers/auto_pc/inst/gen_axilite.gen_b2s_conv.axilite_b2s/RD.ar_channel_0/ar_cmd_fsm_0/axaddr_offset_r[0]_i_2__0, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m00_couplers/auto_pc/inst/gen_axilite.gen_b2s_conv.axilite_b2s/WR.aw_channel_0/aw_cmd_fsm_0/axaddr_offset_r[0]_i_1 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m00_couplers/auto_pc/inst/gen_axilite.gen_b2s_conv.axilite_b2s/WR.aw_channel_0/aw_cmd_fsm_0/axaddr_offset_r[0]_i_2, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m01_couplers/auto_cc/inst/gen_clock_conv.gen_async_conv.asyncfifo_axi/inst_fifo_gen/gaxi_full_lite.gread_ch.grdch2.axi_rdch/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gnsckt_wrst.rst_wr_reg2_inst_i_1 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m01_couplers/auto_cc/inst/gen_clock_conv.gen_async_conv.asyncfifo_axi_i_1, which resulted in an inversion of 1 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m01_couplers/auto_ds/inst/gen_downsizer.gen_simple_downsizer.axi_downsizer_inst/USE_WRITE.USE_SPLIT.write_resp_inst/first_mi_word_i_2 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m01_couplers/auto_ds/inst/gen_downsizer.gen_simple_downsizer.axi_downsizer_inst/USE_WRITE.USE_SPLIT.write_resp_inst/s_axi_bvalid_INST_0_i_1, which resulted in an inversion of 5 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m01_couplers/auto_pc/inst/gen_axilite.gen_b2s_conv.axilite_b2s/RD.ar_channel_0/ar_cmd_fsm_0/axaddr_offset_r[0]_i_1__0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m01_couplers/auto_pc/inst/gen_axilite.gen_b2s_conv.axilite_b2s/RD.ar_channel_0/ar_cmd_fsm_0/axaddr_offset_r[0]_i_2__0, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m01_couplers/auto_pc/inst/gen_axilite.gen_b2s_conv.axilite_b2s/WR.aw_channel_0/aw_cmd_fsm_0/axaddr_offset_r[0]_i_1 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m01_couplers/auto_pc/inst/gen_axilite.gen_b2s_conv.axilite_b2s/WR.aw_channel_0/aw_cmd_fsm_0/axaddr_offset_r[0]_i_2, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m02_couplers/auto_cc/inst/gen_clock_conv.gen_async_conv.asyncfifo_axi/inst_fifo_gen/gaxi_full_lite.gread_ch.grdch2.axi_rdch/grf.rf/rstblk/ngwrdrst.grst.g7serrst.gnsckt_wrst.rst_wr_reg2_inst_i_1 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m02_couplers/auto_cc/inst/gen_clock_conv.gen_async_conv.asyncfifo_axi_i_1, which resulted in an inversion of 1 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m02_couplers/auto_ds/inst/gen_downsizer.gen_simple_downsizer.axi_downsizer_inst/USE_READ.read_addr_inst/cmd_queue/inst/current_word_1[3]_i_1 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m02_couplers/auto_ds/inst/gen_downsizer.gen_simple_downsizer.axi_downsizer_inst/USE_READ.read_addr_inst/cmd_queue/inst/current_word_1[3]_i_2, which resulted in an inversion of 2 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m02_couplers/auto_ds/inst/gen_downsizer.gen_simple_downsizer.axi_downsizer_inst/USE_WRITE.USE_SPLIT.write_resp_inst/first_mi_word_i_2 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/m02_couplers/auto_ds/inst/gen_downsizer.gen_simple_downsizer.axi_downsizer_inst/USE_WRITE.USE_SPLIT.write_resp_inst/s_axi_bvalid_INST_0_i_1, which resulted in an inversion of 5 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/addr_arbiter_ar/gen_no_arbiter.m_target_hot_i[0]_i_1 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/addr_arbiter_ar/gen_no_arbiter.m_target_hot_i[0]_i_2, which resulted in an inversion of 2 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/addr_arbiter_aw/gen_no_arbiter.m_target_hot_i[0]_i_1__0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/addr_arbiter_aw/gen_no_arbiter.m_target_hot_i[0]_i_2__0, which resulted in an inversion of 2 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.active_target[49]_i_1 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.active_target[49]_i_2__0, which resulted in an inversion of 5 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.active_target[57]_i_2 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/addr_arbiter_ar/gen_multi_thread.active_target[57]_i_8, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[0]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[0]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[1]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[1]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[2]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[2]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[3]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[3]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[4]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[4]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[5]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_read.si_transactor_ar/gen_multi_thread.arbiter_resp_inst/s_axi_rid[5]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.active_target[57]_i_2__0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/addr_arbiter_aw/gen_multi_thread.active_target[57]_i_8__0, which resulted in an inversion of 8 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[0]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[0]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[1]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[1]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[2]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[2]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[3]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[3]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[4]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[4]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-1287] Pulled Inverter inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[5]_INST_0 into driver instance inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_slave_slots[0].gen_si_write.si_transactor_aw/gen_multi_thread.arbiter_resp_inst/s_axi_bid[5]_INST_0_i_1, which resulted in an inversion of 9 pins
+INFO: [Opt 31-138] Pushed 167 inverter(s) to 12532 load pin(s).
+CRITICAL WARNING: [Opt 31-430] Found a FDRE that its data pin is undriven. Driver is required to prevent unexpected behavior:inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/r0_data_reg[0]
+CRITICAL WARNING: [Opt 31-430] Found a FDRE that its data pin is undriven. Driver is required to prevent unexpected behavior:inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/r0_id_reg[0]
+CRITICAL WARNING: [Opt 31-430] Found a FDRE that its data pin is undriven. Driver is required to prevent unexpected behavior:inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/r0_last_reg
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 2 Retarget | Checksum: 22210e7ee
+
+Time (s): cpu = 00:04:04 ; elapsed = 00:02:57 . Memory (MB): peak = 7654.742 ; gain = 139.898 ; free physical = 240327 ; free virtual = 296415
+INFO: [Opt 31-389] Phase Retarget created 2321 cells and removed 2795 cells
+INFO: [Opt 31-1021] In phase Retarget, 5745 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 3 Constant propagation
+CRITICAL WARNING: [Opt 31-430] Found a FDRE that its data pin is undriven. Driver is required to prevent unexpected behavior:inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/r0_data_reg[0]
+CRITICAL WARNING: [Opt 31-430] Found a FDRE that its data pin is undriven. Driver is required to prevent unexpected behavior:inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/r0_id_reg[0]
+CRITICAL WARNING: [Opt 31-430] Found a FDRE that its data pin is undriven. Driver is required to prevent unexpected behavior:inst_shell/inst_dynamic/inst_user_wrapper_0/inst_user_c0_0/inst_dwidth_recv/inst/gen_downsizer_conversion.axisc_downsizer_0/r0_last_reg
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Phase 3 Constant propagation | Checksum: 18b118a75
+
+Time (s): cpu = 00:04:14 ; elapsed = 00:03:08 . Memory (MB): peak = 7654.742 ; gain = 139.898 ; free physical = 240357 ; free virtual = 296444
+INFO: [Opt 31-389] Phase Constant propagation created 557 cells and removed 13713 cells
+INFO: [Opt 31-1021] In phase Constant propagation, 1644 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 4 Sweep
+Phase 4 Sweep | Checksum: 17b63cb51
+
+Time (s): cpu = 00:04:48 ; elapsed = 00:03:42 . Memory (MB): peak = 7654.742 ; gain = 139.898 ; free physical = 240455 ; free virtual = 296542
+INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 59506 cells
+INFO: [Opt 31-1021] In phase Sweep, 766722 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 5 BUFG optimization
+INFO: [Opt 31-1077] Phase BUFG optimization inserted 0 global clock buffer(s) for CLOCK_LOW_FANOUT.
+INFO: [Opt 31-274] Optimized connectivity to 1 cascaded buffer cells
+Phase 5 BUFG optimization | Checksum: 1a2be311e
+
+Time (s): cpu = 00:04:58 ; elapsed = 00:03:50 . Memory (MB): peak = 7654.742 ; gain = 139.898 ; free physical = 240627 ; free virtual = 296714
+INFO: [Opt 31-662] Phase BUFG optimization created 0 cells of which 0 are BUFGs and removed 1 cells.
+INFO: [Opt 31-1021] In phase BUFG optimization, 6 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 6 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 6 Shift Register Optimization | Checksum: 1a2be311e
+
+Time (s): cpu = 00:05:02 ; elapsed = 00:03:54 . Memory (MB): peak = 7654.742 ; gain = 139.898 ; free physical = 240633 ; free virtual = 296720
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 7 Post Processing Netlist
+Phase 7 Post Processing Netlist | Checksum: 2007572ef
+
+Time (s): cpu = 00:05:08 ; elapsed = 00:04:00 . Memory (MB): peak = 7654.742 ; gain = 139.898 ; free physical = 240668 ; free virtual = 296756
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+INFO: [Opt 31-1021] In phase Post Processing Netlist, 1770 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |            2321  |            2795  |                                           5745  |
+|  Constant propagation         |             557  |           13713  |                                           1644  |
+|  Sweep                        |               0  |           59506  |                                         766722  |
+|  BUFG optimization            |               0  |               1  |                                              6  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                           1770  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00.51 ; elapsed = 00:00:00.52 . Memory (MB): peak = 7654.742 ; gain = 0.000 ; free physical = 240697 ; free virtual = 296785
+Ending Logic Optimization Task | Checksum: 2b948cd73
+
+Time (s): cpu = 00:05:18 ; elapsed = 00:04:09 . Memory (MB): peak = 7654.742 ; gain = 139.898 ; free physical = 240702 ; free virtual = 296790
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+INFO: [Pwropt 34-232] Skipping BRAM gating because all BRAMs are in high frequency (i.e. period < 3.12 ns) clock domains.
+INFO: [Pwropt 34-162] WRITE_MODE attribute of 0 BRAM(s) out of a total of 154 has been updated to save power. Run report_power_opt to get a complete listing of the BRAMs updated.
+Ending Power Optimization Task | Checksum: 2b948cd73
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 7910.742 ; gain = 256.000 ; free physical = 240394 ; free virtual = 296481
+
+Starting Final Cleanup Task
+Ending Final Cleanup Task | Checksum: 2b948cd73
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 7910.742 ; gain = 0.000 ; free physical = 240426 ; free virtual = 296514
+
+Starting Netlist Obfuscation Task
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 7910.742 ; gain = 0.000 ; free physical = 240426 ; free virtual = 296514
+Ending Netlist Obfuscation Task | Checksum: 2b948cd73
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 7910.742 ; gain = 0.000 ; free physical = 240508 ; free virtual = 296595
+INFO: [Common 17-83] Releasing license: Implementation
+83 Infos, 60 Warnings, 6 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+opt_design: Time (s): cpu = 00:06:00 ; elapsed = 00:04:49 . Memory (MB): peak = 7910.742 ; gain = 742.102 ; free physical = 240508 ; free virtual = 296595
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:36 ; elapsed = 00:00:10 . Memory (MB): peak = 7958.766 ; gain = 40.020 ; free physical = 239535 ; free virtual = 295622
+report_design_analysis: Time (s): cpu = 00:00:32 ; elapsed = 00:00:20 . Memory (MB): peak = 7966.770 ; gain = 8.004 ; free physical = 239550 ; free virtual = 295637
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/checkpoints/shell_opted.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:02:09 ; elapsed = 00:01:04 . Memory (MB): peak = 7966.770 ; gain = 56.027 ; free physical = 240361 ; free virtual = 296449
+[1m[36m** Shell opt_design completed(B[m
+[1m[36m**(B[m
+Command: place_design
+Attempting to get a license for feature 'Implementation' and/or device 'xcu280'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcu280'
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors, 216 Warnings
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+Starting Placer Task
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 8 CPUs
+
+Phase 1 Placer Initialization
+
+Phase 1.1 Placer Initialization Netlist Sorting
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 8195.375 ; gain = 0.000 ; free physical = 239901 ; free virtual = 295989
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: 1224896c3
+
+Time (s): cpu = 00:00:01 ; elapsed = 00:00:01 . Memory (MB): peak = 8195.375 ; gain = 0.000 ; free physical = 239901 ; free virtual = 295989
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.03 . Memory (MB): peak = 8195.375 ; gain = 0.000 ; free physical = 239872 ; free virtual = 295959
+
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: 111c75c34
+
+Time (s): cpu = 00:01:55 ; elapsed = 00:01:50 . Memory (MB): peak = 8357.883 ; gain = 162.508 ; free physical = 240038 ; free virtual = 296125
+
+Phase 1.3 Build Placer Netlist Model
+Phase 1.3 Build Placer Netlist Model | Checksum: 1983b49ad
+
+Time (s): cpu = 00:04:48 ; elapsed = 00:03:06 . Memory (MB): peak = 9082.500 ; gain = 887.125 ; free physical = 239147 ; free virtual = 295234
+
+Phase 1.4 Constrain Clocks/Macros
+Phase 1.4 Constrain Clocks/Macros | Checksum: 1983b49ad
+
+Time (s): cpu = 00:04:50 ; elapsed = 00:03:08 . Memory (MB): peak = 9082.500 ; gain = 887.125 ; free physical = 239139 ; free virtual = 295226
+Phase 1 Placer Initialization | Checksum: 1983b49ad
+
+Time (s): cpu = 00:04:55 ; elapsed = 00:03:14 . Memory (MB): peak = 9082.500 ; gain = 887.125 ; free physical = 239155 ; free virtual = 295243
+
+Phase 2 Global Placement
+
+Phase 2.1 Floorplanning
+
+Phase 2.1.1 Partition Driven Placement
+
+Phase 2.1.1.1 PBP: Partition Driven Placement
+Phase 2.1.1.1 PBP: Partition Driven Placement | Checksum: 117ffaab8
+
+Time (s): cpu = 00:06:50 ; elapsed = 00:04:00 . Memory (MB): peak = 9148.469 ; gain = 953.094 ; free physical = 238946 ; free virtual = 295034
+
+Phase 2.1.1.2 PBP: Clock Region Placement
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_CORECLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_PCLK2_GT due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_USERCLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+Phase 2.1.1.2 PBP: Clock Region Placement | Checksum: 19ea5ce69
+
+Time (s): cpu = 00:07:12 ; elapsed = 00:04:23 . Memory (MB): peak = 9205.672 ; gain = 1010.297 ; free physical = 238923 ; free virtual = 295011
+
+Phase 2.1.1.3 PBP: Compute Congestion
+Phase 2.1.1.3 PBP: Compute Congestion | Checksum: 19ea5ce69
+
+Time (s): cpu = 00:07:24 ; elapsed = 00:04:28 . Memory (MB): peak = 9909.363 ; gain = 1713.988 ; free physical = 238231 ; free virtual = 294318
+
+Phase 2.1.1.4 PBP: UpdateTiming
+Phase 2.1.1.4 PBP: UpdateTiming | Checksum: 23cf1fcbc
+
+Time (s): cpu = 00:08:23 ; elapsed = 00:04:42 . Memory (MB): peak = 9939.379 ; gain = 1744.004 ; free physical = 238601 ; free virtual = 294688
+
+Phase 2.1.1.5 PBP: Add part constraints
+Phase 2.1.1.5 PBP: Add part constraints | Checksum: 23cf1fcbc
+
+Time (s): cpu = 00:08:24 ; elapsed = 00:04:43 . Memory (MB): peak = 9939.379 ; gain = 1744.004 ; free physical = 238602 ; free virtual = 294689
+Phase 2.1.1 Partition Driven Placement | Checksum: 23cf1fcbc
+
+Time (s): cpu = 00:08:25 ; elapsed = 00:04:45 . Memory (MB): peak = 9939.379 ; gain = 1744.004 ; free physical = 238696 ; free virtual = 294783
+Phase 2.1 Floorplanning | Checksum: 23cf1fcbc
+
+Time (s): cpu = 00:08:26 ; elapsed = 00:04:45 . Memory (MB): peak = 9939.379 ; gain = 1744.004 ; free physical = 238696 ; free virtual = 294783
+
+Phase 2.2 Physical Synthesis After Floorplan
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 9939.379 ; gain = 0.000 ; free physical = 238719 ; free virtual = 294807
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                         |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------
+|  PSIP Post Floorplan SLR Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:01  |
+|  Total                                |            0  |              0  |                     0  |           0  |           1  |  00:00:01  |
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.2 Physical Synthesis After Floorplan | Checksum: 23cf1fcbc
+
+Time (s): cpu = 00:08:29 ; elapsed = 00:04:48 . Memory (MB): peak = 9939.379 ; gain = 1744.004 ; free physical = 238728 ; free virtual = 294816
+
+Phase 2.3 Update Timing before SLR Path Opt
+Phase 2.3 Update Timing before SLR Path Opt | Checksum: 23cf1fcbc
+
+Time (s): cpu = 00:08:32 ; elapsed = 00:04:50 . Memory (MB): peak = 9939.379 ; gain = 1744.004 ; free physical = 238730 ; free virtual = 294818
+
+Phase 2.4 Post-Processing in Floorplanning
+Phase 2.4 Post-Processing in Floorplanning | Checksum: 23a1afd9b
+
+Time (s): cpu = 00:08:33 ; elapsed = 00:04:52 . Memory (MB): peak = 9939.379 ; gain = 1744.004 ; free physical = 238747 ; free virtual = 294835
+
+Phase 2.5 Global Placement Core
+
+Phase 2.5.1 Physical Synthesis In Placer
+INFO: [Physopt 32-1035] Found 0 LUTNM shape to break, 1780 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 0, two critical 0, total 0, new lutff created 0
+INFO: [Physopt 32-1138] End 1 Pass. Optimized 817 nets or LUTs. Breaked 0 LUT, combined 817 existing LUTs and moved 0 existing LUT
+INFO: [Physopt 32-1030] Pass 1. Identified 21 candidate driver sets for equivalent driver rewiring.
+INFO: [Physopt 32-661] Optimized 14 nets.  Re-placed 235 instances.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 14 nets or cells. Created 0 new cell, deleted 6 existing cells and moved 235 existing cells
+Netlist sorting complete. Time (s): cpu = 00:00:00.31 ; elapsed = 00:00:00.38 . Memory (MB): peak = 10834.750 ; gain = 0.000 ; free physical = 238001 ; free virtual = 294089
+INFO: [Physopt 32-76] Pass 1. Identified 5 candidate nets for fanout optimization.
+INFO: [Physopt 32-81] Processed net inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/proc_sys_reset_a/U0/peripheral_aresetn[0]. Replicated 66 times.
+INFO: [Physopt 32-81] Processed net inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/s00_couplers/s00_regslice/inst/r.r_pipe/S_READY. Replicated 7 times.
+INFO: [Physopt 32-81] Processed net inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_master_slots[0].reg_slice_mi/r.r_pipe/s_ready_i_reg_0. Replicated 6 times.
+INFO: [Physopt 32-81] Processed net inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/axi_interconnect_0/xbar/inst/gen_samd.crossbar_samd/gen_master_slots[2].reg_slice_mi/r.r_pipe/s_ready_i_reg_0. Replicated 1 times.
+INFO: [Physopt 32-232] Optimized 4 nets. Created 1 new instance.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 4 nets or cells. Created 1 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00.72 ; elapsed = 00:00:00.8 . Memory (MB): peak = 10834.750 ; gain = 0.000 ; free physical = 238076 ; free virtual = 294164
+INFO: [Physopt 32-456] No candidate cells for DSP register optimization found in the design.
+INFO: [Physopt 32-775] End 2 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-1123] No candidate cells found for Shift Register to Pipeline optimization
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-677] No candidate cells for Shift Register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-526] No candidate cells for BRAM register optimization found in the design
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-846] No candidate cells for URAM register optimization found in the design
+INFO: [Physopt 32-775] End 2 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.04 . Memory (MB): peak = 10834.750 ; gain = 0.000 ; free physical = 238079 ; free virtual = 294167
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |            0  |            817  |                   817  |           0  |           1  |  00:00:02  |
+|  Retime                                           |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Equivalent Driver Rewiring                       |            0  |              6  |                    14  |           0  |           1  |  00:00:04  |
+|  Very High Fanout                                 |            1  |              0  |                     4  |           0  |           1  |  00:00:05  |
+|  DSP Register                                     |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Shift Register                                   |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |          96  |           1  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |            1  |            823  |                   835  |          96  |          10  |  00:00:12  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.5.1 Physical Synthesis In Placer | Checksum: 658c5b40
+
+Time (s): cpu = 00:20:21 ; elapsed = 00:10:51 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238366 ; free virtual = 294454
+Phase 2.5 Global Placement Core | Checksum: 1837dca03
+
+Time (s): cpu = 00:21:03 ; elapsed = 00:11:13 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 237676 ; free virtual = 293764
+Phase 2 Global Placement | Checksum: 1837dca03
+
+Time (s): cpu = 00:21:04 ; elapsed = 00:11:14 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 237809 ; free virtual = 293897
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 15d3e2a11
+
+Time (s): cpu = 00:21:30 ; elapsed = 00:11:25 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 237744 ; free virtual = 293832
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1c0f48acd
+
+Time (s): cpu = 00:21:53 ; elapsed = 00:11:36 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 237913 ; free virtual = 294001
+
+Phase 3.3 Small Shape DP
+
+Phase 3.3.1 Small Shape Clustering
+Phase 3.3.1 Small Shape Clustering | Checksum: 1f7080989
+
+Time (s): cpu = 00:23:43 ; elapsed = 00:12:11 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238197 ; free virtual = 294285
+
+Phase 3.3.2 Flow Legalize Slice Clusters
+Phase 3.3.2 Flow Legalize Slice Clusters | Checksum: 15e733a89
+
+Time (s): cpu = 00:23:46 ; elapsed = 00:12:13 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238247 ; free virtual = 294334
+
+Phase 3.3.3 Slice Area Swap
+
+Phase 3.3.3.1 Slice Area Swap Initial
+Phase 3.3.3.1 Slice Area Swap Initial | Checksum: 1b1f0794e
+
+Time (s): cpu = 00:24:09 ; elapsed = 00:12:33 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238366 ; free virtual = 294454
+Phase 3.3.3 Slice Area Swap | Checksum: 1d48d5d2b
+
+Time (s): cpu = 00:24:16 ; elapsed = 00:12:40 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238341 ; free virtual = 294429
+Phase 3.3 Small Shape DP | Checksum: e775602a
+
+Time (s): cpu = 00:24:54 ; elapsed = 00:12:57 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238629 ; free virtual = 294717
+
+Phase 3.4 Place Remaining
+Phase 3.4 Place Remaining | Checksum: e775602a
+
+Time (s): cpu = 00:24:56 ; elapsed = 00:13:00 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238726 ; free virtual = 294814
+
+Phase 3.5 Re-assign LUT pins
+Phase 3.5 Re-assign LUT pins | Checksum: 11532e37b
+
+Time (s): cpu = 00:25:07 ; elapsed = 00:13:08 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238298 ; free virtual = 294386
+
+Phase 3.6 Pipeline Register Optimization
+Phase 3.6 Pipeline Register Optimization | Checksum: 11532e37b
+
+Time (s): cpu = 00:25:12 ; elapsed = 00:13:12 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238350 ; free virtual = 294438
+
+Phase 3.7 Fast Optimization
+Phase 3.7 Fast Optimization | Checksum: a918bbdd
+
+Time (s): cpu = 00:27:11 ; elapsed = 00:13:41 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238318 ; free virtual = 294406
+Phase 3 Detail Placement | Checksum: a918bbdd
+
+Time (s): cpu = 00:27:12 ; elapsed = 00:13:43 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238327 ; free virtual = 294415
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+WARNING: [Place 30-894] Cannot match clock delays for global clock nets 'inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/clk_wiz_0/inst/clkfbout_buf_design_ctrl_clk_wiz_0_0' and 'inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/clk_wiz_0/inst/clk_out1'. Placer is trying to match clock delays for these clocks for best timing, but this operation failed due to usage of these tracks by other clock nets. Try reducing the amount of clock resources in your design, by either combining some clock nets or by changing the placement of clock primitives to reduce the distance between the source and loads of each clock net involved in clock region X4Y2 and areas with high clock routing utilization. Run place_design with -debug_log for more information about the clock partitioning in the design.
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_CORECLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_PCLK2_GT due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_USERCLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+
+Phase 4.1.1 Post Placement Optimization
+Post Placement Optimization Initialization | Checksum: 17b81f369
+
+Phase 4.1.1.1 BUFG Insertion
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 8 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-0.301 | TNS=-8.390 |
+Phase 1 Physical Synthesis Initialization | Checksum: 1fe1f86d1
+
+Time (s): cpu = 00:00:24 ; elapsed = 00:00:06 . Memory (MB): peak = 10834.750 ; gain = 0.000 ; free physical = 238643 ; free virtual = 294731
+INFO: [Place 46-56] BUFG insertion identified 0 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 0, Skipped due to Timing Degradation: 0, Skipped due to Illegal Netlist: 0.
+Ending Physical Synthesis Task | Checksum: 244f680b5
+
+Time (s): cpu = 00:00:40 ; elapsed = 00:00:14 . Memory (MB): peak = 10834.750 ; gain = 0.000 ; free physical = 238617 ; free virtual = 294705
+Phase 4.1.1.1 BUFG Insertion | Checksum: 17b81f369
+
+Time (s): cpu = 00:31:29 ; elapsed = 00:15:10 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238625 ; free virtual = 294713
+
+Phase 4.1.1.2 BUFG Replication
+INFO: [Place 46-63] BUFG replication identified 0 candidate nets: Replicated nets: 0, Replicated BUFGs: 0, Replicated BUFG Driver: 0, Skipped due to Placement / Routing Conflict: 0, Skipped due to Timing: 0, Skipped due to constraints: 0
+Phase 4.1.1.2 BUFG Replication | Checksum: 17b81f369
+
+Time (s): cpu = 00:31:31 ; elapsed = 00:15:12 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238693 ; free virtual = 294781
+
+Phase 4.1.1.3 Post Placement Timing Optimization
+INFO: [Place 30-746] Post Placement Timing Summary WNS=-0.301. For the most accurate timing information please run report_timing.
+Phase 4.1.1.3 Post Placement Timing Optimization | Checksum: 13a6b2e72
+
+Time (s): cpu = 00:31:49 ; elapsed = 00:15:29 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238773 ; free virtual = 294861
+
+Phase 4.1.1.4 Replication
+INFO: [Place 46-19] Post Replication Timing Summary WNS=-0.301. For the most accurate timing information please run report_timing.
+Phase 4.1.1.4 Replication | Checksum: 13a6b2e72
+
+Time (s): cpu = 00:31:53 ; elapsed = 00:15:32 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238624 ; free virtual = 294712
+
+Time (s): cpu = 00:31:53 ; elapsed = 00:15:32 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238631 ; free virtual = 294719
+Phase 4.1 Post Commit Optimization | Checksum: 13a6b2e72
+
+Time (s): cpu = 00:31:54 ; elapsed = 00:15:34 . Memory (MB): peak = 10834.750 ; gain = 2639.375 ; free physical = 238647 ; free virtual = 294735
+WARNING: [Place 30-894] Cannot match clock delays for global clock nets 'inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/clk_wiz_0/inst/clkfbout_buf_design_ctrl_clk_wiz_0_0' and 'inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/clk_wiz_0/inst/clk_out1'. Placer is trying to match clock delays for these clocks for best timing, but this operation failed due to usage of these tracks by other clock nets. Try reducing the amount of clock resources in your design, by either combining some clock nets or by changing the placement of clock primitives to reduce the distance between the source and loads of each clock net involved in clock region X4Y2 and areas with high clock routing utilization. Run place_design with -debug_log for more information about the clock partitioning in the design.
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_CORECLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_PCLK2_GT due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_USERCLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+Netlist sorting complete. Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.05 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238348 ; free virtual = 294436
+
+Phase 4.2 Post Placement Cleanup
+Phase 4.2 Post Placement Cleanup | Checksum: 1ffac62bb
+
+Time (s): cpu = 00:33:08 ; elapsed = 00:16:28 . Memory (MB): peak = 10867.328 ; gain = 2671.953 ; free physical = 238482 ; free virtual = 294570
+
+Phase 4.3 Placer Reporting
+
+Phase 4.3.1 Print Estimated Congestion
+INFO: [Place 30-612] Post-Placement Estimated Congestion 
+ ________________________________________________________________________
+|           | Global Congestion | Long Congestion   | Short Congestion  |
+| Direction | Region Size       | Region Size       | Region Size       |
+|___________|___________________|___________________|___________________|
+|      North|                8x8|                8x8|              16x16|
+|___________|___________________|___________________|___________________|
+|      South|                4x4|              16x16|                8x8|
+|___________|___________________|___________________|___________________|
+|       East|                8x8|                1x1|              16x16|
+|___________|___________________|___________________|___________________|
+|       West|                8x8|                1x1|              16x16|
+|___________|___________________|___________________|___________________|
+
+Phase 4.3.1 Print Estimated Congestion | Checksum: 1ffac62bb
+
+Time (s): cpu = 00:33:13 ; elapsed = 00:16:34 . Memory (MB): peak = 10867.328 ; gain = 2671.953 ; free physical = 238525 ; free virtual = 294613
+Phase 4.3 Placer Reporting | Checksum: 1ffac62bb
+
+Time (s): cpu = 00:33:17 ; elapsed = 00:16:38 . Memory (MB): peak = 10867.328 ; gain = 2671.953 ; free physical = 238543 ; free virtual = 294631
+
+Phase 4.4 Final Placement Cleanup
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238558 ; free virtual = 294647
+
+Time (s): cpu = 00:33:17 ; elapsed = 00:16:38 . Memory (MB): peak = 10867.328 ; gain = 2671.953 ; free physical = 238558 ; free virtual = 294647
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 19de3957e
+
+Time (s): cpu = 00:33:22 ; elapsed = 00:16:43 . Memory (MB): peak = 10867.328 ; gain = 2671.953 ; free physical = 238585 ; free virtual = 294673
+Ending Placer Task | Checksum: 135819049
+
+Time (s): cpu = 00:33:27 ; elapsed = 00:16:48 . Memory (MB): peak = 10867.328 ; gain = 2671.953 ; free physical = 238751 ; free virtual = 294839
+INFO: [Common 17-83] Releasing license: Implementation
+129 Infos, 71 Warnings, 6 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+place_design: Time (s): cpu = 00:36:12 ; elapsed = 00:17:44 . Memory (MB): peak = 10867.328 ; gain = 2900.559 ; free physical = 239801 ; free virtual = 295890
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:47 ; elapsed = 00:00:15 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239140 ; free virtual = 295228
+report_design_analysis: Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239202 ; free virtual = 295290
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/checkpoints/shell_placed.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:01:23 ; elapsed = 00:00:44 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239500 ; free virtual = 295588
+[1m[36m** Shell place_design completed(B[m
+[1m[36m**(B[m
+Command: phys_opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xcu280'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcu280'
+INFO: [Vivado_Tcl 4-1435] PhysOpt_Tcl_Interface Runtime Before Starting Physical Synthesis Task | CPU: 147.85s |  WALL: 31.15s
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239609 ; free virtual = 295697
+
+Starting Physical Synthesis Task
+
+Phase 1 Physical Synthesis Initialization
+INFO: [Physopt 32-245] Routed nets are present in the design. phys_opt_design will optimize unrouted part of the design.
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 8 CPUs
+WARNING: [Place 30-894] Cannot match clock delays for global clock nets 'inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/clk_wiz_0/inst/clkfbout_buf_design_ctrl_clk_wiz_0_0' and 'inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/clk_wiz_0/inst/clk_out1'. Placer is trying to match clock delays for these clocks for best timing, but this operation failed due to usage of these tracks by other clock nets. Try reducing the amount of clock resources in your design, by either combining some clock nets or by changing the placement of clock primitives to reduce the distance between the source and loads of each clock net involved in clock region X4Y2 and areas with high clock routing utilization. Run place_design with -debug_log for more information about the clock partitioning in the design.
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_CORECLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_PCLK2_GT due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_USERCLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-0.301 | TNS=-8.042 |
+Phase 1 Physical Synthesis Initialization | Checksum: 16f26fa68
+
+Time (s): cpu = 00:02:27 ; elapsed = 00:02:16 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239576 ; free virtual = 295664
+INFO: [Physopt 32-245] Routed nets are present in the design. phys_opt_design will optimize unrouted part of the design.
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-0.301 | TNS=-8.042 |
+
+Phase 2 DSP Register Optimization
+INFO: [Physopt 32-456] No candidate cells for DSP register optimization found in the design.
+INFO: [Physopt 32-775] End 2 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Phase 2 DSP Register Optimization | Checksum: 16f26fa68
+
+Time (s): cpu = 00:02:39 ; elapsed = 00:02:22 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239508 ; free virtual = 295597
+
+Phase 3 Critical Path Optimization
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-0.301 | TNS=-8.042 |
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=-0.301 | TNS=-8.042 |
+Phase 3 Critical Path Optimization | Checksum: 16f26fa68
+
+Time (s): cpu = 00:02:47 ; elapsed = 00:02:23 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239508 ; free virtual = 295596
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.04 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239529 ; free virtual = 295618
+WARNING: [Place 30-894] Cannot match clock delays for global clock nets 'inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/clk_wiz_0/inst/clkfbout_buf_design_ctrl_clk_wiz_0_0' and 'inst_shell/inst_shell_ctrl_cc/inst_design_ctrl/clk_wiz_0/inst/clk_out1'. Placer is trying to match clock delays for these clocks for best timing, but this operation failed due to usage of these tracks by other clock nets. Try reducing the amount of clock resources in your design, by either combining some clock nets or by changing the placement of clock primitives to reduce the distance between the source and loads of each clock net involved in clock region X4Y2 and areas with high clock routing utilization. Run place_design with -debug_log for more information about the clock partitioning in the design.
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_CORECLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_PCLK2_GT due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+WARNING: [Place 30-1995] Horizontal BUFCE_ROW programmable delay is capped at 4 for clock net inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_gt_top_i/diablo_gt.diablo_gt_phy_wrapper/phy_clk_i/CLK_USERCLK due to PCIE_GT_SAME_REGION MAX_SKEW requirements
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239515 ; free virtual = 295603
+INFO: [Physopt 32-603] Post Physical Optimization Timing Summary | WNS=-0.301 | TNS=-8.042 |
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization   |  WNS Gain (ns)  |  TNS Gain (ns)  |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+|  DSP Register   |          0.000  |          0.000  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Critical Path  |          0.000  |          0.000  |            0  |              0  |                     0  |           0  |           1  |  00:00:01  |
+|  Total          |          0.000  |          0.000  |            0  |              0  |                     0  |           0  |           2  |  00:00:01  |
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239584 ; free virtual = 295672
+Ending Physical Synthesis Task | Checksum: 28a900c02
+
+Time (s): cpu = 00:02:57 ; elapsed = 00:02:34 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239613 ; free virtual = 295701
+INFO: [Common 17-83] Releasing license: Implementation
+144 Infos, 79 Warnings, 6 Critical Warnings and 0 Errors encountered.
+phys_opt_design completed successfully
+phys_opt_design: Time (s): cpu = 00:05:07 ; elapsed = 00:03:06 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239976 ; free virtual = 296064
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:45 ; elapsed = 00:00:14 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239347 ; free virtual = 295435
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/checkpoints/shell_phys_opted.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:01:05 ; elapsed = 00:00:36 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239460 ; free virtual = 295548
+[1m[36m** Shell phys_opt_design completed(B[m
+[1m[36m**(B[m
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xcu280'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xcu280'
+Running DRC as a precondition to command route_design
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 8 CPUs
+
+Phase 1 Build RT Design
+Checksum: PlaceDB: 4777104f ConstDB: 0 ShapeSum: b3c323b3 RouteDB: c5413449
+Nodegraph reading from file.  Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239179 ; free virtual = 295267
+Post Restoration Checksum: NetGraph: 94a0a452 NumContArr: a573ed3c Constraints: 140c8d74 Timing: 0
+Phase 1 Build RT Design | Checksum: 14e211f02
+
+Time (s): cpu = 00:03:00 ; elapsed = 00:01:18 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239342 ; free virtual = 295430
+
+Phase 2 Router Initialization
+
+Phase 2.1 Fix Topology Constraints
+Phase 2.1 Fix Topology Constraints | Checksum: 14e211f02
+
+Time (s): cpu = 00:03:08 ; elapsed = 00:01:26 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239007 ; free virtual = 295095
+
+Phase 2.2 Pre Route Cleanup
+Phase 2.2 Pre Route Cleanup | Checksum: 14e211f02
+
+Time (s): cpu = 00:03:15 ; elapsed = 00:01:34 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239005 ; free virtual = 295093
+
+Phase 2.3 Global Clock Net Routing
+ Number of Nodes with overlaps = 0
+Phase 2.3 Global Clock Net Routing | Checksum: 12d065f7b
+
+Time (s): cpu = 00:03:42 ; elapsed = 00:01:50 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238904 ; free virtual = 294993
+
+Phase 2.4 Update Timing
+Phase 2.4 Update Timing | Checksum: 187a1a871
+
+Time (s): cpu = 00:05:34 ; elapsed = 00:02:31 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238691 ; free virtual = 294780
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.301 | TNS=-8.047 | WHS=-0.195 | THS=-168.365|
+
+
+Phase 2.5 Update Timing for Bus Skew
+
+Phase 2.5.1 Update Timing
+Phase 2.5.1 Update Timing | Checksum: e3d77805
+
+Time (s): cpu = 00:09:50 ; elapsed = 00:03:43 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238758 ; free virtual = 294846
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.301 | TNS=-7.988 | WHS=N/A    | THS=N/A    |
+
+Phase 2.5 Update Timing for Bus Skew | Checksum: 1873fad11
+
+Time (s): cpu = 00:09:56 ; elapsed = 00:03:49 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238774 ; free virtual = 294862
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0 %
+  Global Horizontal Routing Utilization  = 0 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 97188
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 91588
+  Number of Partially Routed Nets     = 5600
+  Number of Node Overlaps             = 0
+
+Phase 2 Router Initialization | Checksum: 1638b43ed
+
+Time (s): cpu = 00:10:16 ; elapsed = 00:04:00 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238672 ; free virtual = 294761
+
+Phase 3 Initial Routing
+
+Phase 3.1 Global Routing
+Phase 3.1 Global Routing | Checksum: 1638b43ed
+
+Time (s): cpu = 00:10:22 ; elapsed = 00:04:07 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238722 ; free virtual = 294810
+Phase 3 Initial Routing | Checksum: 14b10777b
+
+Time (s): cpu = 00:11:40 ; elapsed = 00:04:45 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238550 ; free virtual = 294639
+INFO: [Route 35-580] Design has 7 pins with tight setup and hold constraints.
+
+The top 5 pins with tight setup and hold constraints:
+
++====================+===================+======================================================================================================================================================+
+| Launch Setup Clock | Launch Hold Clock | Pin                                                                                                                                                  |
++====================+===================+======================================================================================================================================================+
+| xclk               | inst_shell/xclk   | inst_static/inst_cnvrt_static/genblk1[1].inst_s0_axis_dyn_in/genblk1[0].inst_reg/inst_reg_slice/inst/axisc_register_slice_0/storage_data1_reg[22]/D  |
+| xclk               | inst_shell/xclk   | inst_static/inst_cnvrt_static/genblk1[1].inst_s0_axis_dyn_in/genblk1[0].inst_reg/inst_reg_slice/inst/axisc_register_slice_0/storage_data1_reg[237]/D |
+| xclk               | inst_shell/xclk   | inst_static/inst_cnvrt_static/genblk1[1].inst_s0_axis_dyn_in/genblk1[0].inst_reg/inst_reg_slice/inst/axisc_register_slice_0/storage_data1_reg[483]/D |
+| xclk               | inst_shell/xclk   | inst_static/inst_cnvrt_static/genblk1[1].inst_s0_axis_dyn_in/genblk1[0].inst_reg/inst_reg_slice/inst/axisc_register_slice_0/storage_data1_reg[125]/D |
+| xclk               | inst_shell/xclk   | inst_static/inst_cnvrt_static/genblk1[1].inst_s0_axis_dyn_in/genblk1[0].inst_reg/inst_reg_slice/inst/axisc_register_slice_0/storage_data1_reg[164]/D |
++--------------------+-------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+File with complete list of pins: tight_setup_hold_pins.txt
+
+
+Phase 4 Rip-up And Reroute
+
+Phase 4.1 Global Iteration 0
+ Number of Nodes with overlaps = 8721
+ Number of Nodes with overlaps = 474
+ Number of Nodes with overlaps = 61
+ Number of Nodes with overlaps = 23
+ Number of Nodes with overlaps = 9
+ Number of Nodes with overlaps = 4
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.301 | TNS=-8.047 | WHS=-0.018 | THS=-0.163 |
+
+Phase 4.1 Global Iteration 0 | Checksum: f6c11828
+
+Time (s): cpu = 00:20:18 ; elapsed = 00:09:17 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238566 ; free virtual = 294655
+
+Phase 4.2 Global Iteration 1
+ Number of Nodes with overlaps = 54
+ Number of Nodes with overlaps = 10
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.301 | TNS=-8.047 | WHS=N/A    | THS=N/A    |
+
+Phase 4.2 Global Iteration 1 | Checksum: 19663a91c
+
+Time (s): cpu = 00:22:46 ; elapsed = 00:10:53 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238708 ; free virtual = 294797
+
+Phase 4.3 Global Iteration 2
+ Number of Nodes with overlaps = 64
+ Number of Nodes with overlaps = 7
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.301 | TNS=-8.047 | WHS=N/A    | THS=N/A    |
+
+Phase 4.3 Global Iteration 2 | Checksum: 103e8102c
+
+Time (s): cpu = 00:23:59 ; elapsed = 00:11:50 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238866 ; free virtual = 294955
+Phase 4 Rip-up And Reroute | Checksum: 103e8102c
+
+Time (s): cpu = 00:24:06 ; elapsed = 00:11:56 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238858 ; free virtual = 294947
+
+Phase 5 Delay and Skew Optimization
+
+Phase 5.1 Delay CleanUp
+
+Phase 5.1.1 Update Timing
+Phase 5.1.1 Update Timing | Checksum: d4d08ce1
+
+Time (s): cpu = 00:25:50 ; elapsed = 00:12:31 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238819 ; free virtual = 294908
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.301 | TNS=-8.047 | WHS=0.010  | THS=0.000  |
+
+Phase 5.1 Delay CleanUp | Checksum: 1865159bf
+
+Time (s): cpu = 00:26:07 ; elapsed = 00:12:41 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238829 ; free virtual = 294918
+
+Phase 5.2 Clock Skew Optimization
+Phase 5.2 Clock Skew Optimization | Checksum: 1865159bf
+
+Time (s): cpu = 00:26:14 ; elapsed = 00:12:47 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238831 ; free virtual = 294920
+Phase 5 Delay and Skew Optimization | Checksum: 1865159bf
+
+Time (s): cpu = 00:26:20 ; elapsed = 00:12:54 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238836 ; free virtual = 294925
+
+Phase 6 Post Hold Fix
+
+Phase 6.1 Hold Fix Iter
+
+Phase 6.1.1 Update Timing
+Phase 6.1.1 Update Timing | Checksum: 1847a2a79
+
+Time (s): cpu = 00:27:37 ; elapsed = 00:13:21 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238821 ; free virtual = 294909
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.301 | TNS=-8.047 | WHS=0.010  | THS=0.000  |
+
+Phase 6.1 Hold Fix Iter | Checksum: 14ce0bb06
+
+Time (s): cpu = 00:27:44 ; elapsed = 00:13:28 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238805 ; free virtual = 294893
+Phase 6 Post Hold Fix | Checksum: 14ce0bb06
+
+Time (s): cpu = 00:27:50 ; elapsed = 00:13:34 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238807 ; free virtual = 294895
+
+Phase 7 Leaf Clock Prog Delay Opt
+
+Phase 7.1 Delay CleanUp
+
+Phase 7.1.1 Update Timing
+Phase 7.1.1 Update Timing | Checksum: 178db1217
+
+Time (s): cpu = 00:32:22 ; elapsed = 00:15:06 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238020 ; free virtual = 294109
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.301 | TNS=-8.047 | WHS=0.010  | THS=0.000  |
+
+Phase 7.1 Delay CleanUp | Checksum: 16d171336
+
+Time (s): cpu = 00:32:39 ; elapsed = 00:15:15 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238122 ; free virtual = 294211
+
+Phase 7.2 Hold Fix Iter
+
+Phase 7.2.1 Update Timing
+Phase 7.2.1 Update Timing | Checksum: 1be69a6bc
+
+Time (s): cpu = 00:33:57 ; elapsed = 00:15:43 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238087 ; free virtual = 294175
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.301 | TNS=-8.047 | WHS=0.010  | THS=0.000  |
+
+Phase 7.2 Hold Fix Iter | Checksum: f31a2fd4
+
+Time (s): cpu = 00:34:04 ; elapsed = 00:15:50 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238137 ; free virtual = 294225
+Phase 7 Leaf Clock Prog Delay Opt | Checksum: 168b19753
+
+Time (s): cpu = 00:36:42 ; elapsed = 00:16:41 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238682 ; free virtual = 294770
+
+Phase 8 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 1.25083 %
+  Global Horizontal Routing Utilization  = 1.33722 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Congestion Report
+North Dir 1x1 Area, Max Cong = 70.4225%, No Congested Regions.
+South Dir 1x1 Area, Max Cong = 68.7204%, No Congested Regions.
+East Dir 1x1 Area, Max Cong = 68.2692%, No Congested Regions.
+West Dir 1x1 Area, Max Cong = 81.7204%, No Congested Regions.
+
+------------------------------
+Reporting congestion hotspots
+------------------------------
+Direction: North
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: South
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: East
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: West
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+
+Phase 8 Route finalize | Checksum: 17704adbe
+
+Time (s): cpu = 00:36:59 ; elapsed = 00:16:50 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238707 ; free virtual = 294796
+
+Phase 9 Verifying routed nets
+
+ Verification completed successfully
+Phase 9 Verifying routed nets | Checksum: 17704adbe
+
+Time (s): cpu = 00:37:06 ; elapsed = 00:16:57 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238708 ; free virtual = 294797
+
+Phase 10 Depositing Routes
+Phase 10 Depositing Routes | Checksum: 17704adbe
+
+Time (s): cpu = 00:37:39 ; elapsed = 00:17:23 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238695 ; free virtual = 294784
+
+Phase 11 Resolve XTalk
+Phase 11 Resolve XTalk | Checksum: 17704adbe
+
+Time (s): cpu = 00:37:46 ; elapsed = 00:17:30 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238699 ; free virtual = 294787
+
+Phase 12 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=-0.301 | TNS=-8.047 | WHS=0.010  | THS=0.000  |
+
+WARNING: [Route 35-328] Router estimated timing not met.
+Resolution: For a complete and accurate timing signoff, report_timing_summary must be run after route_design. Alternatively, route_design can be run with the -timing_summary option to enable a complete timing signoff at the end of route_design.
+Phase 12 Post Router Timing | Checksum: 17704adbe
+
+Time (s): cpu = 00:38:36 ; elapsed = 00:17:44 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238735 ; free virtual = 294824
+Skip laguna hold fix in PhysOpt in Router as non-negative WHS value: 9.50617e-12 .
+Time taken to check if laguna hold fix is required (in secs): 0
+
+Phase 13 Physical Synthesis in Router
+
+Phase 13.1 Physical Synthesis Initialization
+INFO: [Physopt 32-668] Current Timing Summary | WNS=-0.301 | TNS=-8.042 | WHS=0.010 | THS=0.000 |
+Phase 13.1 Physical Synthesis Initialization | Checksum: 17704adbe
+
+Time (s): cpu = 00:42:38 ; elapsed = 00:19:17 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238404 ; free virtual = 294492
+
+Phase 13.2 Critical Path Optimization
+INFO: [Physopt 32-668] Current Timing Summary | WNS=-0.301 | TNS=-8.042 | WHS=0.010 | THS=0.000 |
+INFO: [Physopt 32-953] Path group WNS did not improve. Path group: GTYE4_CHANNEL_TXOUTCLK[3]_3. Processed net: inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_pcie_4_0_pipe_inst/s_axis_rq_tready_int[0].
+INFO: [Physopt 32-953] Path group WNS did not improve. Path group: GTYE4_CHANNEL_TXOUTCLK[3]_3. Processed net: inst_static/inst_int_static/xdma_0/inst/pcie4c_ip_i/inst/design_static_xdma_0_0_pcie4c_ip_pcie_4_0_pipe_inst/pcie4_0_512b_intfc_mod/pcie_4_0_512b_intfc_int_mod/pcie_4_0_512b_cc_intfc_mod/pcie_4_0_512b_cc_output_mux_blk/out_data_o_reg[255]_0[177].
+INFO: [Physopt 32-668] Current Timing Summary | WNS=-0.301 | TNS=-8.042 | WHS=0.010 | THS=0.000 |
+Phase 13.2 Critical Path Optimization | Checksum: 1c5a50f28
+
+Time (s): cpu = 00:43:15 ; elapsed = 00:19:28 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238405 ; free virtual = 294494
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.05 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238384 ; free virtual = 294473
+INFO: [Physopt 32-669] Post Physical Optimization Timing Summary | WNS=-0.301 | TNS=-8.042 | WHS=0.010 | THS=0.000 |
+Phase 13 Physical Synthesis in Router | Checksum: 193fa636d
+
+Time (s): cpu = 00:43:28 ; elapsed = 00:19:39 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238455 ; free virtual = 294543
+INFO: [Route 35-16] Router Completed Successfully
+
+Time (s): cpu = 00:44:15 ; elapsed = 00:20:10 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239044 ; free virtual = 295132
+INFO: [Common 17-83] Releasing license: Implementation
+170 Infos, 80 Warnings, 6 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:46:14 ; elapsed = 00:21:00 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 239044 ; free virtual = 295132
+[1m[36m** Shell route_design completed(B[m
+[1m[36m**(B[m
+[1m[36m** Shell post route phys_opt_design completed(B[m
+[1m[36m**(B[m
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Write XDEF Complete: Time (s): cpu = 00:00:47 ; elapsed = 00:00:15 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238499 ; free virtual = 294587
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/checkpoints/shell_routed.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:01:07 ; elapsed = 00:00:36 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238555 ; free virtual = 294644
+report_utilization: Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238806 ; free virtual = 294895
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2L, Temperature grade: E, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+WARNING: [Timing 38-436] There are set_bus_skew constraint(s) in this design. Please run report_bus_skew to ensure that bus skew requirements are met.
+report_timing_summary: Time (s): cpu = 00:01:04 ; elapsed = 00:00:18 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238567 ; free virtual = 294656
+Command: report_drc -ruledeck bitstream_checks -name cyt_top -file /scratch/anubhav/Coyote/examples_hw/build_hw_8/reports/shell_drc_bitstream_checks.rpt
+WARNING: [Vivado_Tcl 2-1291] -name option used when not in GUI mode. A DRC tab will not be created, but the results will be stored for use with 'get_drc_violations -name cyt_top'
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file /scratch/anubhav/Coyote/examples_hw/build_hw_8/reports/shell_drc_bitstream_checks.rpt.
+report_drc completed successfully
+report_drc: Time (s): cpu = 00:00:56 ; elapsed = 00:00:21 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 238274 ; free virtual = 294363
+[1m[36m** Shell (parent) compiled(B[m
+[1m[36m**(B[m
+close_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:09 . Memory (MB): peak = 10867.328 ; gain = 0.000 ; free physical = 241474 ; free virtual = 297563
+
+[1m[38;5;214m**(B[m
+[1m[38;5;214m** Shell compilation flow completed(B[m
+[1m[38;5;214m**(B[m
+
+INFO: [Common 17-206] Exiting Vivado at Wed Nov 27 09:27:41 2024...

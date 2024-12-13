@@ -1,0 +1,1069 @@
+
+*** Running vivado
+    with args -log design_user_wrapper_0.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source design_user_wrapper_0.tcl
+
+
+****** Vivado v2022.1 (64-bit)
+  **** SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
+  **** IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+
+source design_user_wrapper_0.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository '/scratch/anubhav/Coyote/examples_hw/build_hw_8/iprepo'.
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/share/xilinx/Vivado/2022.1/data/ip'.
+Command: synth_design -top design_user_wrapper_0 -part xcu280-fsvh2892-2L-e
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xcu280'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xcu280'
+INFO: [Device 21-403] Loading part xcu280-fsvh2892-2L-e
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 289368
+WARNING: [Synth 8-9501] generate block is allowed only inside loop and conditional generate in SystemVerilog mode [/share/xilinx/Vivado/2022.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:4023]
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 3643.238 ; gain = 341.828 ; free physical = 215522 ; free virtual = 276531
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'design_user_wrapper_0' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:39]
+INFO: [Synth 8-6157] synthesizing module 'AXI4L' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:192]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4L' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:192]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4L' is unconnected for instance 'axi_ctrl_user' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:125]
+WARNING: [Synth 8-7023] instance 'axi_ctrl_user' of module 'AXI4L' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:125]
+INFO: [Synth 8-6157] synthesizing module 'AXI4L' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:192]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4L' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:192]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4L' is unconnected for instance 'axi_ctrl_user_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:126]
+WARNING: [Synth 8-7023] instance 'axi_ctrl_user_int' of module 'AXI4L' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:126]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'notify' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:149]
+WARNING: [Synth 8-7023] instance 'notify' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:149]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'notify_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:150]
+WARNING: [Synth 8-7023] instance 'notify_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:150]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'host_sq' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:157]
+WARNING: [Synth 8-7023] instance 'host_sq' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:157]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'host_sq_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:158]
+WARNING: [Synth 8-7023] instance 'host_sq_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:158]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'bpss_rd_req' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:165]
+WARNING: [Synth 8-7023] instance 'bpss_rd_req' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:165]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'bpss_wr_req' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:166]
+WARNING: [Synth 8-7023] instance 'bpss_wr_req' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:166]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'bpss_rd_req_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:167]
+WARNING: [Synth 8-7023] instance 'bpss_rd_req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:167]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'bpss_wr_req_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:168]
+WARNING: [Synth 8-7023] instance 'bpss_wr_req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:168]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'bpss_rd_cq' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:178]
+WARNING: [Synth 8-7023] instance 'bpss_rd_cq' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:178]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'bpss_wr_cq' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:179]
+WARNING: [Synth 8-7023] instance 'bpss_wr_cq' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:179]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'bpss_rd_cq_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:180]
+WARNING: [Synth 8-7023] instance 'bpss_rd_cq_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:180]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'bpss_wr_cq_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:181]
+WARNING: [Synth 8-7023] instance 'bpss_wr_cq_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:181]
+INFO: [Synth 8-6157] synthesizing module 'AXI4S' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:312]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4S' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:312]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4S' is unconnected for instance 'axis_host_sink' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:191]
+WARNING: [Synth 8-7023] instance 'axis_host_sink' of module 'AXI4S' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:191]
+INFO: [Synth 8-6157] synthesizing module 'AXI4S' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:312]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4S' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:312]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4S' is unconnected for instance 'axis_host_sink_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:192]
+WARNING: [Synth 8-7023] instance 'axis_host_sink_int' of module 'AXI4S' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:192]
+INFO: [Synth 8-6157] synthesizing module 'AXI4S' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:312]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4S' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:312]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4S' is unconnected for instance 'axis_host_src' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:200]
+WARNING: [Synth 8-7023] instance 'axis_host_src' of module 'AXI4S' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:200]
+INFO: [Synth 8-6157] synthesizing module 'AXI4S' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:312]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4S' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:312]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4S' is unconnected for instance 'axis_host_src_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:201]
+WARNING: [Synth 8-7023] instance 'axis_host_src_int' of module 'AXI4S' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:201]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_sq_rd_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:241]
+WARNING: [Synth 8-7023] instance 'user_sq_rd_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:241]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_sq_wr_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:242]
+WARNING: [Synth 8-7023] instance 'user_sq_wr_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:242]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'host_local_sq_rd' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:244]
+WARNING: [Synth 8-7023] instance 'host_local_sq_rd' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:244]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'host_local_sq_wr' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:245]
+WARNING: [Synth 8-7023] instance 'host_local_sq_wr' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:245]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_local_sq_rd' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:246]
+WARNING: [Synth 8-7023] instance 'user_local_sq_rd' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:246]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_local_sq_wr' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:247]
+WARNING: [Synth 8-7023] instance 'user_local_sq_wr' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:247]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_sq_rd' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:249]
+WARNING: [Synth 8-7023] instance 'local_sq_rd' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:249]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_sq_wr' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:250]
+WARNING: [Synth 8-7023] instance 'local_sq_wr' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:250]
+INFO: [Synth 8-6157] synthesizing module 'host_req_mux' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/host_req_mux.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'host_sq_int' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/host_req_mux.sv:47]
+WARNING: [Synth 8-7023] instance 'host_sq_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/host_req_mux.sv:47]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'host_local_rd_int' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/host_req_mux.sv:48]
+WARNING: [Synth 8-7023] instance 'host_local_rd_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/host_req_mux.sv:48]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'host_local_wr_int' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/host_req_mux.sv:49]
+WARNING: [Synth 8-7023] instance 'host_local_wr_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/host_req_mux.sv:49]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 256 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'axis_register_slice_meta_256' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/synth_1/.Xil/Vivado-288903-amy/realtime/axis_register_slice_meta_256_stub.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'axis_register_slice_meta_256' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/synth_1/.Xil/Vivado-288903-amy/realtime/axis_register_slice_meta_256_stub.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized0' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'axis_register_slice_meta_128' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/synth_1/.Xil/Vivado-288903-amy/realtime/axis_register_slice_meta_128_stub.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'axis_register_slice_meta_128' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/synth_1/.Xil/Vivado-288903-amy/realtime/axis_register_slice_meta_128_stub.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized0' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized1' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized1' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'host_req_mux' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/host_req_mux.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'user_req_mux' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:32]
+	Parameter ID_REG bound to: 0 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_sq_rd_or' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:52]
+WARNING: [Synth 8-7023] instance 'user_sq_rd_or' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:52]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_sq_wr_or' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:53]
+WARNING: [Synth 8-7023] instance 'user_sq_wr_or' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:53]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_sq_rd_int' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:72]
+WARNING: [Synth 8-7023] instance 'user_sq_rd_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:72]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_sq_wr_int' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:73]
+WARNING: [Synth 8-7023] instance 'user_sq_wr_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:73]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_local_rd_int' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:75]
+WARNING: [Synth 8-7023] instance 'user_local_rd_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:75]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_local_wr_int' [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:76]
+WARNING: [Synth 8-7023] instance 'user_local_wr_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:76]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized2' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized2' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized3' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized3' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized4' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized4' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized5' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized5' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'user_req_mux' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/mux_init/user_req_mux.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'req_arb_2_1' [/scratch/anubhav/Coyote/hw/hdl/user/req/req_arb_2_1.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_int' [/scratch/anubhav/Coyote/hw/hdl/user/req/req_arb_2_1.sv:43]
+WARNING: [Synth 8-7023] instance 'req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/req/req_arb_2_1.sv:43]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized6' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized6' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'req_arb_2_1' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/req/req_arb_2_1.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'req_arb_2_1__parameterized0' [/scratch/anubhav/Coyote/hw/hdl/user/req/req_arb_2_1.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_int' [/scratch/anubhav/Coyote/hw/hdl/user/req/req_arb_2_1.sv:43]
+WARNING: [Synth 8-7023] instance 'req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/req/req_arb_2_1.sv:43]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized7' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized7' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'req_arb_2_1__parameterized0' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/req/req_arb_2_1.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_sq_rd_host' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:295]
+WARNING: [Synth 8-7023] instance 'local_sq_rd_host' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:295]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_sq_rd_card' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:296]
+WARNING: [Synth 8-7023] instance 'local_sq_rd_card' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:296]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_sq_wr_host' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:297]
+WARNING: [Synth 8-7023] instance 'local_sq_wr_host' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:297]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_sq_wr_card' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:298]
+WARNING: [Synth 8-7023] instance 'local_sq_wr_card' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:298]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_cred_rd_host' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:300]
+WARNING: [Synth 8-7023] instance 'local_cred_rd_host' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:300]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_cred_rd_card' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:301]
+WARNING: [Synth 8-7023] instance 'local_cred_rd_card' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:301]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_cred_wr_host' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:302]
+WARNING: [Synth 8-7023] instance 'local_cred_wr_host' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:302]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'local_cred_wr_card' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:303]
+WARNING: [Synth 8-7023] instance 'local_cred_wr_card' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:303]
+INFO: [Synth 8-6157] synthesizing module 'AXI4SR' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4SR' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4SR' is unconnected for instance 'axis_host_send_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:305]
+WARNING: [Synth 8-7023] instance 'axis_host_send_int' of module 'AXI4SR' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:305]
+INFO: [Synth 8-6157] synthesizing module 'AXI4SR' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4SR' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4SR' is unconnected for instance 'axis_host_recv_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:306]
+WARNING: [Synth 8-7023] instance 'axis_host_recv_int' of module 'AXI4SR' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:306]
+INFO: [Synth 8-6157] synthesizing module 'AXI4SR' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4SR' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4SR' is unconnected for instance 'axis_card_send_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:307]
+WARNING: [Synth 8-7023] instance 'axis_card_send_int' of module 'AXI4SR' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:307]
+INFO: [Synth 8-6157] synthesizing module 'AXI4SR' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4SR' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4SR' is unconnected for instance 'axis_card_recv_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:308]
+WARNING: [Synth 8-7023] instance 'axis_card_recv_int' of module 'AXI4SR' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:308]
+INFO: [Synth 8-6157] synthesizing module 'local_credits_host_rd' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:35]
+	Parameter N_DESTS bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_dest' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:52]
+WARNING: [Synth 8-7023] instance 'req_dest' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:52]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_q' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:57]
+WARNING: [Synth 8-7023] instance 'req_q' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:57]
+INFO: [Synth 8-6157] synthesizing module 'queue_meta' [/scratch/anubhav/Coyote/hw/hdl/common/queues/queue_meta.sv:31]
+	Parameter QDEPTH bound to: 4 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'fifo' [/scratch/anubhav/Coyote/hw/hdl/common/queues/fifo.sv:33]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+	Parameter FIFO_SIZE bound to: 4 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'fifo' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/queues/fifo.sv:33]
+INFO: [Synth 8-6155] done synthesizing module 'queue_meta' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/queues/queue_meta.sv:31]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_parsed' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:58]
+WARNING: [Synth 8-7023] instance 'req_parsed' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:58]
+INFO: [Synth 8-6157] synthesizing module 'req_parser' [/scratch/anubhav/Coyote/hw/hdl/user/req/req_parser.sv:37]
+INFO: [Synth 8-155] case statement is not full and has no default [/scratch/anubhav/Coyote/hw/hdl/user/req/req_parser.sv:119]
+INFO: [Synth 8-155] case statement is not full and has no default [/scratch/anubhav/Coyote/hw/hdl/user/req/req_parser.sv:176]
+INFO: [Synth 8-6155] done synthesizing module 'req_parser' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/req/req_parser.sv:37]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_cred' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:59]
+WARNING: [Synth 8-7023] instance 'req_cred' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:59]
+INFO: [Synth 8-6157] synthesizing module 'req_credits_rd' [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_rd.sv:39]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_que_in' [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_rd.sv:68]
+WARNING: [Synth 8-7023] instance 'req_que_in' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_rd.sv:68]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_que_out' [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_rd.sv:69]
+WARNING: [Synth 8-7023] instance 'req_que_out' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_rd.sv:69]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'm_req_int' [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_rd.sv:71]
+WARNING: [Synth 8-7023] instance 'm_req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_rd.sv:71]
+INFO: [Synth 8-6157] synthesizing module 'queue_stream' [/scratch/anubhav/Coyote/hw/hdl/common/queues/queue_stream.sv:30]
+	Parameter QDEPTH bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'fifo__parameterized0' [/scratch/anubhav/Coyote/hw/hdl/common/queues/fifo.sv:33]
+	Parameter DATA_BITS bound to: 22 - type: integer 
+	Parameter FIFO_SIZE bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'fifo__parameterized0' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/queues/fifo.sv:33]
+INFO: [Synth 8-6155] done synthesizing module 'queue_stream' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/queues/queue_stream.sv:30]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized8' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized8' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'req_credits_rd' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_rd.sv:39]
+INFO: [Synth 8-6157] synthesizing module 'AXI4SR' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4SR' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4SR' is unconnected for instance 'axis_int' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:63]
+WARNING: [Synth 8-7023] instance 'axis_int' of module 'AXI4SR' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:63]
+INFO: [Synth 8-6157] synthesizing module 'AXI4SR' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+INFO: [Synth 8-6155] done synthesizing module 'AXI4SR' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:360]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4SR' is unconnected for instance 'axis_int_2' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:64]
+WARNING: [Synth 8-7023] instance 'axis_int_2' of module 'AXI4SR' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:64]
+INFO: [Synth 8-6157] synthesizing module 'axisr_reg' [/scratch/anubhav/Coyote/hw/hdl/common/regs/axisr_reg.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'axisr_register_slice_512' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/synth_1/.Xil/Vivado-288903-amy/realtime/axisr_register_slice_512_stub.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'axisr_register_slice_512' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/synth_1/.Xil/Vivado-288903-amy/realtime/axisr_register_slice_512_stub.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'axisr_reg' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/axisr_reg.sv:32]
+INFO: [Synth 8-6157] synthesizing module 'axisr_data_fifo_512' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/synth_1/.Xil/Vivado-288903-amy/realtime/axisr_data_fifo_512_stub.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'axisr_data_fifo_512' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/synth_1/.Xil/Vivado-288903-amy/realtime/axisr_data_fifo_512_stub.v:5]
+INFO: [Synth 8-6157] synthesizing module 'dest_req_mux' [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_mux.sv:35]
+	Parameter N_DESTS bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_int' [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_mux.sv:51]
+WARNING: [Synth 8-7023] instance 'req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_mux.sv:51]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized9' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized9' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'dest_req_mux' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_mux.sv:35]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'mux' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:61]
+WARNING: [Synth 8-7023] instance 'mux' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:61]
+INFO: [Synth 8-6157] synthesizing module 'dest_req_arb' [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:36]
+	Parameter N_DESTS bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_seq_in' [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:68]
+WARNING: [Synth 8-7023] instance 'user_seq_in' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:68]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'm_req_int' [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:69]
+WARNING: [Synth 8-7023] instance 'm_req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:69]
+INFO: [Synth 8-6157] synthesizing module 'queue_stream__parameterized0' [/scratch/anubhav/Coyote/hw/hdl/common/queues/queue_stream.sv:30]
+	Parameter QDEPTH bound to: 32 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'fifo__parameterized1' [/scratch/anubhav/Coyote/hw/hdl/common/queues/fifo.sv:33]
+	Parameter DATA_BITS bound to: 32 - type: integer 
+	Parameter FIFO_SIZE bound to: 32 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'fifo__parameterized1' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/queues/fifo.sv:33]
+INFO: [Synth 8-6155] done synthesizing module 'queue_stream__parameterized0' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/queues/queue_stream.sv:30]
+INFO: [Synth 8-6157] synthesizing module 'meta_reg__parameterized10' [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'meta_reg__parameterized10' (0#1) [/scratch/anubhav/Coyote/hw/hdl/common/regs/meta_reg.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'dest_req_arb' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:36]
+INFO: [Synth 8-6157] synthesizing module 'axis_mux_user_rd' [/scratch/anubhav/Coyote/hw/hdl/user/axis_mux/axis_mux_user_rd.sv:37]
+	Parameter N_DESTS bound to: 1 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'axis_mux_user_rd' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/axis_mux/axis_mux_user_rd.sv:37]
+INFO: [Synth 8-6155] done synthesizing module 'local_credits_host_rd' (0#1) [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_rd.sv:35]
+INFO: [Synth 8-6157] synthesizing module 'local_credits_host_wr' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:32]
+	Parameter N_DESTS bound to: 1 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_dest' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:49]
+WARNING: [Synth 8-7023] instance 'req_dest' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:49]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_q' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:54]
+WARNING: [Synth 8-7023] instance 'req_q' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:54]
+INFO: [Synth 8-6157] synthesizing module 'metaIntf' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Common 17-14] Message 'Synth 8-6157' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_parsed' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:55]
+WARNING: [Synth 8-7023] instance 'req_parsed' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:55]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_cred' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:56]
+WARNING: [Synth 8-7023] instance 'req_cred' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:56]
+INFO: [Synth 8-6155] done synthesizing module 'metaIntf' (0#1) [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:38]
+INFO: [Common 17-14] Message 'Synth 8-6155' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'm_req_int' [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_wr.sv:60]
+WARNING: [Synth 8-7023] instance 'm_req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/req_credits_wr.sv:60]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4S' is unconnected for instance 'axis_int_2' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:61]
+WARNING: [Synth 8-7023] instance 'axis_int_2' of module 'AXI4S' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:61]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4S' is unconnected for instance 'axis_int' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:60]
+WARNING: [Synth 8-7023] instance 'axis_int' of module 'AXI4S' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:60]
+	Parameter N_DESTS bound to: 1 - type: integer 
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'req_int' [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_mux.sv:51]
+WARNING: [Synth 8-7023] instance 'req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_mux.sv:51]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'mux' [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:58]
+WARNING: [Synth 8-7023] instance 'mux' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/credits/local_credits_host_wr.sv:58]
+	Parameter N_DESTS bound to: 1 - type: integer 
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_seq_in' [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:68]
+WARNING: [Synth 8-7023] instance 'user_seq_in' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:68]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'm_req_int' [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:69]
+WARNING: [Synth 8-7023] instance 'm_req_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/hw/hdl/user/dest/dest_req_arb.sv:69]
+	Parameter DATA_BITS bound to: 128 - type: integer 
+	Parameter N_DESTS bound to: 1 - type: integer 
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_cq_rd_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:348]
+WARNING: [Synth 8-7023] instance 'user_cq_rd_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:348]
+WARNING: [Synth 8-7071] port 'aclk' of module 'metaIntf' is unconnected for instance 'user_cq_wr_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:349]
+WARNING: [Synth 8-7023] instance 'user_cq_wr_int' of module 'metaIntf' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/wrappers/user_wrapper_c0_0.sv:349]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4SR' is unconnected for instance 'axis_sink_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:21]
+WARNING: [Synth 8-7023] instance 'axis_sink_int' of module 'AXI4SR' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:21]
+WARNING: [Synth 8-7071] port 'aclk' of module 'AXI4SR' is unconnected for instance 'axis_src_int' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:22]
+WARNING: [Synth 8-7023] instance 'axis_src_int' of module 'AXI4SR' has 1 connections declared, but only 0 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:22]
+WARNING: [Synth 8-689] width (6) of port connection 's_axis_tid' does not match port width (4) of module 'dwidth_converter_512_32' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:56]
+WARNING: [Synth 8-689] width (16) of port connection 'm_axis_tid' does not match port width (4) of module 'dwidth_converter_512_32' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:61]
+WARNING: [Synth 8-689] width (32) of port connection 'm_axis_data_tdata' does not match port width (64) of module 'xfft_0' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:72]
+WARNING: [Synth 8-689] width (16) of port connection 's_axis_tid' does not match port width (4) of module 'dwidth_converter_32_512' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:95]
+WARNING: [Synth 8-689] width (6) of port connection 'm_axis_tid' does not match port width (4) of module 'dwidth_converter_32_512' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:100]
+WARNING: [Synth 8-7071] port 'm_axis_tkeep' of module 'dwidth_converter_32_512' is unconnected for instance 'inst_dwidth_send' [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:88]
+WARNING: [Synth 8-7023] instance 'inst_dwidth_send' of module 'dwidth_converter_32_512' has 13 connections declared, but only 12 given [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/vfpga_top.svh:88]
+WARNING: [Synth 8-3848] Net aclk in module/entity host_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity host_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity host_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity user_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity user_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity user_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity user_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity user_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity user_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity req_arb_2_1 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity req_arb_2_1__parameterized0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity req_credits_rd does not have driver.
+WARNING: [Synth 8-5858] RAM req_data_reg from Abstract Data Type (record/struct) for this pattern/configuration is not supported. This will most likely be implemented in registers
+WARNING: [Synth 8-10225] Potential Runtime issue for 3D-RAM or RAM from Record/Structs for RAM  req_data_reg 
+WARNING: [Synth 8-3848] Net aclk in module/entity dest_req_mux does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity dest_req_arb does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_rd does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_rd does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_rd does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_rd does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_rd does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_rd does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_rd does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity req_credits_wr does not have driver.
+WARNING: [Synth 8-5858] RAM req_data_reg from Abstract Data Type (record/struct) for this pattern/configuration is not supported. This will most likely be implemented in registers
+WARNING: [Synth 8-10225] Potential Runtime issue for 3D-RAM or RAM from Record/Structs for RAM  req_data_reg 
+WARNING: [Synth 8-3848] Net aclk in module/entity dest_req_mux__parameterized0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity dest_req_arb__parameterized0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_wr does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_wr does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_wr does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_wr does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_wr does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_wr does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity local_credits_host_wr does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_logic_c0_0 does not have driver.
+WARNING: [Synth 8-3848] Net axis_src_int\.tkeep in module/entity design_user_logic_c0_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:372]
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_logic_c0_0 does not have driver.
+WARNING: [Synth 8-3848] Net axi_ctrl_user_int\.arready in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:208]
+WARNING: [Synth 8-3848] Net axi_ctrl_user_int\.awready in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:216]
+WARNING: [Synth 8-3848] Net axi_ctrl_user_int\.bresp in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:232]
+WARNING: [Synth 8-3848] Net axi_ctrl_user_int\.bvalid in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:234]
+WARNING: [Synth 8-3848] Net axi_ctrl_user_int\.rdata in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:220]
+WARNING: [Synth 8-3848] Net axi_ctrl_user_int\.rresp in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:221]
+WARNING: [Synth 8-3848] Net axi_ctrl_user_int\.rvalid in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:223]
+WARNING: [Synth 8-3848] Net axi_ctrl_user_int\.wready in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:228]
+WARNING: [Synth 8-3848] Net notify_int\.valid in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:44]
+WARNING: [Synth 8-3848] Net notify_int\.data[pid] in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:46]
+WARNING: [Synth 8-3848] Net notify_int\.data[value] in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:46]
+WARNING: [Synth 8-3848] Net bpss_rd_cq_int\.ready in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:45]
+WARNING: [Synth 8-3848] Net bpss_wr_cq_int\.ready in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/lynx_intf.sv:45]
+WARNING: [Synth 8-3848] Net axi_ctrl_user\.awqos in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:214]
+WARNING: [Synth 8-3848] Net axi_ctrl_user\.awregion in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:215]
+WARNING: [Synth 8-3848] Net axi_ctrl_user\.arqos in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:206]
+WARNING: [Synth 8-3848] Net axi_ctrl_user\.arregion in module/entity design_user_wrapper_0 does not have driver. [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/hdl/ext/raw/axi_intf.sv:207]
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-3848] Net aclk in module/entity design_user_wrapper_0 does not have driver.
+WARNING: [Synth 8-7129] Port s_axis\.aclk in module axisr_reg__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis\.aclk in module axisr_reg__parameterized1 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port s_axis\.aclk in module axisr_reg__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port m_axis\.aclk in module axisr_reg__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[63] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[62] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[61] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[60] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[59] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[58] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[57] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[56] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[55] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[54] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[53] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[52] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[51] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[50] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[49] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[48] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[47] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[46] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[45] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[44] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[43] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[42] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[41] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[40] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[39] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[38] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[37] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[36] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[35] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[34] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[33] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[32] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[31] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[30] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[29] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[28] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[27] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[26] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[25] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[24] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[23] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[22] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[21] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[20] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[19] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[18] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[17] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[16] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[15] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[14] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[13] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[12] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[11] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[10] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[9] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[8] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[7] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[6] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[5] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[4] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[3] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[2] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[1] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awaddr[0] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awprot[2] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awprot[1] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awprot[0] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awqos[3] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awqos[2] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awqos[1] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awqos[0] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awregion[3] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awregion[2] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awregion[1] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awregion[0] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.awvalid in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[63] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[62] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[61] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[60] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[59] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[58] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[57] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[56] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[55] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[54] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[53] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[52] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[51] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[50] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[49] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[48] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[47] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[46] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[45] in module design_user_logic_c0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port axi_ctrl\.araddr[44] in module design_user_logic_c0_0 is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 3730.145 ; gain = 428.734 ; free physical = 215836 ; free virtual = 276845
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 3747.957 ; gain = 446.547 ; free physical = 215836 ; free virtual = 276845
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 3747.957 ; gain = 446.547 ; free physical = 215836 ; free virtual = 276845
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.11 ; elapsed = 00:00:00.1 . Memory (MB): peak = 3747.957 ; gain = 0.000 ; free physical = 215857 ; free virtual = 276867
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_data_fifo_512/axis_data_fifo_512/axis_data_fifo_512_in_context.xdc] for cell 'inst_local_credits_host_wr/genblk2[0].inst_dq'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_data_fifo_512/axis_data_fifo_512/axis_data_fifo_512_in_context.xdc] for cell 'inst_local_credits_host_wr/genblk2[0].inst_dq'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axisr_data_fifo_512/axisr_data_fifo_512/axisr_data_fifo_512_in_context.xdc] for cell 'inst_local_credits_host_rd/genblk2[0].inst_dq'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axisr_data_fifo_512/axisr_data_fifo_512/axisr_data_fifo_512_in_context.xdc] for cell 'inst_local_credits_host_rd/genblk2[0].inst_dq'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/dwidth_converter_512_32/dwidth_converter_512_32/dwidth_converter_512_32_in_context.xdc] for cell 'inst_user_c0_0/inst_dwidth_recv'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/dwidth_converter_512_32/dwidth_converter_512_32/dwidth_converter_512_32_in_context.xdc] for cell 'inst_user_c0_0/inst_dwidth_recv'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/dwidth_converter_32_512/dwidth_converter_32_512/dwidth_converter_32_512_in_context.xdc] for cell 'inst_user_c0_0/inst_dwidth_send'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/dwidth_converter_32_512/dwidth_converter_32_512/dwidth_converter_32_512_in_context.xdc] for cell 'inst_user_c0_0/inst_dwidth_send'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/xfft_0/xfft_0/xfft_0_in_context.xdc] for cell 'inst_user_c0_0/inst_xfft'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/xfft_0/xfft_0/xfft_0_in_context.xdc] for cell 'inst_user_c0_0/inst_xfft'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/debug_bridge_user/debug_bridge_user/debug_bridge_user_in_context.xdc] for cell 'inst_debug_bridge_user'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/debug_bridge_user/debug_bridge_user/debug_bridge_user_in_context.xdc] for cell 'inst_debug_bridge_user'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_512/axis_register_slice_512/axis_register_slice_512_in_context.xdc] for cell 'inst_local_credits_host_wr/genblk2[0].inst_dq_reg/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_512/axis_register_slice_512/axis_register_slice_512_in_context.xdc] for cell 'inst_local_credits_host_wr/genblk2[0].inst_dq_reg/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axisr_register_slice_512/axisr_register_slice_512/axisr_register_slice_512_in_context.xdc] for cell 'inst_local_credits_host_rd/genblk2[0].inst_dq_reg/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axisr_register_slice_512/axisr_register_slice_512/axisr_register_slice_512_in_context.xdc] for cell 'inst_local_credits_host_rd/genblk2[0].inst_dq_reg/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axisr_register_slice_512/axisr_register_slice_512/axisr_register_slice_512_in_context.xdc] for cell 'inst_user_c0_0/inst_reg_sink/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axisr_register_slice_512/axisr_register_slice_512/axisr_register_slice_512_in_context.xdc] for cell 'inst_user_c0_0/inst_reg_sink/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axisr_register_slice_512/axisr_register_slice_512/axisr_register_slice_512_in_context.xdc] for cell 'inst_user_c0_0/inst_reg_src/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axisr_register_slice_512/axisr_register_slice_512/axisr_register_slice_512_in_context.xdc] for cell 'inst_user_c0_0/inst_reg_src/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_host_mux/inst_reg_local_rd/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_host_mux/inst_reg_local_rd/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_host_mux/inst_reg_local_wr/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_host_mux/inst_reg_local_wr/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_user_mux/inst_reg_sq_rd/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_user_mux/inst_reg_sq_rd/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_user_mux/inst_reg_sq_wr/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_user_mux/inst_reg_sq_wr/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_user_mux/inst_reg_local_rd/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_user_mux/inst_reg_local_rd/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_user_mux/inst_reg_local_wr/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_user_mux/inst_reg_local_wr/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_arb_local_rd/inst_reg_out/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_arb_local_rd/inst_reg_out/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_arb_local_wr/inst_reg_out/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_arb_local_wr/inst_reg_out/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_rd/genblk1[0].inst_credits/inst_out_reg/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_rd/genblk1[0].inst_credits/inst_out_reg/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_rd/inst_mux/genblk2[0].inst_reg/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_rd/inst_mux/genblk2[0].inst_reg/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_rd/inst_arb/inst_src_reg/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_rd/inst_arb/inst_src_reg/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_wr/genblk1[0].inst_credits/inst_out_reg/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_wr/genblk1[0].inst_credits/inst_out_reg/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_wr/inst_mux/genblk2[0].inst_reg/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_wr/inst_mux/genblk2[0].inst_reg/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_wr/inst_arb/inst_src_reg/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_128/axis_register_slice_meta_128/axis_register_slice_meta_128_in_context.xdc] for cell 'inst_local_credits_host_wr/inst_arb/inst_src_reg/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_256/axis_register_slice_meta_256/axis_register_slice_meta_256_in_context.xdc] for cell 'inst_host_mux/inst_reg_sq/inst_reg_slice'
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.gen/sources_1/ip/axis_register_slice_meta_256/axis_register_slice_meta_256/axis_register_slice_meta_256_in_context.xdc] for cell 'inst_host_mux/inst_reg_sq/inst_reg_slice'
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/xdc/user_clk_c0_0.xdc]
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/xdc/user_clk_c0_0.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/xdc/user_clk_c0_0.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/design_user_wrapper_0_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/design_user_wrapper_0_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.srcs/constrs_1/local.xdc]
+Finished Parsing XDC File [/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.srcs/constrs_1/local.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3927.551 ; gain = 0.000 ; free physical = 216033 ; free virtual = 277042
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 3927.551 ; gain = 0.000 ; free physical = 216033 ; free virtual = 277042
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_arb_local_rd/inst_reg_out/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_arb_local_wr/inst_reg_out/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_host_mux/inst_reg_local_rd/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_host_mux/inst_reg_local_wr/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_host_mux/inst_reg_sq/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_rd/genblk2[0].inst_dq' at clock pin 's_axis_aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_rd/genblk1[0].inst_credits/inst_out_reg/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_rd/genblk2[0].inst_dq_reg/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_rd/inst_arb/inst_src_reg/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_rd/inst_mux/genblk2[0].inst_reg/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_wr/genblk2[0].inst_dq' at clock pin 's_axis_aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_wr/genblk1[0].inst_credits/inst_out_reg/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_wr/genblk2[0].inst_dq_reg/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_wr/inst_arb/inst_src_reg/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_local_credits_host_wr/inst_mux/genblk2[0].inst_reg/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_user_c0_0/inst_dwidth_recv' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_user_c0_0/inst_dwidth_send' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '10.000' specified during out-of-context synthesis of instance 'inst_user_c0_0/inst_xfft' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_user_c0_0/inst_reg_sink/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_user_c0_0/inst_reg_src/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_user_mux/inst_reg_local_rd/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_user_mux/inst_reg_local_wr/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_user_mux/inst_reg_sq_rd/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '100.000' specified during out-of-context synthesis of instance 'inst_user_mux/inst_reg_sq_wr/inst_reg_slice' at clock pin 'aclk' is different from the actual clock period '4.000', this can lead to different synthesis results.
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:18 ; elapsed = 00:00:19 . Memory (MB): peak = 3927.551 ; gain = 626.141 ; free physical = 216309 ; free virtual = 277318
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xcu280-fsvh2892-2L-e
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:18 ; elapsed = 00:00:19 . Memory (MB): peak = 3927.551 ; gain = 626.141 ; free physical = 216309 ; free virtual = 277318
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_wr/\genblk2[0].inst_dq . (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_rd/\genblk2[0].inst_dq . (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_user_c0_0/inst_dwidth_recv. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_user_c0_0/inst_dwidth_send. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_user_c0_0/inst_xfft. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_debug_bridge_user. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_wr/\genblk2[0].inst_dq_reg /inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_rd/\genblk2[0].inst_dq_reg /inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_user_c0_0/inst_reg_sink/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_user_c0_0/inst_reg_src/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_host_mux/inst_reg_local_rd/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_host_mux/inst_reg_local_wr/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_user_mux/inst_reg_sq_rd/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_user_mux/inst_reg_sq_wr/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_user_mux/inst_reg_local_rd/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_user_mux/inst_reg_local_wr/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_arb_local_rd/inst_reg_out/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_arb_local_wr/inst_reg_out/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_rd/\genblk1[0].inst_credits /inst_out_reg/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_rd/inst_mux/\genblk2[0].inst_reg /inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_rd/inst_arb/inst_src_reg/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_wr/\genblk1[0].inst_credits /inst_out_reg/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_wr/inst_mux/\genblk2[0].inst_reg /inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_local_credits_host_wr/inst_arb/inst_src_reg/inst_reg_slice. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for inst_host_mux/inst_reg_sq/inst_reg_slice. (constraint file  auto generated constraint).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:18 ; elapsed = 00:00:19 . Memory (MB): peak = 3927.551 ; gain = 626.141 ; free physical = 216309 ; free virtual = 277318
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'state_C_reg' in module 'req_parser'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                 ST_IDLE |                              001 |                               00
+                ST_PARSE |                              010 |                               01
+                 ST_SEND |                              100 |                               10
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_C_reg' using encoding 'one-hot' in module 'req_parser'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:19 ; elapsed = 00:00:20 . Memory (MB): peak = 3927.551 ; gain = 626.141 ; free physical = 216345 ; free virtual = 277354
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   48 Bit       Adders := 2     
+	   2 Input   32 Bit       Adders := 5     
+	   2 Input   28 Bit       Adders := 2     
+	   2 Input   23 Bit       Adders := 1     
+	   3 Input   23 Bit       Adders := 1     
+	   2 Input   22 Bit       Adders := 3     
+	   2 Input    8 Bit       Adders := 1     
+	   2 Input    6 Bit       Adders := 2     
+	   2 Input    5 Bit       Adders := 4     
+	   2 Input    4 Bit       Adders := 1     
+	   2 Input    3 Bit       Adders := 4     
+	   2 Input    2 Bit       Adders := 4     
+	   2 Input    1 Bit       Adders := 2     
++---XORs : 
+	   2 Input      1 Bit         XORs := 2     
++---Registers : 
+	              128 Bit    Registers := 8     
+	               48 Bit    Registers := 4     
+	               32 Bit    Registers := 64    
+	               28 Bit    Registers := 4     
+	               23 Bit    Registers := 1     
+	               22 Bit    Registers := 11    
+	                8 Bit    Registers := 1     
+	                6 Bit    Registers := 5     
+	                5 Bit    Registers := 6     
+	                4 Bit    Registers := 3     
+	                3 Bit    Registers := 4     
+	                2 Bit    Registers := 6     
+	                1 Bit    Registers := 27    
++---Muxes : 
+	   2 Input  512 Bit        Muxes := 1     
+	   4 Input  128 Bit        Muxes := 2     
+	   2 Input   64 Bit        Muxes := 1     
+	   2 Input   48 Bit        Muxes := 10    
+	   3 Input   48 Bit        Muxes := 2     
+	   2 Input   28 Bit        Muxes := 14    
+	   3 Input   28 Bit        Muxes := 2     
+	   2 Input   23 Bit        Muxes := 2     
+	   2 Input   22 Bit        Muxes := 6     
+	   2 Input   19 Bit        Muxes := 10    
+	   2 Input    6 Bit        Muxes := 20    
+	   2 Input    5 Bit        Muxes := 14    
+	   2 Input    4 Bit        Muxes := 20    
+	   3 Input    3 Bit        Muxes := 2     
+	   2 Input    3 Bit        Muxes := 4     
+	   2 Input    2 Bit        Muxes := 15    
+	   2 Input    1 Bit        Muxes := 161   
+	   3 Input    1 Bit        Muxes := 10    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 9024 (col length:94)
+BRAMs: 4032 (col length: RAMB18 288 RAMB36 144)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_arready driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_awready driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_bresp[1] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_bresp[0] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_bvalid driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[63] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[62] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[61] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[60] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[59] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[58] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[57] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[56] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[55] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[54] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[53] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[52] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[51] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[50] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[49] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[48] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[47] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[46] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[45] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[44] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[43] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[42] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[41] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[40] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[39] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[38] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[37] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[36] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[35] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[34] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[33] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[32] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[31] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[30] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[29] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[28] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[27] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[26] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[25] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[24] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[23] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[22] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[21] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[20] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[19] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[18] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[17] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[16] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[15] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[14] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[13] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[12] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[11] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[10] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[9] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[8] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[7] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[6] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[5] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[4] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[3] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[2] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[1] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rdata[0] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rresp[1] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rresp[0] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_rvalid driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port axi_ctrl_wready driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_valid driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[pid][5] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[pid][4] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[pid][3] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[pid][2] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[pid][1] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[pid][0] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][31] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][30] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][29] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][28] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][27] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][26] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][25] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][24] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][23] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][22] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][21] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][20] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][19] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][18] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][17] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][16] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][15] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][14] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][13] driven by constant 0
+WARNING: [Synth 8-3917] design design_user_wrapper_0 has port notify_data[value][12] driven by constant 0
+INFO: [Common 17-14] Message 'Synth 8-3917' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:26 ; elapsed = 00:00:28 . Memory (MB): peak = 3927.551 ; gain = 626.141 ; free physical = 216503 ; free virtual = 277512
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:36 ; elapsed = 00:00:41 . Memory (MB): peak = 4164.918 ; gain = 863.508 ; free physical = 216318 ; free virtual = 277327
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:38 ; elapsed = 00:00:44 . Memory (MB): peak = 4239.543 ; gain = 938.133 ; free physical = 216200 ; free virtual = 277209
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:39 ; elapsed = 00:00:45 . Memory (MB): peak = 4239.543 ; gain = 938.133 ; free physical = 216239 ; free virtual = 277248
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:43 ; elapsed = 00:00:49 . Memory (MB): peak = 4239.543 ; gain = 938.133 ; free physical = 216312 ; free virtual = 277321
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:43 ; elapsed = 00:00:49 . Memory (MB): peak = 4239.543 ; gain = 938.133 ; free physical = 216312 ; free virtual = 277321
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:44 ; elapsed = 00:00:50 . Memory (MB): peak = 4239.543 ; gain = 938.133 ; free physical = 216314 ; free virtual = 277323
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:44 ; elapsed = 00:00:50 . Memory (MB): peak = 4239.543 ; gain = 938.133 ; free physical = 216314 ; free virtual = 277323
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:44 ; elapsed = 00:00:50 . Memory (MB): peak = 4239.543 ; gain = 938.133 ; free physical = 216314 ; free virtual = 277323
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:44 ; elapsed = 00:00:50 . Memory (MB): peak = 4239.543 ; gain = 938.133 ; free physical = 216314 ; free virtual = 277323
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+-----------------------------+----------+
+|      |BlackBox name                |Instances |
++------+-----------------------------+----------+
+|1     |debug_bridge_user            |         1|
+|2     |axis_register_slice_meta_128 |        14|
+|3     |axis_register_slice_meta_256 |         1|
+|4     |axisr_data_fifo_512          |         1|
+|5     |axisr_register_slice_512     |         3|
+|6     |axis_data_fifo_512           |         1|
+|7     |axis_register_slice_512      |         1|
+|8     |dwidth_converter_512_32      |         1|
+|9     |xfft_0                       |         1|
+|10    |dwidth_converter_32_512      |         1|
++------+-----------------------------+----------+
+
+Report Cell Usage: 
++------+-----------------------------+------+
+|      |Cell                         |Count |
++------+-----------------------------+------+
+|1     |axis_data_fifo               |     1|
+|2     |axis_register_slice          |     1|
+|3     |axis_register_slice_meta     |     1|
+|4     |axis_register_slice_meta_128 |    13|
+|17    |axis_register_slice_meta     |     1|
+|18    |axisr_data_fifo              |     1|
+|19    |axisr_register_slice         |     1|
+|20    |axisr_register_slice_512     |     2|
+|22    |debug_bridge_user            |     1|
+|23    |dwidth_converter_32          |     1|
+|24    |dwidth_converter_512         |     1|
+|25    |xfft                         |     1|
+|26    |BUFG                         |     1|
+|27    |CARRY8                       |    44|
+|28    |LUT1                         |   204|
+|29    |LUT2                         |   623|
+|30    |LUT3                         |    24|
+|31    |LUT4                         |   260|
+|32    |LUT5                         |   295|
+|33    |LUT6                         |   838|
+|34    |MUXF7                        |   222|
+|35    |FDRE                         |  3088|
+|36    |FDSE                         |     2|
++------+-----------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:44 ; elapsed = 00:00:50 . Memory (MB): peak = 4239.543 ; gain = 938.133 ; free physical = 216314 ; free virtual = 277323
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 463 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:37 ; elapsed = 00:00:42 . Memory (MB): peak = 4239.543 ; gain = 758.539 ; free physical = 216322 ; free virtual = 277332
+Synthesis Optimization Complete : Time (s): cpu = 00:00:44 ; elapsed = 00:00:50 . Memory (MB): peak = 4239.551 ; gain = 938.133 ; free physical = 216322 ; free virtual = 277332
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.1 ; elapsed = 00:00:00.1 . Memory (MB): peak = 4247.543 ; gain = 0.000 ; free physical = 216378 ; free virtual = 277388
+INFO: [Netlist 29-17] Analyzing 267 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4331.848 ; gain = 0.000 ; free physical = 216369 ; free virtual = 277378
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 1 instances were transformed.
+  BUFG => BUFGCE: 1 instance 
+
+Synth Design complete, checksum: 338ee032
+INFO: [Common 17-83] Releasing license: Synthesis
+227 Infos, 463 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:59 ; elapsed = 00:01:03 . Memory (MB): peak = 4331.848 ; gain = 1416.703 ; free physical = 216509 ; free virtual = 277518
+INFO: [Common 17-1381] The checkpoint '/scratch/anubhav/Coyote/examples_hw/build_hw_8/test_config_0/user_c0_0/test.runs/synth_1/design_user_wrapper_0.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file design_user_wrapper_0_utilization_synth.rpt -pb design_user_wrapper_0_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Nov 27 16:36:00 2024...
