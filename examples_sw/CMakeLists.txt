@@ -70,46 +70,58 @@ if(EXAMPLE STREQUAL "hll")
     message("** Example: HLL (Coyote daemon)")
 endif()
 
-# AES example
+#AES example
 if(EXAMPLE STREQUAL "aes")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/aes")
     message("** Example: AES-ECB (Coyote daemon)")
 endif()
 
-# MD5 example
+#MD5 example
 if(EXAMPLE STREQUAL "md5")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/md5")
     message("** Example: MD5 (Coyote daemon)")
 endif()
 
-# SHA example
+#SHA example
 if(EXAMPLE STREQUAL "sha")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/sha")
     message("** Example: SHA (Coyote daemon)")
 endif()
 
-# CONV example
+#CONV example
 if(EXAMPLE STREQUAL "conv")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/conv")
-    message("** Example: Conv (Coyote daemon)")
+    message("** Example: CONV (Coyote daemon)")
 endif()
 
-# FFT example
+#FFT example
 if(EXAMPLE STREQUAL "fft")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/fft")
     message("** Example: FFT (Coyote daemon)")
 endif()
 
-# Speech example
-if(EXAMPLE STREQUAL "speech")
-    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech")
-    message("** Example: Speech Recognition (Coyote daemon)")
+#SVM example
+if(EXAMPLE STREQUAL "svm")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/svm")
+    message("** Example: SVM (Coyote daemon)")
+endif()
+
+#FFT2SVM example
+if(EXAMPLE STREQUAL "fft2svm")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/fft2svm")
+    message("** Example: FFT2SVM (Coyote daemon)")
 endif()
 
 #Multithreading
 if(EXAMPLE STREQUAL "multithreading")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/multithreading")
     message("** Example: Multithreading")
+endif()
+
+#Speech
+if(EXAMPLE STREQUAL "speech")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech")
+    message("** Example: Speech Recognition (Coyote daemon)")
 endif()
 
 # Kmeans example (unified memory)

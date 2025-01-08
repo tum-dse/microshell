@@ -23,18 +23,18 @@ if(EXAMPLE STREQUAL "static")
     set(BUILD_STATIC 1)
     set(BUILD_SHELL 0)
     set(BUILD_OPT 1)
-    set(N_REGIONS 2)
+    set(N_REGIONS 4)
     set(EN_STRM 1)
     set(EN_MEM 1)
-    set(HBM_SPLIT 1)
+    set(HBM_SPLIT 0)
 
     validation_checks_hw()
 
     load_apps (
         VFPGA_C0_0 "apps/perf_local"
         VFPGA_C0_1 "apps/perf_local"
-        # VFPGA_C0_2 "apps/perf_local"
-        # VFPGA_C0_3 "apps/perf_local"
+        VFPGA_C0_2 "apps/perf_local"
+        VFPGA_C0_3 "apps/perf_local"
     )
 
     create_hw()
@@ -54,13 +54,13 @@ endif()
 if(EXAMPLE STREQUAL "streaming")
     message("** Streaming examples: HyperLogLog (cardinality estimation), GBM decision trees (inference) and AES CBC mode")
     set(SHELL_PROBE 1)
-    # set(FDEV_NAME "u55c")
+    set(FDEV_NAME "u55c")
     set(N_REGIONS 1)
     set(EN_STRM 1)
     set(EN_MEM 0)
     set(EN_PR 1)
     set(N_CONFIG 2)
-    # set(FPLAN_PATH "${CMAKE_SOURCE_DIR}/floorplans/streaming_fplan_u55c.xdc")
+    set(FPLAN_PATH "${CMAKE_SOURCE_DIR}/floorplans/streaming_fplan_u55c.xdc")
 
     validation_checks_hw()
 
@@ -100,9 +100,7 @@ endif()
 if(EXAMPLE STREQUAL "multithreading")
     message("** Streaming examples: Multithreading AES CBC")
     set(SHELL_PROBE 2)
-    message("** FDEV_NAME is ${FDEV_NAME}")
-    # set(FDEV_NAME "u55c")
-    message("** FDEV_NAME is ${FDEV_NAME}")
+    set(FDEV_NAME "u55c")
     set(N_REGIONS 1)
     set(EN_STRM 1)
     set(N_STRM_AXI 8)
@@ -231,8 +229,6 @@ endif()
 #
 
 if(EXAMPLE STREQUAL "perf_fpga")
-    set(BUILD_STATIC 1)
-    set(BUILD_SHELL 0)
     set(N_REGIONS 1)
     set(EN_STRM 1)
     set(N_STRM_AXI 2)
@@ -248,45 +244,14 @@ if(EXAMPLE STREQUAL "perf_fpga")
     create_hw()
 endif()
 
-#HLL
-if(EXAMPLE STREQUAL "hll")
-        set(EN_STRM 1)
-        set(EN_MEM 0)
-        set(N_STRM_AXI 1) 
-        set(N_REGIONS 1)
-        
-        validation_checks_hw()
-
-        load_apps (
-            VFPGA_C0_0 "apps/hyperloglog"
-        )
-
-        create_hw()
-endif()
-
-#AES
-if(EXAMPLE STREQUAL "aes")
-        set(EN_STRM 1)
-        set(EN_MEM 0)
-        set(N_STRM_AXI 1) 
-        set(N_REGIONS 1)
-        
-        validation_checks_hw()
-
-        load_apps (
-            VFPGA_C0_0 "apps/aes_ecb"
-        )
-
-        create_hw()
-endif()
-
 #SHA
 if(EXAMPLE STREQUAL "sha256")
         set(EN_STRM 1)
         set(EN_MEM 0)
-        set(N_STRM_AXI 1) 
         set(N_REGIONS 1)
-        
+	set(N_STRM_AXI 1)
+	set(EN_PR 0)
+
         validation_checks_hw()
 
         load_apps (
@@ -300,8 +265,9 @@ endif()
 if(EXAMPLE STREQUAL "md5")
         set(EN_STRM 1)
         set(N_REGIONS 1)
-        set(N_STRM_AXI 1) 
-        set(EN_MEM 0)
+        set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
 
         validation_checks_hw()
 
@@ -312,66 +278,174 @@ if(EXAMPLE STREQUAL "md5")
         create_hw()
 endif()
 
+#HLL
+if(EXAMPLE STREQUAL "hll")
+	set(SHELL_PROBE 1)
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/hyperloglog"
+	)
+
+	create_hw()
+endif()
+
+#AES
+if(EXAMPLE STREQUAL "aes")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/aes_ecb"
+	)
+
+	create_hw()
+endif()
+
 #CONV
 if(EXAMPLE STREQUAL "conv")
-        set(EN_STRM 1)
-        set(N_REGIONS 1)
-        set(N_STRM_AXI 1) 
-        set(EN_MEM 0)
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
 
-        validation_checks_hw()
+	validation_checks_hw()
 
-        load_apps (
-           VFPGA_C0_0 "apps/conv"
-        )
+	load_apps (
+	   VFPGA_C0_0 "apps/conv"
+	)
 
-        create_hw()
+	create_hw()
 endif()
 
-# Speech_recognition 
-if(EXAMPLE STREQUAL "speech")       
-    set(N_REGIONS 1)             
-    set(EN_STRM 1)               
-    set(N_STRM_AXI 1)            
-    set(EN_MEM 0)                
-    set(EN_PR 0)                 
+#IFFT
+if(EXAMPLE STREQUAL "ifft")          
+	set(N_REGIONS 1)              
+	set(EN_STRM 1)               
+	set(N_STRM_AXI 1)           
+	set(EN_MEM 0)                
+	set(EN_PR 0)
 
-    validation_checks_hw()
+	validation_checks_hw()
 
-    load_apps (
-        VFPGA_C0_0 "apps/speech"    
-    )
+	load_apps (
+	   VFPGA_C0_0 "apps/ifft"    
+	)
 
-    create_hw()
+	create_hw()
 endif()
 
-# FFT
-if(EXAMPLE STREQUAL "fft")         
-    set(N_REGIONS 1)             
-    set(EN_STRM 1)               
-    set(N_STRM_AXI 1)            
-    set(EN_MEM 0)                
-    set(EN_PR 0)                 
+#MUL
+if(EXAMPLE STREQUAL "mul")          
+	set(N_REGIONS 1)              
+	set(EN_STRM 1)               
+	set(N_STRM_AXI 1)           
+	set(EN_MEM 0)                
+	set(EN_PR 0)
 
-    validation_checks_hw()
+	validation_checks_hw()
 
-    load_apps (
-        VFPGA_C0_0 "apps/fft"    
-    )
+	load_apps (
+	   VFPGA_C0_0 "apps/mul"    
+	)
 
-    create_hw()
+	create_hw()
 endif()
 
-# test 
+#FFT
+if(EXAMPLE STREQUAL "fft")          
+	set(N_REGIONS 1)              
+	set(EN_STRM 1)               
+	set(N_STRM_AXI 1)           
+	set(EN_MEM 0)                
+	set(EN_PR 0)
+
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/fft"    
+	)
+
+	create_hw()
+endif()
+
+#SVM
+if(EXAMPLE STREQUAL "svm")
+	set(N_REGIONS 1)
+	set(EN_STRM 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/svm"
+	)
+
+	create_hw()
+endif()
+
+#FFT2SVM
+if(EXAMPLE STREQUAL "fft2svm")
+	set(N_REGIONS 1)
+	set(EN_STRM 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/fft2svm"
+	)
+
+	create_hw()
+endif()
+
+#Speech Recognition
+if(EXAMPLE STREQUAL "speech")
+	set(N_REGIONS 1)
+	set(EN_STRM 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/speech"
+	)
+
+	create_hw()
+endif()
+
+#test
 if(EXAMPLE STREQUAL "test")
-    set(SHELL_PROBE 1)           
-    set(N_REGIONS 1)             
-    set(EN_STRM 1)               
-    set(N_STRM_AXI 1)            
-    set(EN_MEM 0)                
-    set(EN_PR 0)                 
+	set(SHELL_PROBE 1)
+	set(N_REGIONS 1)
+	set(EN_STRM 1)	
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
 
-    validation_checks_hw()
+	validation_checks_hw()
+	
+	load_apps (
+	   VFPGA_C0_0 "apps/perf_local"
+	)
 
-    create_hw()
+	create_hw()
 endif()

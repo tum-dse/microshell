@@ -70,14 +70,6 @@ assign axis_src_int.tvalid = output_valid;
 assign axis_src_int.tlast = output_last && output_valid;
 assign wr_tready = !output_valid || axis_src_int.tready;
 
-// Output data assignments
-//assign axis_src_int.tdata = wr_tdata;
-//assign axis_src_int.tkeep = 64'hffffffffffffffff;
-//assign axis_src_int.tid = '0;
-//assign axis_src_int.tvalid = wr_tvalid;
-//assign axis_src_int.tlast = wr_tlast;
-//assign wr_tready = axis_src_int.tready;
-
 // Image size calculation and configuration
 always_ff @(posedge aclk) begin
     if (rst_synced) begin

@@ -1,16 +1,27 @@
 #include <iostream>
 #include <string>
+#include <malloc.h>
+#include <time.h> 
+#include <sys/time.h>  
+#include <chrono>
+#include <fstream>
+#include <fcntl.h>
+#include <unistd.h>
 #include <iomanip>
 #include <signal.h>
-#include <unistd.h>
-#include <memory>
-#include <any>
-#include <chrono>
+#ifdef EN_AVX
+#include <x86intrin.h>
+#endif
 #include <boost/program_options.hpp>
+#include <any>
+#include <cmath>
+#include <random>
+#include <vector>
 #include "cBench.hpp"
 #include "cThread.hpp"
 
 using namespace std;
+using namespace std::chrono;
 using namespace fpga;
 
 /* Signal handler */
@@ -23,7 +34,7 @@ void gotInt(int) {
 constexpr auto const defDevice = 0;
 constexpr auto const targetVfid = 0;  
 constexpr auto const defReps = 1;
-constexpr auto const defSize = 64 * 64;  // 64x64 image default
+constexpr auto const defSize = 32;  // 32x32 image default
 
 int main(int argc, char *argv[])  
 {
@@ -52,12 +63,15 @@ int main(int argc, char *argv[])
 
     // Calculate memory requirements
     uint32_t bytes_per_pixel = 1;  // 8-bit pixels
-    uint32_t total_size = size * size * bytes_per_pixel;
-    uint32_t n_pages = (total_size + hugePageSize - 1) / hugePageSize;
+    uint32_t buffer_size = size * size * bytes_per_pixel;
+    uint32_t aligned_size = ((buffer_size + 511) / 512) * 512; // Align to 512 bytes
+    uint32_t n_pages = (aligned_size + hugePageSize - 1) / hugePageSize;
+
 
     PR_HEADER("CONVOLUTION TEST");
     std::cout << "Image size: " << size << "x" << size << " pixels" << std::endl;
-    std::cout << "Total size: " << total_size << " bytes" << std::endl;
+    std::cout << "Buffer size: " << buffer_size << " bytes" << std::endl;
+    std::cout << "Aligned size: " << aligned_size << " bytes" << std::endl;
     std::cout << "Pages required: " << n_pages << std::endl;
     std::cout << "Repetitions: " << n_reps << std::endl;
 
@@ -66,87 +80,96 @@ int main(int argc, char *argv[])
         std::unique_ptr<cThread<std::any>> cthread(new cThread<std::any>(targetVfid, getpid(), defDevice));
         cthread->start();
 
-        // Allocate memory
-        uint64_t* input_buffer = (uint64_t*)cthread->getMem({CoyoteAlloc::HPF, n_pages});
-        uint64_t* output_buffer = (uint64_t*)cthread->getMem({CoyoteAlloc::HPF, n_pages});
+        std::vector<uint64_t*> input_buffers(n_reps, nullptr);
+        std::vector<uint64_t*> output_buffers(n_reps, nullptr);
         
-        if (!input_buffer || !output_buffer) {
-            throw std::runtime_error("Memory allocation failed");
-        }
+        // Allocate and initialize memory
+        for(int i = 0; i < n_reps; i++) {
+            input_buffers[i] = (uint64_t*) cthread->getMem({CoyoteAlloc::HPF, n_pages});
+            output_buffers[i] = (uint64_t*) cthread->getMem({CoyoteAlloc::HPF, n_pages});
+            
+            if (!input_buffers[i] || !output_buffers[i]) {
+                throw std::runtime_error("Memory allocation failed");
+            }
 
-        // Fill input with test pattern
-        std::cout << "Writing test pattern..." << std::endl;
-        for(uint32_t i = 0; i < total_size; i++) {
-            ((uint8_t*)input_buffer)[i] = i & 0xFF;
-        }
+            // Fill input with test pattern
+            for(uint32_t j = 0; j < aligned_size; j++) {
+                ((uint64_t*)input_buffers[i])[j] = j & 0xFF;
+            }
 
-        // Configure image size
-        cthread->setCSR(size, 0);  // Set image width/height
+            // Clear output buffer
+            memset(output_buffers[i], 0, aligned_size);
+        }
 
         // Setup transfer
         sgEntry sg;
-        sgFlags sg_flags = {false, false, false};
+        sgFlags sg_flags = {true, true, false};
         
-        memset(&sg, 0, sizeof(sgEntry));
-        sg.local.src_addr = input_buffer;
-        sg.local.src_len = total_size;
-        sg.local.src_stream = strmHost;
-        sg.local.src_dest = targetVfid;
-        
-        sg.local.dst_addr = output_buffer;
-        sg.local.dst_len = total_size;
-        sg.local.dst_stream = strmHost;
-        sg.local.dst_dest = targetVfid;
+        cBench bench(n_reps);
+        PR_HEADER("CONV");
 
-        // Clear any previous completions
         cthread->clearCompleted();
 
-        std::cout << "Starting convolution..." << std::endl;
-        cthread->invoke(CoyoteOper::LOCAL_TRANSFER, &sg, sg_flags);
+        auto benchmark_thr = [&]() {
+            for(int i = 0; i < n_reps; i++) {
+                memset(&sg, 0, sizeof(sgEntry));
+                
+                sg.local.src_addr = input_buffers[i];
+                sg.local.src_len = aligned_size;
+                sg.local.src_stream = strmHost;
+                sg.local.src_dest = targetVfid;
 
-        // Wait for completion with timeout
-        auto start = std::chrono::high_resolution_clock::now();
-        while(cthread->checkCompleted(CoyoteOper::LOCAL_TRANSFER) != 1) {
-            if(stalled.load()) {
-                throw std::runtime_error("Operation interrupted");
-            }
-            
-            auto now = std::chrono::high_resolution_clock::now();
-            if(std::chrono::duration_cast<std::chrono::seconds>(now - start).count() > 10) {
-                throw std::runtime_error("Operation timeout");
-            }
-            
-            usleep(1000);  // 1ms sleep
-        }
+                sg.local.dst_addr = output_buffers[i];
+                sg.local.dst_len = aligned_size;
+                sg.local.dst_stream = strmHost;
+                sg.local.dst_dest = targetVfid;
 
-        // Basic verification - check if output is not all zeros
-        std::cout << "Verifying output..." << std::endl;
-        bool has_data = false;
-        for(uint32_t i = 0; i < total_size && !has_data; i++) {
-            if(((uint8_t*)output_buffer)[i] != 0) {
-                has_data = true;
+                sg_flags.last = (i == n_reps-1);
+                
+                cthread->invoke(CoyoteOper::LOCAL_TRANSFER, &sg, sg_flags);
             }
-        }
-        
-        if(!has_data) {
-            std::cout << "WARNING: Output buffer contains all zeros!" << std::endl;
-        }
 
-        // Print some sample values
+            // Wait for completion with status updates
+            auto start = std::chrono::high_resolution_clock::now();
+            while(cthread->checkCompleted(CoyoteOper::LOCAL_WRITE) != 1) {
+                if(stalled.load()) throw std::runtime_error("Stalled");
+                
+                auto now = std::chrono::high_resolution_clock::now();
+                auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
+                
+                if(elapsed > 5) {
+                    throw std::runtime_error("Transfer timeout");
+                }
+            }
+        };
+
+        bench.runtime(benchmark_thr);
+
+        // Print results
+        std::cout << std::fixed << std::setprecision(2);
+        std::cout << "Size: " << std::setw(8) << size << ", throughput: " 
+                  << std::setw(8) << (1000 * aligned_size) / (bench.getAvg() / n_reps) 
+                  << " MB/s" << std::endl;
+
+        // Print sample values from first buffer
         std::cout << "\nFirst few input pixels: ";
         for(int i = 0; i < 4; i++) {
-            std::cout << std::hex << (int)((uint8_t*)input_buffer)[i] << " ";
+            std::cout << std::hex << (int)((uint64_t*)input_buffers[0])[i] << " ";
         }
         
         std::cout << "\nFirst few output pixels: ";
         for(int i = 0; i < 4; i++) {
-            std::cout << std::hex << (int)((uint8_t*)output_buffer)[i] << " ";
+            std::cout << std::hex << (int)((uint64_t*)output_buffers[0])[i] << " ";
         }
         std::cout << std::dec << std::endl;
 
+        cthread->printDebug();
+
         // Cleanup
-        cthread->freeMem(input_buffer);
-        cthread->freeMem(output_buffer);
+        for(int i = 0; i < n_reps; i++) {
+            if(input_buffers[i]) cthread->freeMem(input_buffers[i]);
+            if(output_buffers[i]) cthread->freeMem(output_buffers[i]);
+        }
 
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
