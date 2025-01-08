@@ -1,6 +1,0 @@
-/scratch/anubhav/Coyote/examples_hw/build_hw_8/CMakeFiles/shell.dir
-/scratch/anubhav/Coyote/examples_hw/build_hw_8/CMakeFiles/link.dir
-/scratch/anubhav/Coyote/examples_hw/build_hw_8/CMakeFiles/bitgen.dir
-/scratch/anubhav/Coyote/examples_hw/build_hw_8/CMakeFiles/synth.dir
-/scratch/anubhav/Coyote/examples_hw/build_hw_8/CMakeFiles/project.dir
-/scratch/anubhav/Coyote/examples_hw/build_hw_8/CMakeFiles/sim.dir
