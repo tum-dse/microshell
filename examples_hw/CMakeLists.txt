@@ -313,10 +313,44 @@ if(EXAMPLE STREQUAL "aes")
 	create_hw()
 endif()
 
-#CONV
-if(EXAMPLE STREQUAL "conv")
-	set(EN_STRM 1)
+#1DIFFT
+if(EXAMPLE STREQUAL "1difft")
 	set(N_REGIONS 1)
+	set(EN_STRM 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/1difft"
+	)
+
+	create_hw()
+endif()
+
+#MUL
+if(EXAMPLE STREQUAL "mul")
+	set(N_REGIONS 1)
+	set(EN_STRM 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/mul"
+	)
+
+	create_hw()
+endif()
+
+#2DFFT
+if(EXAMPLE STREQUAL "2dfft")
+	set(N_REGIONS 1)
+	set(EN_STRM 1)
 	set(N_STRM_AXI 1)
 	set(EN_MEM 0)
 	set(EN_PR 0)
@@ -324,14 +358,31 @@ if(EXAMPLE STREQUAL "conv")
 	validation_checks_hw()
 
 	load_apps (
-	   VFPGA_C0_0 "apps/conv"
+	   VFPGA_C0_0 "apps/2dfft"
 	)
 
 	create_hw()
 endif()
 
-#IFFT
-if(EXAMPLE STREQUAL "ifft")          
+#2DIFFT
+if(EXAMPLE STREQUAL "2difft")
+	set(N_REGIONS 1)
+	set(EN_STRM 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/2difft"
+	)
+
+	create_hw()
+endif()
+
+#1DFFT
+if(EXAMPLE STREQUAL "1dfft")          
 	set(N_REGIONS 1)              
 	set(EN_STRM 1)               
 	set(N_STRM_AXI 1)           
@@ -341,41 +392,24 @@ if(EXAMPLE STREQUAL "ifft")
 	validation_checks_hw()
 
 	load_apps (
-	   VFPGA_C0_0 "apps/ifft"    
+	   VFPGA_C0_0 "apps/1dfft"    
 	)
 
 	create_hw()
 endif()
 
-#MUL
-if(EXAMPLE STREQUAL "mul")          
-	set(N_REGIONS 1)              
-	set(EN_STRM 1)               
-	set(N_STRM_AXI 1)           
-	set(EN_MEM 0)                
+#LETTERBOX
+if(EXAMPLE STREQUAL "letterbox")
+	set(N_REGIONS 1)
+	set(EN_STRM 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
 	set(EN_PR 0)
 
 	validation_checks_hw()
 
 	load_apps (
-	   VFPGA_C0_0 "apps/mul"    
-	)
-
-	create_hw()
-endif()
-
-#FFT
-if(EXAMPLE STREQUAL "fft")          
-	set(N_REGIONS 1)              
-	set(EN_STRM 1)               
-	set(N_STRM_AXI 1)           
-	set(EN_MEM 0)                
-	set(EN_PR 0)
-
-	validation_checks_hw()
-
-	load_apps (
-	   VFPGA_C0_0 "apps/fft"    
+	   VFPGA_C0_0 "apps/letterbox"
 	)
 
 	create_hw()
@@ -415,7 +449,7 @@ if(EXAMPLE STREQUAL "fft2svm")
 	create_hw()
 endif()
 
-#Speech Recognition
+#SPEECH
 if(EXAMPLE STREQUAL "speech")
 	set(N_REGIONS 1)
 	set(EN_STRM 1)
@@ -444,7 +478,7 @@ if(EXAMPLE STREQUAL "test")
 	validation_checks_hw()
 	
 	load_apps (
-	   VFPGA_C0_0 "apps/perf_local"
+	   VFPGA_C0_0 "apps/test"
 	)
 
 	create_hw()

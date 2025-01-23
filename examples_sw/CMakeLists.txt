@@ -94,10 +94,40 @@ if(EXAMPLE STREQUAL "conv")
     message("** Example: CONV (Coyote daemon)")
 endif()
 
-#FFT example
-if(EXAMPLE STREQUAL "fft")
-    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/fft")
+#MUL example
+if(EXAMPLE STREQUAL "mul")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/mul")
+    message("** Example: MUL (Coyote daemon)")
+endif()
+
+#1DIFFT example
+if(EXAMPLE STREQUAL "1difft")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/1difft")
+    message("** Example: IFFT (Coyote daemon)")
+endif()
+
+#1DFFT example
+if(EXAMPLE STREQUAL "1dfft")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/1dfft")
     message("** Example: FFT (Coyote daemon)")
+endif()
+
+#2DIFFT example
+if(EXAMPLE STREQUAL "2difft")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/2difft")
+    message("** Example: 2D IFFT (Coyote daemon)")
+endif()
+
+#2DFFT example
+if(EXAMPLE STREQUAL "2dfft")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/2dfft")
+    message("** Example: 2D FFT (Coyote daemon)")
+endif()
+
+#LETTERBOX example
+if(EXAMPLE STREQUAL "letterbox")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/letterbox")
+    message("** Example: Letterbox (Coyote daemon)")
 endif()
 
 #SVM example

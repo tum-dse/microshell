@@ -18,10 +18,6 @@ import lynxTypes::*;
     logic [3:0]  dwidth_out_tkeep;
     logic [15:0] dwidth_out_tid;
      
-    // Clock and reset signals
-    logic clk_10M;
-    logic clk_locked;
-    logic rst_n_10M;
     
     // Stream interface connections
     AXI4SR axis_sink_int ();
@@ -31,32 +27,18 @@ import lynxTypes::*;
     axisr_reg inst_reg_sink (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_host_recv[0]), .m_axis(axis_sink_int));
     axisr_reg inst_reg_src (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int), .m_axis(axis_host_send[0]));
         
-    // Clock wizard instance
-    clk_wiz_0 inst_user_clk_wiz (
-        .clk_in1         (aclk),              
-        .reset          (!aresetn),           
-        .clk_out1       (clk_10M),
-        .locked         (clk_locked)
-    );
-    
-    // Reset module for 10MHz domain
-    proc_sys_reset_0 inst_rst_10M (
-        .slowest_sync_clk (clk_10M),
-        .ext_reset_in     (!aresetn),
-        .aux_reset_in     (1'b1),
-        .mb_debug_sys_rst (1'b0),
-        .dcm_locked       (clk_locked),
-        .mb_reset         (),            
-        .bus_struct_reset (),
-        .peripheral_reset (),
-        .interconnect_aresetn(),
-        .peripheral_aresetn(rst_n_10M)
-    );
+    // Static assignments
+    always_comb begin
+        dwidth_in_tkeep = 1;
+        dwidth_out_tkeep = 1;
+        dwidth_in_tid = 0;
+        dwidth_out_tid = 0;
+    end
     
     // Input width converter (512->32)
     dwidth_converter_512_32 inst_dwidth_recv (
-        .aclk(clk_10M),
-        .aresetn(rst_n_10M),
+        .aclk(aclk),
+        .aresetn(aresetn),
         .s_axis_tvalid(axis_sink_int.tvalid),
         .s_axis_tready(axis_sink_int.tready),
         .s_axis_tdata (axis_sink_int.tdata),
@@ -68,11 +50,25 @@ import lynxTypes::*;
         .m_axis_tlast (dwidth_in_tlast),
         .m_axis_tid   (dwidth_in_tid) 
     );
+        
+    // SVM IP
+    svm_speech_30_0 inst_svm (
+	 .ap_clk          (aclk),
+	 .ap_rst_n        (aresetn),
+	 .input_r_TDATA   (dwidth_in_tdata),
+	 .input_r_TVALID  (dwidth_in_tvalid),
+	 .input_r_TREADY  (dwidth_in_tready),
+	 .input_r_TLAST   (dwidth_in_tlast),
+	 .output_r_TDATA  (dwidth_out_tdata),
+	 .output_r_TVALID (dwidth_out_tvalid),
+	 .output_r_TREADY (dwidth_out_tready),
+	 .output_r_TLAST  (dwidth_out_tlast)
+    );
 
     // Output width converter (32->512)
     dwidth_converter_32_512 inst_dwidth_send (
-        .aclk(clk_10M),
-        .aresetn(rst_n_10M),
+        .aclk(aclk),
+        .aresetn(aresetn),
         .s_axis_tvalid(dwidth_out_tvalid),
         .s_axis_tready(dwidth_out_tready),
         .s_axis_tdata (dwidth_out_tdata),
@@ -83,29 +79,6 @@ import lynxTypes::*;
         .m_axis_tdata (axis_src_int.tdata),
         .m_axis_tlast (axis_src_int.tlast),
         .m_axis_tid   (axis_src_int.tid) 
-    );
-
-    // Static assignments
-    always_comb begin
-        dwidth_in_tkeep = 4'hF;
-        dwidth_out_tkeep = 4'hF;
-
-        dwidth_in_tid = 0;
-        dwidth_out_tid = 0;
-    end
-    
-    // SVM IP
-    svm_speech_30_0 inst_svm (  
-        .ap_clk             (clk_10M),
-        .ap_rst_n          (rst_n_10M),
-        .s_axis_input_TDATA    (dwidth_in_tdata),
-        .s_axis_input_TVALID   (dwidth_in_tvalid),
-        .s_axis_input_TREADY   (dwidth_in_tready),
-        .s_axis_input_TLAST    (dwidth_in_tlast),
-        .m_axis_output_TDATA   (dwidth_out_tdata),
-        .m_axis_output_TVALID  (dwidth_out_tvalid),
-        .m_axis_output_TREADY  (dwidth_out_tready),
-        .m_axis_output_TLAST   (dwidth_out_tlast)
     );
     
     // Tie off unused interfaces
