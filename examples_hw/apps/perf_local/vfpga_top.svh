@@ -39,7 +39,7 @@ always_comb cq_rd.tie_off_s();
 always_comb cq_wr.tie_off_s();
 
 // ILA
-ila_perf_host inst_ila_perf_host (
+ila_perf_host inst_ila_perf_host_c1 (
     .clk(aclk),
     .probe0(axis_host_recv[0].tvalid),
     .probe1(axis_host_recv[0].tready),

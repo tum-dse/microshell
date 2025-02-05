@@ -99,10 +99,7 @@ module cnfg_slave_avx #(
     metaIntf.s                  s_notify,
 
     // Control
-    output logic                usr_irq,
-
-    // IO Control
-    output logic [7:0]          io_ctrl
+    output logic                usr_irq
 );
 
 // -- Decl -------------------------------------------------------------------------------
@@ -366,7 +363,6 @@ localparam integer TCP_OPEN_PORT_REG                        = 12;
 localparam integer TCP_OPEN_PORT_STAT_REG                   = 13;
 localparam integer TCP_OPEN_CONN_REG                        = 14;
 localparam integer TCP_OPEN_CONN_STAT_REG                   = 15;
-
 
 // 53 (RW): IO Switch
 localparam integer IO_SWITCH_REG                            = 53;
@@ -1049,7 +1045,7 @@ assign pfault_wr_ctrl.data = slv_reg[ISR_REG][ISR_SUCCESS];
 
 assign usr_irq = irq_pending;
 
-// IO control
+logic [7:0]          io_ctrl;
 assign io_ctrl = slv_reg[IO_SWITCH_REG][7:0];
 
 // Host request
