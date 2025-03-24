@@ -25,7 +25,6 @@ AXI4SR axis_src_int ();
 axisr_reg inst_reg_sink (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_host_recv[0]), .m_axis(axis_sink_int));
 axisr_reg inst_reg_src (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int), .m_axis(axis_host_send[0]));
 
-assign user_data = 0;
 
 always_comb begin
     axis_host_recv_tkeep = 1;
@@ -117,8 +116,92 @@ dwidth_converter_256_512 inst_dwidth_send (
     .m_axis_tid(axis_src_int.tid)
 );
 
+
+// ============================================================================
+// Cycle Counter Integration
+// ============================================================================
+
+logic start_signal_sha2, end_signal_sha2;
+logic start_signal_rsa, end_signal_rsa;
+
+assign start_signal_sha2 = axis_host_recv[0].tvalid && axis_host_recv[0].tready;
+assign end_signal_sha2 = sha_done;
+
+assign start_signal_rsa = sha_done;
+assign end_signal_rsa = axis_host_send[0].tvalid && axis_host_send[0].tready;
+
+logic [31:0]                     cycle_count_sha2;
+logic [31:0]                     cycle_count_rsa;
+logic                            count_valid_sha2;
+logic                            count_valid_rsa;
+
+// Benchmark slave
+logic [1:0] bench_ctrl;
+logic [31:0] bench_done;
+logic [63:0] bench_timer;
+logic [PID_BITS-1:0] bench_pid;
+logic [DEST_BITS-1:0] bench_dest;
+logic [VADDR_BITS-1:0] bench_vaddr;
+logic [LEN_BITS-1:0] bench_len;
+logic [31:0] bench_n_reps;
+logic [63:0] bench_n_beats;
+
+assign bench_timer[31:0] = cycle_count_sha2;
+assign bench_timer[63:32] = cycle_count_rsa;
+assign bench_done = count_valid_rsa;
+
+// Instantiate cycle counter
+cycle_counter cycle_counter_sha2 (
+    .clk          (aclk),
+    .resetn       (aresetn),
+    .start        (start_signal_sha2),
+    .stop         (end_signal_sha2),
+    .cycle_count  (cycle_count_sha2),
+    .count_valid  (count_valid_sha2)
+);
+
+cycle_counter cycle_counter_rsa (
+    .clk          (aclk),
+    .resetn       (aresetn),
+    .start        (start_signal_rsa),
+    .stop         (end_signal_rsa),
+    .cycle_count  (cycle_count_rsa),
+    .count_valid  (count_valid_rsa)
+);
+
+ctrl_slv inst_slave (
+    .aclk(aclk),
+    .aresetn(aresetn),
+    .axi_ctrl(axi_ctrl),
+    .bench_ctrl(bench_ctrl),
+    .bench_done(bench_done),
+    .bench_timer(bench_timer),
+    .bench_pid(bench_pid),
+    .bench_dest(bench_dest),
+    .bench_vaddr(bench_vaddr),
+    .bench_len(bench_len),
+    .bench_n_reps(bench_n_reps),
+    .bench_n_beats(bench_n_beats)
+);
+
+
+ila_ctrl_fpga inst_ila_ctrl_fpga (
+    .clk(aclk),
+    .probe0(bench_ctrl), // 2
+    .probe1(bench_done), // 32
+    .probe2(bench_timer), // 64
+    .probe3(start_signal_sha2), // 1
+    .probe4(end_signal_sha2), // 1
+    .probe5(start_signal_rsa), // 1
+    .probe6(end_signal_rsa), // 1
+    .probe7(cycle_count_rsa), // 32
+    .probe8(cycle_count_rsa), // 32
+    .probe9(count_valid_sha2), // 1
+    .probe10(count_valid_rsa) // 1
+);
+
 // Tie-off unused
-always_comb axi_ctrl.tie_off_s();
+// always_comb axi_ctrl.tie_off_s();
 always_comb notify.tie_off_m();
 always_comb sq_rd.tie_off_m();
 always_comb sq_wr.tie_off_m();

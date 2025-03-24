@@ -40,6 +40,183 @@ if(EXAMPLE STREQUAL "static")
     create_hw()
 endif()
 
+if(EXAMPLE STREQUAL "digi")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 2)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/sha2"
+        VFPGA_C0_1 "apps/rsa"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "digi_module")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 2)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/sha2_module"
+        VFPGA_C0_1 "apps/rsa_module"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "speech")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 3)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/1dfft"
+        VFPGA_C0_1 "apps/fft2svm"
+        VFPGA_C0_2 "apps/svm"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "1dfft")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 1)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/1dfft"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "fft2svm_2")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 2)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/fft2svm"
+        VFPGA_C0_1 "apps/fft2svm"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "digi_base")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 1)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/digital_signature"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "digi_base_con")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 1)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/digital_sig_con"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "speech_base")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 1)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/speech"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "counter_hbm")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 2)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/perf_counter"
+        VFPGA_C0_1 "apps/perf_counter"
+    )
+
+    create_hw()
+endif()
+
 #
 # Sim
 # @brief: Default shell, contains interconnect and memory link testing circuits (perf_local)
@@ -258,6 +435,9 @@ endif()
 #
 
 if(EXAMPLE STREQUAL "perf_fpga")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
     set(N_REGIONS 1)
     set(EN_STRM 1)
     set(N_STRM_AXI 2)

@@ -26,7 +26,7 @@ logic         axis_sink_tvalid;
 logic         axis_sink_tlast;
 logic         axis_sink_tready;
 
-logic [255:0] axis_src_tdata;
+logic [511:0] axis_src_tdata;
 logic [63:0]  axis_src_tkeep;
 logic [7:0]   axis_src_tid;
 logic         axis_src_tvalid;
