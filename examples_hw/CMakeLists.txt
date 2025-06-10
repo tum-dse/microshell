@@ -468,7 +468,6 @@ endif()
 
 #test
 if(EXAMPLE STREQUAL "test")
-	set(SHELL_PROBE 1)
 	set(N_REGIONS 1)
 	set(EN_STRM 1)	
 	set(N_STRM_AXI 1)
@@ -478,7 +477,7 @@ if(EXAMPLE STREQUAL "test")
 	validation_checks_hw()
 	
 	load_apps (
-	   VFPGA_C0_0 "apps/test"
+	   VFPGA_C0_0 "apps/perf_local"
 	)
 
 	create_hw()

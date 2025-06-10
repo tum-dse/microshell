@@ -216,6 +216,38 @@ public:
 	 */
 	void printDebug();
 
+	/**
+	 * @brief Endpoint control interface
+	 * 
+	 * @param endpoint_idx : endpoint index (0 to N_ENDPOINTS-1)
+	 * @param config : endpoint configuration structure
+	 */
+	void epConfigure(uint32_t endpoint_idx, const epConfig& config);
+
+	/**
+	 * @brief Read endpoint configuration
+	 * 
+	 * @param endpoint_idx : endpoint index (0 to N_ENDPOINTS-1)
+	 * @return epConfig : current endpoint configuration
+	 */
+	epConfig epGetConfig(uint32_t endpoint_idx);
+
+	/**
+	 * @brief Enable/disable endpoint
+	 * 
+	 * @param endpoint_idx : endpoint index
+	 * @param enable : true to enable, false to disable
+	 */
+	void epSetValid(uint32_t endpoint_idx, bool enable);
+
+	/**
+	 * @brief Get endpoint validity status
+	 * 
+	 * @param endpoint_idx : endpoint index
+	 * @return bool : true if endpoint is valid/enabled
+	 */
+	bool epIsValid(uint32_t endpoint_idx);
+
 };
 
 } /* namespace fpga */

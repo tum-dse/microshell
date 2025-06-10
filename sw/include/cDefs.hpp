@@ -144,6 +144,35 @@ namespace fpga {
 #  define htols(x)                          __bswap_16(x)
 #endif
 
+/* EP Control constants */
+constexpr auto const EP_MAX_ENDPOINTS = 8;
+constexpr auto const EP_REGS_PER_ENDPOINT = 4;
+
+/* EP register offsets per endpoint */
+constexpr auto const EP_REG_BASE = 0;
+constexpr auto const EP_REG_BOUND = 1;
+constexpr auto const EP_REG_ACCESS = 2;
+constexpr auto const EP_REG_VALID = 3;
+
+/* EP access rights */
+constexpr auto const EP_ACCESS_READ = 0x1;
+constexpr auto const EP_ACCESS_WRITE = 0x2;
+constexpr auto const EP_ACCESS_RW = 0x3;
+
+/**
+ * Endpoint configuration structure
+ */
+struct epConfig {
+    uint64_t base_addr;
+    uint64_t bound_addr;
+    uint8_t access_rights;  // bit 0: read, bit 1: write
+    bool valid;
+
+    epConfig() : base_addr(0), bound_addr(0), access_rights(0), valid(false) {}
+    
+    epConfig(uint64_t base, uint64_t bound, uint8_t access, bool v) 
+        : base_addr(base), bound_addr(bound), access_rights(access), valid(v) {}
+};
 
 // ======-------------------------------------------------------------------------------
 // Enum
@@ -215,6 +244,7 @@ enum class CnfgAvxRegs : uint32_t {
     TCP_OPEN_PORT_STAT_REG = 13,
     TCP_OPEN_CONN_REG = 14,
     TCP_OPEN_CONN_STAT_REG = 15,
+    EP_CTRL_BASE_REG = 54,
     STAT_DMA_REG = 64
 };
 

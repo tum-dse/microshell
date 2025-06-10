@@ -1,30 +1,3 @@
-/**
-  * Copyright (c) 2021, Systems Group, ETH Zurich
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *
-  * 1. Redistributions of source code must retain the above copyright notice,
-  * this list of conditions and the following disclaimer.
-  * 2. Redistributions in binary form must reproduce the above copyright notice,
-  * this list of conditions and the following disclaimer in the documentation
-  * and/or other materials provided with the distribution.
-  * 3. Neither the name of the copyright holder nor the names of its contributors
-  * may be used to endorse or promote products derived from this software
-  * without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-  * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  */
-
 `timescale 1ns / 1ps
 
 import lynxTypes::*;
@@ -40,18 +13,23 @@ import lynxTypes::*;
  *  @param ID_REG   Number of associated vFPGA
  */
 module mmu_region_top #(
-	parameter integer 					ID_REG = 0	
+    parameter integer                 ID_REG = 0,
+    parameter integer                 N_ENDPOINTS = 1    
 ) (
-	// AXI tlb control and writeback
-    AXI4L.s   							s_axi_ctrl_sTlb,
-    AXI4L.s   							s_axi_ctrl_lTlb,
+    // AXI tlb control and writeback
+    AXI4L.s                           s_axi_ctrl_sTlb,
+    AXI4L.s                           s_axi_ctrl_lTlb,
+    
+    // Add new control interface for memory endpoints
+    //AXI4L.s                         s_axi_ctrl_ep,  
+    input logic [(131*N_ENDPOINTS)-1:0]            ep_ctrl,
 
-	// Requests user
-	metaIntf.s 						    s_bpss_rd_sq,
-	metaIntf.s						    s_bpss_wr_sq,
+    // Requests user
+    metaIntf.s                       s_bpss_rd_sq,
+    metaIntf.s                       s_bpss_wr_sq,
 
 `ifdef EN_STRM
-	// Stream DMAs
+    // Stream DMAs
     dmaIntf.m                           m_rd_HDMA,
     dmaIntf.m                           m_wr_HDMA,
     metaIntf.m                          m_rd_host_done,
@@ -88,9 +66,27 @@ module mmu_region_top #(
     metaIntf.s                          s_wr_invldt_ctrl,
     metaIntf.m                          m_wr_invldt_irq,
     
-    input logic        					aclk,    
-	input logic    						aresetn
+    input logic                         aclk,    
+    input logic                         aresetn
 );
+
+// Endpoint configuration registers
+endpoint_reg_t [N_ENDPOINTS-1:0] endpoint_regs;
+
+// Access violation signals
+logic rd_access_violation, wr_access_violation;
+// Pre-mutex check of access violations - new signals
+logic rd_pre_check_violation, wr_pre_check_violation;
+
+// Registered signals to handle timing
+logic rd_violation_reg, wr_violation_reg;
+logic rd_req_valid_reg, wr_req_valid_reg;
+
+// Page fault handling signals
+logic rd_av_pf_valid, wr_av_pf_valid;  // Access violation page fault valid
+logic rd_tlb_pf_valid, wr_tlb_pf_valid; // TLB miss page fault valid
+logic rd_pf_arb_state, wr_pf_arb_state; // Arbitration state (0: ready, 1: busy)
+logic rd_tlb_pf_ack, wr_tlb_pf_ack;    // TLB miss page fault acknowledgment
 
 // -- Decl -----------------------------------------------------------------------------------
 // -------------------------------------------------------------------------------------------
@@ -102,8 +98,8 @@ localparam integer PHY_L_BITS = PADDR_BITS - PG_L_BITS;
 localparam integer PHY_S_BITS = PADDR_BITS - PG_S_BITS;
 localparam integer TAG_L_BITS = VADDR_BITS - HASH_L_BITS - PG_L_BITS;
 localparam integer TAG_S_BITS = VADDR_BITS - HASH_S_BITS - PG_S_BITS;
-localparam integer TLB_L_DATA_BITS = TAG_L_BITS + PID_BITS + 2 + PHY_L_BITS + HPID_BITS;
-localparam integer TLB_S_DATA_BITS = TAG_S_BITS + PID_BITS + 2 + PHY_S_BITS + HPID_BITS;
+localparam integer TLB_L_DATA_BITS = TAG_L_BITS + PID_BITS + STRM_BITS + 1 + PHY_L_BITS + HPID_BITS;
+localparam integer TLB_S_DATA_BITS = TAG_S_BITS + PID_BITS + STRM_BITS + 1 + PHY_S_BITS + HPID_BITS;
 
 // Tlb interfaces
 tlbIntf #(.TLB_INTF_DATA_BITS(TLB_L_DATA_BITS)) rd_lTlb ();
@@ -116,9 +112,115 @@ tlbIntf #(.TLB_INTF_DATA_BITS(TLB_S_DATA_BITS)) sTlb ();
 AXI4S #(.AXI4S_DATA_BITS(AXI_TLB_BITS)) axis_lTlb ();
 AXI4S #(.AXI4S_DATA_BITS(AXI_TLB_BITS)) axis_sTlb ();
 
-// Request interfaces
-metaIntf #(.STYPE(req_t)) rd_req ();
-metaIntf #(.STYPE(req_t)) wr_req ();
+// Modified read requests for pre-checking
+metaIntf #(.STYPE(req_t)) s_bpss_rd_sq_filtered(aclk);
+metaIntf #(.STYPE(req_t)) s_bpss_wr_sq_filtered(aclk);
+
+// Internal page fault interfaces for TLB FSM
+metaIntf #(.STYPE(irq_pft_t)) rd_tlb_pfault(aclk);
+metaIntf #(.STYPE(irq_pft_t)) wr_tlb_pfault(aclk);
+logic [LEN_BITS-1:0] rd_tlb_pfault_rng;
+logic [LEN_BITS-1:0] wr_tlb_pfault_rng;
+
+// Minimal memory endpoints configuration
+memory_endpoints #(
+    .N_ENDPOINTS(N_ENDPOINTS)
+) inst_endpoints (
+    .aclk(aclk),
+    .aresetn(aresetn),
+    .ep_ctrl(ep_ctrl),
+    .endpoint_regs(endpoint_regs)
+);
+
+// Simple inline access check with consistent defaults
+always_comb begin
+    // Default to violations (most restrictive state)
+    rd_access_violation = 1'b1;
+    wr_access_violation = 1'b1;
+    
+    // Only check if there's a valid request
+    if (s_bpss_rd_sq.valid) begin
+        // Check against all endpoints
+        for (int i = 0; i < N_ENDPOINTS; i++) begin
+            if (endpoint_regs[i].valid && 
+                endpoint_regs[i].access_rights[0] && // Read permission
+                (s_bpss_rd_sq.data.vaddr >= endpoint_regs[i].vaddr_base) &&
+                (s_bpss_rd_sq.data.vaddr <= endpoint_regs[i].vaddr_bound)) begin
+                rd_access_violation = 1'b0; // Clear violation if match found
+                break;
+            end
+        end
+    end
+    
+    // Similar check for write requests
+    if (s_bpss_wr_sq.valid) begin
+        for (int i = 0; i < N_ENDPOINTS; i++) begin
+            if (endpoint_regs[i].valid && 
+                endpoint_regs[i].access_rights[1] && // Write permission
+                (s_bpss_wr_sq.data.vaddr >= endpoint_regs[i].vaddr_base) &&
+                (s_bpss_wr_sq.data.vaddr <= endpoint_regs[i].vaddr_bound)) begin
+                wr_access_violation = 1'b0; // Clear violation if match found
+                break;
+            end
+        end
+    end
+end
+
+// Pre-mutex access violation check
+always_ff @(posedge aclk) begin
+    if (~aresetn) begin
+        rd_pre_check_violation <= 1'b1;
+        wr_pre_check_violation <= 1'b1;
+        rd_req_valid_reg <= 1'b0;
+        wr_req_valid_reg <= 1'b0;
+    end
+    else begin
+        // Capture request validity and access violation before mutex acquisition
+        if (s_bpss_rd_sq.valid) begin
+            rd_pre_check_violation <= rd_access_violation;
+            rd_req_valid_reg <= 1'b1;
+        end
+        else if (rd_lock) begin
+            rd_req_valid_reg <= 1'b0;
+        end
+        
+        if (s_bpss_wr_sq.valid) begin
+            wr_pre_check_violation <= wr_access_violation;
+            wr_req_valid_reg <= 1'b1;
+        end
+        else if (wr_lock) begin
+            wr_req_valid_reg <= 1'b0;
+        end
+    end
+end
+
+// Register access violations for stable values
+always_ff @(posedge aclk) begin
+    if (~aresetn) begin
+        rd_violation_reg <= 1'b1;
+        wr_violation_reg <= 1'b1;
+    end
+    else begin
+        // Update violations when needed
+        if (s_bpss_rd_sq.valid)
+            rd_violation_reg <= rd_access_violation;
+        if (s_bpss_wr_sq.valid)
+            wr_violation_reg <= wr_access_violation;
+    end
+end
+
+// Filter requests based on pre-check violations 
+always_comb begin
+    // Read request filtering
+    s_bpss_rd_sq_filtered.valid = s_bpss_rd_sq.valid && !rd_pre_check_violation;
+    s_bpss_rd_sq_filtered.data = s_bpss_rd_sq.data;
+    s_bpss_rd_sq.ready = s_bpss_rd_sq_filtered.ready || (s_bpss_rd_sq.valid && rd_pre_check_violation);
+    
+    // Write request filtering
+    s_bpss_wr_sq_filtered.valid = s_bpss_wr_sq.valid && !wr_pre_check_violation;
+    s_bpss_wr_sq_filtered.data = s_bpss_wr_sq.data;
+    s_bpss_wr_sq.ready = s_bpss_wr_sq_filtered.ready || (s_bpss_wr_sq.valid && wr_pre_check_violation);
+end
 
 // ----------------------------------------------------------------------------------------
 // Mutex 
@@ -128,22 +230,22 @@ logic rd_lock, wr_lock;
 logic rd_unlock, wr_unlock;
 
 always_ff @(posedge aclk) begin
-	if(aresetn == 1'b0) begin
-		mutex <= 2'b01;
-	end else begin
-		if(mutex[0] == 1'b1) begin // free
-			if(rd_lock)
-				mutex <= 2'b00;
-			else if(wr_lock)
-				mutex <= 2'b10;
-		end
-		else begin // locked
-			if((mutex[1] == 1'b0) && rd_unlock)
-				mutex <= 2'b01;
-			else if (wr_unlock)
-				mutex <= 2'b01;
-		end
-	end
+    if(aresetn == 1'b0) begin
+        mutex <= 2'b01;
+    end else begin
+        if(mutex[0] == 1'b1) begin // free
+            if(rd_lock)
+                mutex <= 2'b00;
+            else if(wr_lock)
+                mutex <= 2'b10;
+        end
+        else begin // locked
+            if((mutex[1] == 1'b0) && rd_unlock)
+                mutex <= 2'b01;
+            else if (wr_unlock)
+                mutex <= 2'b01;
+        end
+    end
 end
 
 // ----------------------------------------------------------------------------------------
@@ -174,8 +276,7 @@ tlb_controller #(
     .TLB_ORDER(TLB_L_ORDER),
     .PG_BITS(PG_L_BITS),
     .N_ASSOC(N_L_ASSOC),
-    .DBG_L(1),
-    .ID_REG(ID_REG)
+    .DBG_L(1)
 ) inst_lTlb (
     .aclk(aclk),
     .aresetn(aresetn),
@@ -187,8 +288,7 @@ tlb_controller #(
     .TLB_ORDER(TLB_S_ORDER),
     .PG_BITS(PG_S_BITS),
     .N_ASSOC(N_S_ASSOC),
-    .DBG_S(1),
-    .ID_REG(ID_REG)
+    .DBG_S(1)
 ) inst_sTlb (
     .aclk(aclk),
     .aresetn(aresetn),
@@ -275,18 +375,19 @@ tlb_fsm #(
     .m_card_done(m_rd_card_done),
     .m_DDMA(rd_DDMA_fsm),
 `endif
-    .s_req(s_bpss_rd_sq),
+    .s_req(s_bpss_rd_sq_filtered),  // Use filtered requests
 
-    .m_pfault(m_rd_pfault_irq),
-    .m_pfault_rng(m_rd_pfault_rng),
+    // Use internal page fault interface
+    .m_pfault(rd_tlb_pfault),
+    .m_pfault_rng(rd_tlb_pfault_rng),
     .s_pfault(s_rd_pfault_ctrl),
 
     .s_invldt(s_rd_invldt_ctrl),
     .m_invldt(m_rd_invldt_irq),
 
     .lock(rd_lock),
-	.unlock(rd_unlock),
-	.mutex(mutex)
+    .unlock(rd_unlock),
+    .mutex(mutex)
 );
 
 // TLB wr FSM
@@ -306,19 +407,150 @@ tlb_fsm #(
     .m_card_done(m_wr_card_done),
     .m_DDMA(wr_DDMA_fsm),
 `endif
-    .s_req(s_bpss_wr_sq),
+    .s_req(s_bpss_wr_sq_filtered),  // Use filtered requests
 
-    .m_pfault(m_wr_pfault_irq),
-    .m_pfault_rng(m_wr_pfault_rng),
+    // Use internal page fault interface
+    .m_pfault(wr_tlb_pfault),
+    .m_pfault_rng(wr_tlb_pfault_rng),
     .s_pfault(s_wr_pfault_ctrl),
 
     .s_invldt(s_wr_invldt_ctrl),
     .m_invldt(m_wr_invldt_irq),
 
     .lock(wr_lock),
-	.unlock(wr_unlock),
-	.mutex(mutex)
+    .unlock(wr_unlock),
+    .mutex(mutex)
 );
+
+// ----------------------------------------------------------------------------------------
+// Page Fault Arbitration
+// ----------------------------------------------------------------------------------------
+
+// Page fault control for read path
+always_ff @(posedge aclk) begin
+    if (~aresetn) begin
+        m_rd_pfault_irq.valid <= 1'b0;
+        rd_av_pf_valid <= 1'b0;
+        rd_tlb_pf_valid <= 1'b0;
+        rd_pf_arb_state <= 1'b0;
+        rd_tlb_pf_ack <= 1'b0;
+    end
+    else begin
+        // State transition
+        if (rd_pf_arb_state == 1'b0) begin  // Ready state
+            // Check access violation first
+            if (s_bpss_rd_sq.valid && rd_pre_check_violation && s_bpss_rd_sq.ready) begin
+                rd_av_pf_valid <= 1'b1;
+                rd_pf_arb_state <= 1'b1;  // Move to busy state
+                // Generate page fault for access violation
+                m_rd_pfault_irq.valid <= 1'b1;
+                m_rd_pfault_irq.data.vaddr <= s_bpss_rd_sq.data.vaddr;
+                m_rd_pfault_irq.data.pid <= s_bpss_rd_sq.data.pid;
+                m_rd_pfault_irq.data.strm <= s_bpss_rd_sq.data.strm;
+                m_rd_pfault_rng <= s_bpss_rd_sq.data.len;
+            end
+            // Then check TLB miss
+            else if (rd_tlb_pfault.valid && !rd_tlb_pf_valid) begin
+                rd_tlb_pf_valid <= 1'b1;
+                rd_pf_arb_state <= 1'b1;  // Move to busy state
+                // Generate page fault for TLB miss
+                m_rd_pfault_irq.valid <= 1'b1;
+                m_rd_pfault_irq.data <= rd_tlb_pfault.data;
+                m_rd_pfault_rng <= rd_tlb_pfault_rng;
+            end
+        end
+        else begin  // Busy state
+            // Wait for acknowledgment
+            if (m_rd_pfault_irq.ready) begin
+                m_rd_pfault_irq.valid <= 1'b0;
+                
+                // Handle acknowledgment based on source
+                if (rd_av_pf_valid) begin
+                    rd_av_pf_valid <= 1'b0;
+                    rd_pf_arb_state <= 1'b0;  // Return to ready state
+                end
+                else if (rd_tlb_pf_valid) begin
+                    rd_tlb_pf_ack <= 1'b1;
+                end
+            end
+            
+            // Handle TLB acknowledgment
+            if (rd_tlb_pf_ack) begin
+                if (!rd_tlb_pfault.valid) begin
+                    rd_tlb_pf_valid <= 1'b0;
+                    rd_tlb_pf_ack <= 1'b0;
+                    rd_pf_arb_state <= 1'b0;  // Return to ready state
+                end
+            end
+        end
+    end
+end
+
+// Connect TLB page fault interface
+assign rd_tlb_pfault.ready = rd_tlb_pf_ack;
+
+// Page fault control for write path
+always_ff @(posedge aclk) begin
+    if (~aresetn) begin
+        m_wr_pfault_irq.valid <= 1'b0;
+        wr_av_pf_valid <= 1'b0;
+        wr_tlb_pf_valid <= 1'b0;
+        wr_pf_arb_state <= 1'b0;
+        wr_tlb_pf_ack <= 1'b0;
+    end
+    else begin
+        // State transition
+        if (wr_pf_arb_state == 1'b0) begin  // Ready state
+            // Check access violation first
+            if (s_bpss_wr_sq.valid && wr_pre_check_violation && s_bpss_wr_sq.ready) begin
+                wr_av_pf_valid <= 1'b1;
+                wr_pf_arb_state <= 1'b1;  // Move to busy state
+                // Generate page fault for access violation
+                m_wr_pfault_irq.valid <= 1'b1;
+                m_wr_pfault_irq.data.vaddr <= s_bpss_wr_sq.data.vaddr;
+                m_wr_pfault_irq.data.pid <= s_bpss_wr_sq.data.pid;
+                m_wr_pfault_irq.data.strm <= s_bpss_wr_sq.data.strm;
+                m_wr_pfault_rng <= s_bpss_wr_sq.data.len;
+            end
+            // Then check TLB miss
+            else if (wr_tlb_pfault.valid && !wr_tlb_pf_valid) begin
+                wr_tlb_pf_valid <= 1'b1;
+                wr_pf_arb_state <= 1'b1;  // Move to busy state
+                // Generate page fault for TLB miss
+                m_wr_pfault_irq.valid <= 1'b1;
+                m_wr_pfault_irq.data <= wr_tlb_pfault.data;
+                m_wr_pfault_rng <= wr_tlb_pfault_rng;
+            end
+        end
+        else begin  // Busy state
+            // Wait for acknowledgment
+            if (m_wr_pfault_irq.ready) begin
+                m_wr_pfault_irq.valid <= 1'b0;
+                
+                // Handle acknowledgment based on source
+                if (wr_av_pf_valid) begin
+                    wr_av_pf_valid <= 1'b0;
+                    wr_pf_arb_state <= 1'b0;  // Return to ready state
+                end
+                else if (wr_tlb_pf_valid) begin
+                    wr_tlb_pf_ack <= 1'b1;
+                end
+            end
+            
+            // Handle TLB acknowledgment
+            if (wr_tlb_pf_ack) begin
+                if (!wr_tlb_pfault.valid) begin
+                    wr_tlb_pf_valid <= 1'b0;
+                    wr_tlb_pf_ack <= 1'b0;
+                    wr_pf_arb_state <= 1'b0;  // Return to ready state
+                end
+            end
+        end
+    end
+end
+
+// Connect TLB page fault interface
+assign wr_tlb_pfault.ready = wr_tlb_pf_ack;
 
 // ----------------------------------------------------------------------------------------
 // Queueing stage
@@ -399,13 +631,6 @@ tlb_fsm #(
         `DMA_REQ_ASSIGN(wr_DDMA_parsed[i], m_wr_DDMA[i])
     end
 `endif
-
-`endif
-
-/////////////////////////////////////////////////////////////////////////////
-// DEBUG
-/////////////////////////////////////////////////////////////////////////////
-`ifdef DBG_MMU_REGION_TOP
 
 `endif
 

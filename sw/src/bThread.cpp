@@ -1215,4 +1215,143 @@ void bThread::printDebug()
 	std::cout << std::endl;
 } 
 
+// Add to bThread.cpp
+
+/**
+ * @brief Configure endpoint
+ * 
+ * @param endpoint_idx - endpoint index (0 to N_ENDPOINTS-1)
+ * @param config - endpoint configuration
+ */
+void bThread::epConfigure(uint32_t endpoint_idx, const epConfig& config) {
+    if (endpoint_idx >= EP_MAX_ENDPOINTS) {
+        throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
+    }
+
+    # ifdef VERBOSE
+        std::cout << "bThread: Configuring EP" << endpoint_idx 
+                  << " - base=0x" << std::hex << config.base_addr
+                  << ", bound=0x" << config.bound_addr 
+                  << ", access=0x" << (uint32_t)config.access_rights
+                  << ", valid=" << config.valid << std::dec << std::endl;
+    # endif
+
+    uint32_t reg_base = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG) + (endpoint_idx * EP_REGS_PER_ENDPOINT);
+
+#ifdef EN_AVX
+    if(fcnfg.en_avx) {
+        // Configure base address
+        cnfg_reg_avx[reg_base + EP_REG_BASE] = 
+            _mm256_set_epi64x(0, 0, 0, config.base_addr);
+        
+        // Configure bound address  
+        cnfg_reg_avx[reg_base + EP_REG_BOUND] = 
+            _mm256_set_epi64x(0, 0, 0, config.bound_addr);
+        
+        // Configure access rights
+        cnfg_reg_avx[reg_base + EP_REG_ACCESS] = 
+            _mm256_set_epi64x(0, 0, 0, static_cast<uint64_t>(config.access_rights));
+        
+        // Configure validity
+        cnfg_reg_avx[reg_base + EP_REG_VALID] = 
+            _mm256_set_epi64x(0, 0, 0, config.valid ? 1 : 0);
+    } else {
+#endif
+        // Legacy mode
+        cnfg_reg[reg_base + EP_REG_BASE] = config.base_addr;
+        cnfg_reg[reg_base + EP_REG_BOUND] = config.bound_addr;
+        cnfg_reg[reg_base + EP_REG_ACCESS] = static_cast<uint64_t>(config.access_rights);
+        cnfg_reg[reg_base + EP_REG_VALID] = config.valid ? 1 : 0;
+#ifdef EN_AVX
+    }
+#endif
+}
+
+/**
+ * @brief Read endpoint configuration
+ * 
+ * @param endpoint_idx - endpoint index
+ * @return epConfig - current endpoint configuration
+ */
+epConfig bThread::epGetConfig(uint32_t endpoint_idx) {
+    if (endpoint_idx >= EP_MAX_ENDPOINTS) {
+        throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
+    }
+
+    epConfig config;
+    uint32_t reg_base = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG) + (endpoint_idx * EP_REGS_PER_ENDPOINT);
+
+#ifdef EN_AVX
+    if(fcnfg.en_avx) {
+        config.base_addr = _mm256_extract_epi64(cnfg_reg_avx[reg_base + EP_REG_BASE], 0);
+        config.bound_addr = _mm256_extract_epi64(cnfg_reg_avx[reg_base + EP_REG_BOUND], 0);
+        config.access_rights = static_cast<uint8_t>(_mm256_extract_epi64(cnfg_reg_avx[reg_base + EP_REG_ACCESS], 0));
+        config.valid = _mm256_extract_epi64(cnfg_reg_avx[reg_base + EP_REG_VALID], 0) != 0;
+    } else {
+#endif
+        config.base_addr = cnfg_reg[reg_base + EP_REG_BASE];
+        config.bound_addr = cnfg_reg[reg_base + EP_REG_BOUND];
+        config.access_rights = static_cast<uint8_t>(cnfg_reg[reg_base + EP_REG_ACCESS]);
+        config.valid = cnfg_reg[reg_base + EP_REG_VALID] != 0;
+#ifdef EN_AVX
+    }
+#endif
+
+    return config;
+}
+
+/**
+ * @brief Enable/disable endpoint
+ * 
+ * @param endpoint_idx - endpoint index
+ * @param enable - true to enable, false to disable
+ */
+void bThread::epSetValid(uint32_t endpoint_idx, bool enable) {
+    if (endpoint_idx >= EP_MAX_ENDPOINTS) {
+        throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
+    }
+
+    # ifdef VERBOSE
+        std::cout << "bThread: Setting EP" << endpoint_idx 
+                  << " valid=" << enable << std::endl;
+    # endif
+
+    uint32_t reg_base = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG) + (endpoint_idx * EP_REGS_PER_ENDPOINT);
+
+#ifdef EN_AVX
+    if(fcnfg.en_avx) {
+        cnfg_reg_avx[reg_base + EP_REG_VALID] = 
+            _mm256_set_epi64x(0, 0, 0, enable ? 1 : 0);
+    } else {
+#endif
+        cnfg_reg[reg_base + EP_REG_VALID] = enable ? 1 : 0;
+#ifdef EN_AVX
+    }
+#endif
+}
+
+/**
+ * @brief Get endpoint validity status
+ * 
+ * @param endpoint_idx - endpoint index
+ * @return bool - true if endpoint is valid/enabled
+ */
+bool bThread::epIsValid(uint32_t endpoint_idx) {
+    if (endpoint_idx >= EP_MAX_ENDPOINTS) {
+        throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
+    }
+
+    uint32_t reg_base = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG) + (endpoint_idx * EP_REGS_PER_ENDPOINT);
+
+#ifdef EN_AVX
+    if(fcnfg.en_avx) {
+        return _mm256_extract_epi64(cnfg_reg_avx[reg_base + EP_REG_VALID], 0) != 0;
+    } else {
+#endif
+        return cnfg_reg[reg_base + EP_REG_VALID] != 0;
+#ifdef EN_AVX
+    }
+#endif
+}
+
 }

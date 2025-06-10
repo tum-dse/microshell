@@ -45,7 +45,7 @@ module mmu_top #(
 	
 	// AXI tlb control
     AXI4L.s   							s_axi_ctrl_sTlb [N_REGIONS],
-    AXI4L.s   							s_axi_ctrl_lTlb [N_REGIONS],
+    AXI4L.s   							s_axi_ctrl_lTlb [N_REGIONS],  
 
 `ifdef EN_AVX
 	// AXI config
@@ -124,10 +124,7 @@ module mmu_top #(
 `endif
 	
 	// Page fault IRQ
-	output logic [N_REGIONS-1:0]    	usr_irq,
-
-    // IO Control switches
-    output logic [N_REGIONS-1:0][7:0]   io_ctrl_switch
+	output logic [N_REGIONS-1:0]    	usr_irq
 );
 
 //
@@ -161,11 +158,16 @@ metaIntf #(.STYPE(pf_t)) wr_pfault_ctrl [N_REGIONS] ();
 metaIntf #(.STYPE(inv_t)) rd_invldt_ctrl [N_REGIONS] ();
 metaIntf #(.STYPE(inv_t)) wr_invldt_ctrl [N_REGIONS] ();
 
+parameter integer N_ENDPOINTS = 1;
+//AXI4L s_axi_ctrl_ep [N_REGIONS] (); 
+logic [N_REGIONS-1:0][(131*N_ENDPOINTS)-1:0]   ep_ctrl;
+
 // Instantiate region MMUs
 for(genvar i = 0; i < N_REGIONS; i++) begin
     
     mmu_region_top #(
-        .ID_REG(i)
+        .ID_REG(i),
+        .N_ENDPOINTS(N_ENDPOINTS)
     ) inst_mmu_region (
         .aclk(aclk),
         .aresetn(aresetn),
@@ -203,7 +205,8 @@ for(genvar i = 0; i < N_REGIONS; i++) begin
         .s_rd_invldt_ctrl(rd_invldt_ctrl[i]),
         .m_rd_invldt_irq(rd_invldt_irq[i]),
         .s_wr_invldt_ctrl(wr_invldt_ctrl[i]),
-        .m_wr_invldt_irq(wr_invldt_irq[i])
+        .m_wr_invldt_irq(wr_invldt_irq[i]),
+        .ep_ctrl(ep_ctrl[i])
     );
 
 end
@@ -254,7 +257,7 @@ end
 for(genvar i = 0; i < N_REGIONS; i++) begin
 
     `ifdef EN_AVX
-        cnfg_slave_avx #(.ID_REG(i)) inst_cnfg_slave (
+        cnfg_slave_avx #(.ID_REG(i),.N_ENDPOINTS(N_ENDPOINTS)) inst_cnfg_slave (
     `else
         cnfg_slave #(.ID_REG(i)) inst_cnfg_slave (
     `endif
@@ -309,8 +312,8 @@ for(genvar i = 0; i < N_REGIONS; i++) begin
             
             .s_notify(s_notify[i]), //
             
-            .usr_irq(usr_irq[i]), //
-            .io_ctrl(io_ctrl_switch[i])
+            .usr_irq(usr_irq[i]),
+            .ep_ctrl(ep_ctrl[i]) //
         );
 
 end
