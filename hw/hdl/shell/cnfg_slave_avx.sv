@@ -366,8 +366,8 @@ localparam integer TCP_OPEN_PORT_STAT_REG                   = 13;
 localparam integer TCP_OPEN_CONN_REG                        = 14;
 localparam integer TCP_OPEN_CONN_STAT_REG                   = 15;
 
-localparam integer EP_CTRL_BASE_REG = 54;        // Base register for EP control
-localparam integer EP_REGS_PER_ENDPOINT = 4;     // Number of registers per endpoint (base, bound, access, valid)
+ // Base register for EP control
+localparam integer EP_CTRL_BASE_REG = 54;       
 
 // 64 (RO) : Status DMA completion
 localparam integer STAT_DMA_REG                             = 2**PID_BITS;
@@ -681,15 +681,13 @@ always_ff @(posedge aclk) begin
                         open_conn_sts.ready <= s_axim_ctrl.wdata[0];
                     end
 `endif     
-                [EP_CTRL_BASE_REG:EP_CTRL_BASE_REG+31]: begin
-                    // Write to EP control registers
+                EP_CTRL_BASE_REG:
                     for (int i = 0; i < AVX_DATA_BITS/8; i++) begin
                         if(s_axim_ctrl.wstrb[i]) begin
-                            slv_reg[axi_araddr[ADDR_LSB+:ADDR_MSB]][(i*8)+:8] <= s_axim_ctrl.wdata[(i*8)+:8];
+                            slv_reg[EP_CTRL_BASE_REG][(i*8)+:8] <= s_axim_ctrl.wdata[(i*8)+:8];
                         end
                     end
-                end
-
+            
                 default: ;
             endcase
         end
@@ -782,10 +780,8 @@ always_ff @(posedge aclk) begin
             axi_mux <= 1'b1; 
         end
         
-        [EP_CTRL_BASE_REG:EP_CTRL_BASE_REG+31]: begin
-            // Read from EP control registers
-            axi_rdata <= slv_reg[axi_araddr[ADDR_LSB+:ADDR_MSB]];
-        end
+        [EP_CTRL_BASE_REG:EP_CTRL_BASE_REG]:
+            axi_rdata <= slv_reg[EP_CTRL_BASE_REG];
 
         default: ;
       endcase
@@ -1623,17 +1619,7 @@ begin
 end    
 
 
-always_comb begin
-    for (int ep = 0; ep < N_ENDPOINTS; ep++) begin
-        // Each endpoint uses 131 bits: base(64) + bound(64) + access(2) + valid(1)
-        ep_ctrl[ep*131 +: 131] = {
-            slv_reg[EP_CTRL_BASE_REG + ep*4 + 3][0],        // valid (1 bit from reg 3)
-            slv_reg[EP_CTRL_BASE_REG + ep*4 + 2][1:0],      // access (2 bits from reg 2)
-            slv_reg[EP_CTRL_BASE_REG + ep*4 + 1][63:0],     // bound (64 bits from reg 1)
-            slv_reg[EP_CTRL_BASE_REG + ep*4 + 0][63:0]      // base (64 bits from reg 0)
-        };
-    end
-end
+assign ep_ctrl = slv_reg[EP_CTRL_BASE_REG][(131*N_ENDPOINTS)-1:0];
 
 //
 // DEBUG
