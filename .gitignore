@@ -4,6 +4,7 @@ bitstreams/
 iprepo/
 tmp/
 test/
+static/
 hd_visual/
 ip_dir/
 xsim.dir/

@@ -26,11 +26,6 @@ module memory_gateway #(
     // Signal declarations
     endpoint_reg_t [N_ENDPOINTS-1:0] endpoint_regs;
 
-    // Secure range checking signals - use wider arithmetic to prevent overflow
-    logic [VADDR_BITS:0] rd_req_end_addr_wide, wr_req_end_addr_wide;
-    logic rd_range_valid, wr_range_valid;
-    logic rd_overflow_detected, wr_overflow_detected;
-
     // Instantiate memory endpoints configuration module
     memory_endpoints #(
         .N_ENDPOINTS(N_ENDPOINTS)
@@ -46,7 +41,7 @@ module memory_gateway #(
     logic violation_detected;
 
     // ----------------------------------------------------------------------------------------
-    // FIXED: Comprehensive Security Validation with Proper Overflow Detection
+    // Security Validation - Overflow-Safe Bounds Checking
     // ----------------------------------------------------------------------------------------
     
     always_comb begin
@@ -54,85 +49,47 @@ module memory_gateway #(
         rd_access_allowed = 1'b0;
         wr_access_allowed = 1'b0;
         
-        // FIXED: Use wider arithmetic (VADDR_BITS+1) to properly detect overflow
-        rd_req_end_addr_wide = {1'b0, s_rd_req.data.vaddr} + {1'b0, s_rd_req.data.len} - 1;
-        wr_req_end_addr_wide = {1'b0, s_wr_req.data.vaddr} + {1'b0, s_wr_req.data.len} - 1;
-        
-        // Detect overflow: if result doesn't fit in VADDR_BITS, it overflowed
-        rd_overflow_detected = rd_req_end_addr_wide[VADDR_BITS];
-        wr_overflow_detected = wr_req_end_addr_wide[VADDR_BITS];
-        
-        // Only check if there's a valid request 
-        if (s_rd_req.valid) begin
+        // Read request validation
+        if (s_rd_req.valid && s_rd_req.data.len > 0) begin
             // Check against all endpoints 
             for (int i = 0; i < N_ENDPOINTS; i++) begin
                 if (endpoint_regs[i].valid && endpoint_regs[i].access_rights[0]) begin
-                    // FIXED: Comprehensive security validation
-                    rd_range_valid = 1'b0; // Start with denial
+                    // Calculate endpoint size to detect malicious huge lengths
+                    logic [VADDR_BITS-1:0] endpoint_size;
+                    endpoint_size = endpoint_regs[i].vaddr_bound - endpoint_regs[i].vaddr_base + 1;
                     
-                    // Security Check 1: Reject zero-length requests
-                    if (s_rd_req.data.len == 0) begin
-                        rd_range_valid = 1'b0;
+                    // Security check: Length cannot exceed endpoint size (prevents underflow attack)
+                    if (s_rd_req.data.len <= endpoint_size) begin
+                        // Overflow-safe bounds check: both start and end must be within bounds
+                        if (s_rd_req.data.vaddr >= endpoint_regs[i].vaddr_base && 
+                            s_rd_req.data.vaddr <= (endpoint_regs[i].vaddr_bound - s_rd_req.data.len + 1)) begin
+                            rd_access_allowed = 1'b1;
+                            break; // Found valid endpoint, allow access
+                        end
                     end
-                    // Security Check 2: Detect integer overflow
-                    else if (rd_overflow_detected) begin
-                        rd_range_valid = 1'b0;
-                    end
-                    // Security Check 3: Start address must be within endpoint bounds
-                    else if (s_rd_req.data.vaddr < endpoint_regs[i].vaddr_base || 
-                             s_rd_req.data.vaddr > endpoint_regs[i].vaddr_bound) begin
-                        rd_range_valid = 1'b0;
-                    end
-                    // Security Check 4: End address must be within endpoint bounds (no overflow case)
-                    else if (rd_req_end_addr_wide[VADDR_BITS-1:0] > endpoint_regs[i].vaddr_bound) begin
-                        rd_range_valid = 1'b0;
-                    end
-                    // All security checks passed - safe to allow
-                    else begin
-                        rd_range_valid = 1'b1;
-                    end
-                    
-                    if (rd_range_valid) begin
-                        rd_access_allowed = 1'b1;
-                        break; // Found valid endpoint, allow access
-                    end
+                    // If len > endpoint_size, skip this endpoint (implicit denial)
                 end
             end
         end
         
-        // FIXED: Similar comprehensive security check for write requests
-        if (s_wr_req.valid) begin
+        // Write request validation  
+        if (s_wr_req.valid && s_wr_req.data.len > 0) begin
             for (int i = 0; i < N_ENDPOINTS; i++) begin
                 if (endpoint_regs[i].valid && endpoint_regs[i].access_rights[1]) begin
-                    // FIXED: Comprehensive security validation
-                    wr_range_valid = 1'b0; // Start with denial
+                    // Calculate endpoint size to detect malicious huge lengths
+                    logic [VADDR_BITS-1:0] endpoint_size;
+                    endpoint_size = endpoint_regs[i].vaddr_bound - endpoint_regs[i].vaddr_base + 1;
                     
-                    // Security Check 1: Reject zero-length requests
-                    if (s_wr_req.data.len == 0) begin
-                        wr_range_valid = 1'b0;
+                    // Security check: Length cannot exceed endpoint size (prevents underflow attack)
+                    if (s_wr_req.data.len <= endpoint_size) begin
+                        // Overflow-safe bounds check: both start and end must be within bounds
+                        if (s_wr_req.data.vaddr >= endpoint_regs[i].vaddr_base && 
+                            s_wr_req.data.vaddr <= (endpoint_regs[i].vaddr_bound - s_wr_req.data.len + 1)) begin
+                            wr_access_allowed = 1'b1;
+                            break; // Found valid endpoint, allow access
+                        end
                     end
-                    // Security Check 2: Detect integer overflow
-                    else if (wr_overflow_detected) begin
-                        wr_range_valid = 1'b0;
-                    end
-                    // Security Check 3: Start address must be within endpoint bounds
-                    else if (s_wr_req.data.vaddr < endpoint_regs[i].vaddr_base || 
-                             s_wr_req.data.vaddr > endpoint_regs[i].vaddr_bound) begin
-                        wr_range_valid = 1'b0;
-                    end
-                    // Security Check 4: End address must be within endpoint bounds (no overflow case)
-                    else if (wr_req_end_addr_wide[VADDR_BITS-1:0] > endpoint_regs[i].vaddr_bound) begin
-                        wr_range_valid = 1'b0;
-                    end
-                    // All security checks passed - safe to allow
-                    else begin
-                        wr_range_valid = 1'b1;
-                    end
-                    
-                    if (wr_range_valid) begin
-                        wr_access_allowed = 1'b1;
-                        break; // Found valid endpoint, allow access
-                    end
+                    // If len > endpoint_size, skip this endpoint (implicit denial)
                 end
             end
         end
@@ -150,8 +107,8 @@ module memory_gateway #(
         m_wr_req.valid = s_wr_req.valid && wr_access_allowed;
         m_wr_req.data = s_wr_req.data;
         
-        // - AUTHORIZED: Wait for downstream ready
-        // - UNAUTHORIZED: Immediately drop (assert ready to consume/reject request)
+        // AUTHORIZED: Wait for downstream ready
+        // UNAUTHORIZED: Immediately drop (assert ready to consume/reject request)
         s_rd_req.ready = rd_access_allowed ? m_rd_req.ready : 1'b1;
         s_wr_req.ready = wr_access_allowed ? m_wr_req.ready : 1'b1;
     end
