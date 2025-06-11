@@ -101,7 +101,10 @@ module cnfg_slave_avx #(
 
     // Control
     output logic                usr_irq,
-    output logic [(131*N_ENDPOINTS)-1:0] ep_ctrl
+    
+    output logic [(131*N_ENDPOINTS)-1:0] ep_ctrl,
+    input  logic                s_access_violation_irq,
+    output logic                m_access_violation_clear
 );
 
 // -- Decl -------------------------------------------------------------------------------
@@ -265,6 +268,8 @@ logic [1:0] open_port_sts_response;
 logic [63:0] open_conn_sts_response;
 `endif
 
+logic access_violation_pending;
+logic [31:0] access_violation_count;
 
 // -- Def --------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------
@@ -367,7 +372,8 @@ localparam integer TCP_OPEN_CONN_REG                        = 14;
 localparam integer TCP_OPEN_CONN_STAT_REG                   = 15;
 
  // Base register for EP control
-localparam integer EP_CTRL_BASE_REG = 54;       
+localparam integer EP_CTRL_BASE_REG = 54;    
+localparam integer ACCESS_VIOL_REG = 55;             
 
 // 64 (RO) : Status DMA completion
 localparam integer STAT_DMA_REG                             = 2**PID_BITS;
@@ -381,6 +387,9 @@ assign slv_reg_wren = axi_wready && s_axim_ctrl.wvalid;
 always_ff @(posedge aclk) begin
     if ( aresetn == 1'b0 ) begin
         slv_reg <= 'X;
+
+        access_violation_pending <= 1'b0;
+        access_violation_count <= 32'h0;
 
         slv_reg[CTRL_REG][31:0] <= 0;
         slv_reg[ISR_REG][7:0] <= 0;
@@ -547,11 +556,21 @@ always_ff @(posedge aclk) begin
 
             slv_reg[STAT_REG_1][STAT_NOTIFY_OFFS+:32] <=  slv_reg[STAT_REG_1][STAT_NOTIFY_OFFS+:32] + 1;
         end
+        else if(s_access_violation_irq & ~irq_pending) begin
+            irq_pending <= 1'b1;
+            access_violation_pending <= 1'b1;
+            access_violation_count <= access_violation_count + 1;
+            
+            slv_reg[ISR_REG][TYPE_MISS_OFFS+:16] <= IRQ_ACCESS_VIOLATION;   
+        end
     
         if(slv_reg[ISR_REG][ISR_CLR_IRQ_PENDING]) begin
             irq_pending <= 1'b0;
         end
 
+        if(slv_reg[ACCESS_VIOL_REG][0]) begin
+            access_violation_pending <= 1'b0;
+        end
         //
         // Slave write
         //
@@ -687,7 +706,14 @@ always_ff @(posedge aclk) begin
                             slv_reg[EP_CTRL_BASE_REG][(i*8)+:8] <= s_axim_ctrl.wdata[(i*8)+:8];
                         end
                     end
-            
+                
+                ACCESS_VIOL_REG: // Access violation control
+                    for (int i = 0; i < AVX_DATA_BITS/8; i++) begin
+                        if(s_axim_ctrl.wstrb[i]) begin
+                            slv_reg[ACCESS_VIOL_REG][(i*8)+:8] <= s_axim_ctrl.wdata[(i*8)+:8];
+                        end
+                    end
+                
                 default: ;
             endcase
         end
@@ -783,6 +809,11 @@ always_ff @(posedge aclk) begin
         [EP_CTRL_BASE_REG:EP_CTRL_BASE_REG]:
             axi_rdata <= slv_reg[EP_CTRL_BASE_REG];
 
+        [ACCESS_VIOL_REG:ACCESS_VIOL_REG]:
+            begin
+                axi_rdata[0] <= access_violation_pending;      // Status bit
+                axi_rdata[31:1] <= access_violation_count[30:0]; // Counter
+            end
         default: ;
       endcase
     end
@@ -1620,6 +1651,7 @@ end
 
 
 assign ep_ctrl = slv_reg[EP_CTRL_BASE_REG][(131*N_ENDPOINTS)-1:0];
+assign m_access_violation_clear = slv_reg[ACCESS_VIOL_REG][0]; // Clear bit
 
 //
 // DEBUG

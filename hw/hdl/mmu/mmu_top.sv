@@ -161,6 +161,9 @@ metaIntf #(.STYPE(inv_t)) wr_invldt_ctrl [N_REGIONS] ();
 parameter integer N_ENDPOINTS = 1;
 //AXI4L s_axi_ctrl_ep [N_REGIONS] (); 
 logic [N_REGIONS-1:0][(131*N_ENDPOINTS)-1:0]   ep_ctrl;
+// NEW: Access violation signals
+logic [N_REGIONS-1:0] access_violation_irq;
+logic [N_REGIONS-1:0] access_violation_clear;
 
 // Instantiate region MMUs
 for(genvar i = 0; i < N_REGIONS; i++) begin
@@ -206,7 +209,9 @@ for(genvar i = 0; i < N_REGIONS; i++) begin
         .m_rd_invldt_irq(rd_invldt_irq[i]),
         .s_wr_invldt_ctrl(wr_invldt_ctrl[i]),
         .m_wr_invldt_irq(wr_invldt_irq[i]),
-        .ep_ctrl(ep_ctrl[i])
+        .ep_ctrl(ep_ctrl[i]),
+        .access_violation_irq(access_violation_irq[i]),
+        .access_violation_clear(access_violation_clear[i])
     );
 
 end
@@ -313,7 +318,9 @@ for(genvar i = 0; i < N_REGIONS; i++) begin
             .s_notify(s_notify[i]), //
             
             .usr_irq(usr_irq[i]),
-            .ep_ctrl(ep_ctrl[i]) //
+            .ep_ctrl(ep_ctrl[i]), 
+            .s_access_violation_irq(access_violation_irq[i]),
+            .m_access_violation_clear(access_violation_clear[i]) //
         );
 
 end
