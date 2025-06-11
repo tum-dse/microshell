@@ -30,22 +30,7 @@ module memory_endpoints #(
     localparam integer EP_BOUND_ADDR_OFFSET = EP_BASE_ADDR_OFFSET + EP_BASE_ADDR_BITS;
     localparam integer EP_ACCESS_OFFSET = EP_BOUND_ADDR_OFFSET + EP_BOUND_ADDR_BITS;
     localparam integer EP_VALID_OFFSET = EP_ACCESS_OFFSET + EP_ACCESS_BITS;
-
-    // Control signal change detection for optimization
-    logic [(131*N_ENDPOINTS)-1:0] ep_ctrl_prev;
-    logic ep_ctrl_changed;
-
-    always_ff @(posedge aclk) begin
-        if (~aresetn) begin
-            ep_ctrl_prev <= '0;
-        end
-        else begin
-            ep_ctrl_prev <= ep_ctrl;
-        end
-    end
-
-    assign ep_ctrl_changed = (ep_ctrl != ep_ctrl_prev);
-
+    
     // Extract configuration for each endpoint and update registers
     always_ff @(posedge aclk) begin
         if (~aresetn) begin
@@ -60,7 +45,7 @@ module memory_endpoints #(
         else begin
             // Update endpoint configurations from packed control signal
             for (int i = 0; i < N_ENDPOINTS; i++) begin
-                // Calculate bit range for this endpoint (inside the loop!)
+                // Calculate bit range for this endpoint
                 logic [15:0] ep_start_bit = i * EP_TOTAL_BITS;
                 
                 // Extract fields for endpoint i
@@ -68,6 +53,13 @@ module memory_endpoints #(
                 endpoint_regs[i].vaddr_bound <= ep_ctrl[ep_start_bit + EP_BOUND_ADDR_OFFSET +: EP_BOUND_ADDR_BITS];
                 endpoint_regs[i].access_rights <= ep_ctrl[ep_start_bit + EP_ACCESS_OFFSET +: EP_ACCESS_BITS];
                 endpoint_regs[i].valid <= ep_ctrl[ep_start_bit + EP_VALID_OFFSET +: EP_VALID_BITS];
+                
+                // VALIDATION: Check that base <= bound for valid endpoints
+                if (endpoint_regs[i].valid && 
+                    (endpoint_regs[i].vaddr_base > endpoint_regs[i].vaddr_bound)) begin
+                    // Invalid range - disable endpoint
+                    endpoint_regs[i].valid <= 1'b0;
+                end
             end
         end
     end
