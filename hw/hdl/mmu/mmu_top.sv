@@ -162,7 +162,7 @@ parameter integer N_ENDPOINTS = 1;
 
 logic [N_REGIONS-1:0][(131*N_ENDPOINTS)-1:0]   ep_ctrl;
 
-logic [N_REGIONS-1:0] access_violation_irq;
+
 
 // Instantiate region MMUs
 for(genvar i = 0; i < N_REGIONS; i++) begin
@@ -208,8 +208,7 @@ for(genvar i = 0; i < N_REGIONS; i++) begin
         .m_rd_invldt_irq(rd_invldt_irq[i]),
         .s_wr_invldt_ctrl(wr_invldt_ctrl[i]),
         .m_wr_invldt_irq(wr_invldt_irq[i]),
-        .ep_ctrl(ep_ctrl[i]),
-        .access_violation_irq(access_violation_irq[i])
+        .ep_ctrl(ep_ctrl[i])
     );
 
 end
@@ -316,8 +315,7 @@ for(genvar i = 0; i < N_REGIONS; i++) begin
             .s_notify(s_notify[i]), //
             
             .usr_irq(usr_irq[i]),
-            .ep_ctrl(ep_ctrl[i]), 
-            .s_access_violation_irq(access_violation_irq[i]) //
+            .ep_ctrl(ep_ctrl[i]) //
         );
 
 end

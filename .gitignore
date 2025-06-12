@@ -5,6 +5,7 @@ iprepo/
 tmp/
 test/
 static/
+checkpoints/
 hd_visual/
 ip_dir/
 xsim.dir/

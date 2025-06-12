@@ -17,10 +17,7 @@ module memory_gateway #(
     
     // Filtered DMA interfaces (only authorized requests)
     metaIntf.m m_rd_req,
-    metaIntf.m m_wr_req,
-    
-    // Access violation signal - auto-clears when violation condition ends
-    output logic access_violation_irq
+    metaIntf.m m_wr_req
 );
 
     // Signal declarations
@@ -124,14 +121,19 @@ module memory_gateway #(
             (s_wr_req.valid && !wr_access_allowed);
     end
     
-    // Direct assignment - violation signal reflects current access state
+    logic access_violation_detected;
+    logic [31:0] violation_count;
+
     always_ff @(posedge aclk) begin
         if (~aresetn) begin
-            access_violation_irq <= 1'b0;
+            violation_count <= 0;
+            access_violation_detected <= 1'b0;
         end
         else begin
-            // Simple: IRQ follows violation state directly
-            access_violation_irq <= violation_detected;
+            access_violation_detected <= violation_detected;
+            if (violation_detected) begin
+                violation_count <= violation_count + 1;
+            end
         end
     end
 

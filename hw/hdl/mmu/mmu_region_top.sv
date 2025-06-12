@@ -89,9 +89,6 @@ module mmu_region_top #(
     output logic [LEN_BITS-1:0]         m_wr_pfault_rng,
     metaIntf.s                          s_wr_pfault_ctrl,
 
-    // Access violation signal - auto-clears when violation condition ends
-    output logic                        access_violation_irq,
-
     // TLB invalidation
     metaIntf.s                          s_rd_invldt_ctrl,
     metaIntf.m                          m_rd_invldt_irq,
@@ -146,10 +143,7 @@ memory_gateway #(
     
     // Only authorized requests pass through to TLB FSMs
     .m_rd_req(rd_req),
-    .m_wr_req(wr_req),
-    
-    // Auto-clearing access violation signal
-    .access_violation_irq(access_violation_irq)
+    .m_wr_req(wr_req)
 );
 
 // ----------------------------------------------------------------------------------------

@@ -172,7 +172,6 @@ package lynxTypes;
     parameter integer IRQ_PFAULT = 3;
     parameter integer IRQ_NOTIFY = 4;
     parameter integer IRQ_RCNFG = 5;
-    parameter integer IRQ_ACCESS_VIOLATION = 6;
 
     // Data
     parameter integer ADDR_BITS = 64;
