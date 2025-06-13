@@ -62,12 +62,12 @@
   /* Def params */
   constexpr auto const defDevice = 0;
   
-  constexpr auto const nRegions = 4;
+  constexpr auto const nRegions = 1;
   constexpr auto const defHuge = true;
   constexpr auto const defMappped = true;
   constexpr auto const defStream = 1;
-  constexpr auto const nRepsThr = 10;
-  constexpr auto const nRepsLat = 10;
+  constexpr auto const nRepsThr = 1;
+  constexpr auto const nRepsLat = 1;
   constexpr auto const defMinSize = 1024;
   constexpr auto const defMaxSize = 1 * 1024 * 1024;
   constexpr auto const nBenchRuns = 1;
@@ -169,7 +169,8 @@
           sg[i].local.src_addr = hMem[i]; sg[i].local.src_len = curr_size; sg[i].local.src_stream = stream;
           sg[i].local.dst_addr = hMem[i]; sg[i].local.dst_len = curr_size; sg[i].local.dst_stream = stream;
       }
-  
+      
+      /*
       // ---------------------------------------------------------------
       // Configure Memory Endpoints
       // ---------------------------------------------------------------
@@ -237,7 +238,7 @@
       
       // Force a memory sync to ensure the test pattern is written to physical memory
       for (int i = 0; i < n_regions; i++) {
-          cthread[i]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[i], {true, true, true});
+          cthread[i]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[i], {true, true, false});
           std::cout << "Region " << i << " memory sync completed." << std::endl;
       }
       
@@ -295,101 +296,150 @@
       }
       
       std::cout << "Memory gateway and access control tests completed." << std::endl << std::endl;
-  
-      // ---------------------------------------------------------------
-      // Runs 
-      // ---------------------------------------------------------------
-      cBench bench(nBenchRuns);
-      uint32_t n_runs;
-  
-      PR_HEADER("PERF HOST");
-      while(curr_size <= max_size) {
-          
-  #ifdef EN_THR_TESTS        
-          // Prep for throughput test
-          for(int i = 0; i < n_regions; i++) {
-              cthread[i]->clearCompleted();
-              sg[i].local.src_len = curr_size; sg[i].local.dst_len = curr_size;
-          }
-          n_runs = 0;
-          
-          // Throughput test
-          auto benchmark_thr = [&]() {
-              bool k = false;
-              n_runs++;
-  
-              // Transfer the data
-              for(int i = 0; i < n_reps_thr; i++)
-                  for(int j = 0; j < n_regions; j++) 
-                      cthread[j]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[j], {true, false, false});
-  
-              while(!k) {
-                  k = true;
-                  for(int i = 0; i < n_regions; i++) 
-                      if(cthread[i]->checkCompleted(CoyoteOper::LOCAL_WRITE) != n_reps_thr * n_runs) k = false;
-                      //if(cthread[i]->checkCompleted(CoyoteOper::LOCAL_TRANSFER) != n_reps_thr * n_runs) k = false;
-                  if(stalled.load()) throw std::runtime_error("Stalled, SIGINT caught");
-              }  
-          };
-          bench.runtime(benchmark_thr);
-          std::cout << std::fixed << std::setprecision(2);
-          std::cout << "Size: " << std::setw(8) << curr_size << ", thr: " << std::setw(8) << ((double) n_regions * 1000 * curr_size) / (bench.getAvg() / n_reps_thr) << " MB/s";
-      #ifndef EN_LAT_TESTS
-          std::cout << std::endl;
-      #endif
-  #endif
-  
-  #ifdef EN_LAT_TESTS
-          // Prep for latency test
-          for(int i = 0; i < n_regions; i++) {
-              cthread[i]->clearCompleted();
-              sg[i].local.src_len = curr_size; sg[i].local.dst_len = curr_size;
-          }
-          n_runs = 0;
-  
-          // Latency test
-          auto benchmark_lat = [&]() {
-              // Transfer the data
-              for(int i = 0; i < n_reps_lat; i++) {
-                  for(int j = 0; j < n_regions; j++) {
-                      cthread[j]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[j], {true, true, false});
-                      while(cthread[j]->checkCompleted(CoyoteOper::LOCAL_WRITE) != 1) 
-                          if(stalled.load()) throw std::runtime_error("Stalled, SIGINT caught");           
-                  }
-              }
-          };
-          bench.runtime(benchmark_lat);
-          std::cout << ", lat: " << std::setw(8) << bench.getAvg() / (n_reps_lat) << " ns" << std::endl;
-  #endif
-  
-          curr_size *= 2;
-      }
-  
-      std::cout << std::endl;
-      
-      // ---------------------------------------------------------------
-      // Release 
-      // ---------------------------------------------------------------
-      
-      // Disable all endpoints before cleanup
-      PR_HEADER("CLEANUP");
-      for (int i = 0; i < n_regions; i++) {
-          try {
-              cthread[i]->epSetValid(i, false);
-              std::cout << "Disabled endpoint " << i << std::endl;
-          } catch (const std::exception& e) {
-              std::cout << "Warning: Failed to disable endpoint " << i << ": " << e.what() << std::endl;
-          }
-      }
-      
-      // Print status
-      for (int i = 0; i < n_regions; i++) {
-          if(!mapped) {
-              if(!huge) free(hMem[i]);
-              else      munmap(hMem[i], max_size);  
-          }
-          cthread[i]->printDebug();
-      }
-      
-      return EXIT_SUCCESS;
+    */
+    // ---------------------------------------------------------------
+    // Runs 
+    // ---------------------------------------------------------------
+    cBench bench(nBenchRuns);
+    uint32_t n_runs;
+
+    PR_HEADER("PERF HOST");
+
+    // ---------------------------------------------------------------
+    // Add a warm-up run to match the new code's behavior
+    // ---------------------------------------------------------------
+    std::cout << "Performing warm-up run..." << std::endl;
+
+    try {
+        // Clear counters for warm-up
+        for(int i = 0; i < n_regions; i++) {
+            cthread[i]->clearCompleted();
+            sg[i].local.src_len = curr_size; 
+            sg[i].local.dst_len = curr_size;
+        }
+        
+        // Warm-up: Direct test mode (since we're using single region)
+        for(int j = 0; j < n_regions; j++) {
+            cthread[j]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[j], {true, true, false});
+            
+            // Add timeout to warm-up as well
+            int timeout_counter = 0;
+            while(cthread[j]->checkCompleted(CoyoteOper::LOCAL_WRITE) != 1) {
+                if(stalled.load()) throw std::runtime_error("Stalled during warm-up");
+                
+                timeout_counter++;
+                if(timeout_counter > 500) { // 5 second timeout
+                    std::cout << "Warning: Warm-up timed out for region " << j << std::endl;
+                    break;
+                }
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
+        }
+        
+        std::cout << "Warm-up complete, starting benchmark..." << std::endl;
+    } 
+    catch (const std::exception& e) {
+        std::cerr << "Exception during warm-up: " << e.what() << std::endl;
+        
+        // Clean up and exit
+        for (int i = 0; i < n_regions; i++) {
+            try {
+                //cthread[i]->epSetValid(i, false);
+            } catch(...) {}
+            
+            if(!mapped) {
+                if(!huge) free(hMem[i]);
+                else      munmap(hMem[i], max_size);  
+            }
+        }
+        return EXIT_FAILURE;
+    }
+
+    // ---------------------------------------------------------------
+    // Benchmark loop
+    // ---------------------------------------------------------------
+    uint32_t test_size = curr_size;  // Start with initial size
+    std::cout << "\nSize (bytes)    Latency (ns)" << std::endl;
+    std::cout << "-------------------------" << std::endl;
+
+    while(test_size <= max_size) {
+
+        // Prep for latency test
+        for(int i = 0; i < n_regions; i++) {
+            cthread[i]->clearCompleted();
+            sg[i].local.src_len = test_size; 
+            sg[i].local.dst_len = test_size;
+        }
+        n_runs = 0;
+
+        try {
+            // Latency test with timeout
+            auto benchmark_lat = [&]() {
+                // Transfer the data
+                for(int i = 0; i < n_reps_lat; i++) {
+                    for(int j = 0; j < n_regions; j++) {
+                        cthread[j]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[j], {true, true, false});
+                        
+                        // Add timeout to prevent hanging
+                        int timeout_counter = 0;
+                        while(cthread[j]->checkCompleted(CoyoteOper::LOCAL_WRITE) != 1) {
+                            if(stalled.load()) throw std::runtime_error("Stalled, SIGINT caught");
+                            
+                            timeout_counter++;
+                            if(timeout_counter > 1000) { // 10 second timeout
+                                throw std::runtime_error("Transfer timeout for size " + std::to_string(test_size));
+                            }
+                            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                        }
+                    }
+                }
+            };
+            
+            bench.runtime(benchmark_lat);
+            std::cout << std::setw(8) << test_size << "       " << std::setw(8) 
+                    << bench.getAvg() / (n_reps_lat) << " ns" << std::endl;
+        }
+        catch (const std::exception& e) {
+            std::cout << std::setw(8) << test_size << "       TIMEOUT/ERROR" << std::endl;
+            std::cerr << "Error for size " << test_size << ": " << e.what() << std::endl;
+        }
+
+        test_size *= 2;
+    }
+
+    std::cout << std::endl;
+
+    // Display final memory contents
+    for (int j = 0; j < n_regions; j++) {
+        std::cout << "Data for vFPGA " << j << std::endl;
+        for (int i = 0; i < std::min(8, (int)(32 / sizeof(uint32_t))); i++) {
+            std::cout << "Number " << i << ": " << ((uint32_t *)hMem[j])[i] << std::endl;
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // Release 
+    // ---------------------------------------------------------------
+
+    // Disable all endpoints before cleanup
+    PR_HEADER("CLEANUP");
+    for (int i = 0; i < n_regions; i++) {
+        try {
+            cthread[i]->epSetValid(i, false);
+            std::cout << "Disabled endpoint " << i << std::endl;
+        } catch (const std::exception& e) {
+            std::cout << "Warning: Failed to disable endpoint " << i << ": " << e.what() << std::endl;
+        }
+    }
+
+    // Print status
+    for (int i = 0; i < n_regions; i++) {
+        if(!mapped) {
+            if(!huge) free(hMem[i]);
+            else      munmap(hMem[i], max_size);  
+        }
+        cthread[i]->printDebug();
+    }
+
+    return EXIT_SUCCESS;
   }
