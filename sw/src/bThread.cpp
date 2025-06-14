@@ -1215,11 +1215,8 @@ void bThread::printDebug()
 	std::cout << std::endl;
 } 
 
-// Corrected endpoint configuration methods for bThread.cpp
-// Fixes bit-shift overflow warnings
-
 /**
- * @brief Configure endpoint - Corrected version without bit overflow
+ * @brief Configure endpoint - Corrected version matching hardware
  * 
  * @param endpoint_idx - endpoint index (0 to N_ENDPOINTS-1)
  * @param config - endpoint configuration

@@ -48,16 +48,35 @@ module memory_endpoints #(
                 // Calculate bit range for this endpoint
                 logic [15:0] ep_start_bit = i * EP_TOTAL_BITS;
                 
-                // Extract fields for endpoint i
-                endpoint_regs[i].vaddr_base <= ep_ctrl[ep_start_bit + EP_BASE_ADDR_OFFSET +: EP_BASE_ADDR_BITS];
-                endpoint_regs[i].vaddr_bound <= ep_ctrl[ep_start_bit + EP_BOUND_ADDR_OFFSET +: EP_BOUND_ADDR_BITS];
-                endpoint_regs[i].access_rights <= ep_ctrl[ep_start_bit + EP_ACCESS_OFFSET +: EP_ACCESS_BITS];
-                endpoint_regs[i].valid <= ep_ctrl[ep_start_bit + EP_VALID_OFFSET +: EP_VALID_BITS];
+                // Extract fields for endpoint i into temporary variables
+                logic [63:0] new_base;
+                logic [63:0] new_bound;
+                logic [1:0] new_access;
+                logic new_valid;
+                
+                new_base = ep_ctrl[ep_start_bit + EP_BASE_ADDR_OFFSET +: EP_BASE_ADDR_BITS];
+                new_bound = ep_ctrl[ep_start_bit + EP_BOUND_ADDR_OFFSET +: EP_BOUND_ADDR_BITS];
+                new_access = ep_ctrl[ep_start_bit + EP_ACCESS_OFFSET +: EP_ACCESS_BITS];
+                new_valid = ep_ctrl[ep_start_bit + EP_VALID_OFFSET +: EP_VALID_BITS];
                 
                 // VALIDATION: Check that base <= bound for valid endpoints
-                if (endpoint_regs[i].valid && 
-                    (endpoint_regs[i].vaddr_base > endpoint_regs[i].vaddr_bound)) begin
-                    // Invalid range - disable endpoint
+                if (new_valid && (new_base <= new_bound)) begin
+                    // Valid configuration - accept all fields
+                    endpoint_regs[i].vaddr_base <= new_base;
+                    endpoint_regs[i].vaddr_bound <= new_bound;
+                    endpoint_regs[i].access_rights <= new_access;
+                    endpoint_regs[i].valid <= 1'b1;
+                end else if (new_valid && (new_base > new_bound)) begin
+                    // Invalid range (base > bound) - disable endpoint but keep other fields for debugging
+                    endpoint_regs[i].vaddr_base <= new_base;
+                    endpoint_regs[i].vaddr_bound <= new_bound;
+                    endpoint_regs[i].access_rights <= new_access;
+                    endpoint_regs[i].valid <= 1'b0;  // Auto-disable invalid config
+                end else begin
+                    // Explicitly disabled (new_valid = 0) - update all fields
+                    endpoint_regs[i].vaddr_base <= new_base;
+                    endpoint_regs[i].vaddr_bound <= new_bound;
+                    endpoint_regs[i].access_rights <= new_access;
                     endpoint_regs[i].valid <= 1'b0;
                 end
             end

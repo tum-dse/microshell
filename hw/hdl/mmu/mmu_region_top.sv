@@ -141,10 +141,11 @@ memory_gateway #(
     .s_rd_req(s_bpss_rd_sq),
     .s_wr_req(s_bpss_wr_sq),
     
-    // Only authorized requests pass through to TLB FSMs
+    // Only authorized requests pass through to TLB FSM
     .m_rd_req(rd_req),
     .m_wr_req(wr_req)
 );
+
 
 // ----------------------------------------------------------------------------------------
 // Mutex 
