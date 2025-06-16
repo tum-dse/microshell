@@ -289,6 +289,7 @@ enum class CnfgLegRegs : uint32_t {
     RDMA_CONN_REG_2 = 46,
     TCP_OPEN_PORT_REG = 48,
     TCP_OPEN_PORT_STAT_REG = 52,
+    EP_CTRL_BASE_REG = 54,
     TCP_OPEN_CONN_REG = 56,
     TCP_OPEN_CONN_STAT_REG = 60,
     STAT_DMA_REG = 64,

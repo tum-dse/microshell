@@ -1217,7 +1217,7 @@ void bThread::printDebug()
 
 /**
  * @brief Configure endpoint - Corrected version matching hardware
- * 
+ *
  * @param endpoint_idx - endpoint index (0 to N_ENDPOINTS-1)
  * @param config - endpoint configuration
  */
@@ -1225,66 +1225,37 @@ void bThread::epConfigure(uint32_t endpoint_idx, const epConfig& config) {
     if (endpoint_idx >= EP_MAX_ENDPOINTS) {
         throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
     }
+    
+    // Pack into 131-bit format: [130] valid, [129:128] access, [127:64] bound, [63:0] base
+    uint64_t control_bits = (config.access_rights & 0x3ULL) | ((config.valid ? 1ULL : 0ULL) << 2);
 
-    # ifdef VERBOSE
-        std::cout << "bThread: Configuring EP" << endpoint_idx 
-                  << " - base=0x" << std::hex << config.base_addr
-                  << ", bound=0x" << config.bound_addr 
-                  << ", access=0x" << (uint32_t)config.access_rights
-                  << ", valid=" << config.valid << std::dec << std::endl;
-    # endif
-
-    // Hardware expects 131-bit packed format per endpoint:
-    // [130:130] valid (1 bit)
-    // [129:128] access_rights (2 bits)  
-    // [127:64]  bound_addr (64 bits)
-    // [63:0]    base_addr (64 bits)
-    
-    // We need to split this across multiple 64-bit registers
-    
-    uint32_t ep_base_reg = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG);
-    
 #ifdef EN_AVX
     if(fcnfg.en_avx) {
-        // Pack into 256-bit AVX register
-        // Low 64 bits: base_addr
-        // Next 64 bits: bound_addr  
-        // High bits: access_rights and valid
-        uint64_t high_bits = 0;
-        high_bits |= (config.access_rights & 0x3ULL);           // bits [1:0]
-        high_bits |= ((config.valid ? 1ULL : 0ULL) << 2);      // bit [2]
+        uint32_t ep_base_reg = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG);
         
-        cnfg_reg_avx[ep_base_reg + endpoint_idx] = 
-            _mm256_set_epi64x(high_bits, 0, config.bound_addr, config.base_addr);
+        // Pack all 131 bits into lower portion of 256-bit register
+        // Position 0: [63:0] = base_addr
+        // Position 1: [127:64] = bound_addr  
+        // Position 2: [130:128] = valid + access_rights (only lowest 3 bits used)
+        // Position 3: unused (0)
+        cnfg_reg_avx[ep_base_reg] = 
+            _mm256_set_epi64x(0, control_bits, config.bound_addr, config.base_addr);
     } else {
 #endif
-        // For legacy mode, use multiple 64-bit registers
-        // Register layout for each endpoint:
-        // reg[0]: base_addr [63:0]
-        // reg[1]: bound_addr [63:0] 
-        // reg[2]: access_rights [1:0] | valid [2]
+        // Legacy mode - use regular 64-bit registers
+        uint32_t ep_base_reg = static_cast<uint32_t>(CnfgLegRegs::EP_CTRL_BASE_REG);
         
-        uint32_t reg_offset = endpoint_idx * 3;  // 3 registers per endpoint
-        
-        cnfg_reg[ep_base_reg + reg_offset + 0] = config.base_addr;
-        cnfg_reg[ep_base_reg + reg_offset + 1] = config.bound_addr;
-        
-        uint64_t control_bits = 0;
-        control_bits |= (config.access_rights & 0x3ULL);        // bits [1:0]
-        control_bits |= ((config.valid ? 1ULL : 0ULL) << 2);   // bit [2]
-        cnfg_reg[ep_base_reg + reg_offset + 2] = control_bits;
+        cnfg_reg[ep_base_reg] = config.base_addr;      // [63:0]
+        cnfg_reg[ep_base_reg + 1] = config.bound_addr; // [127:64]
+        cnfg_reg[ep_base_reg + 2] = control_bits;      // [130:128]
 #ifdef EN_AVX
     }
 #endif
-
-    # ifdef VERBOSE
-        std::cout << "bThread: EP" << endpoint_idx << " configured successfully" << std::endl;
-    # endif
 }
 
 /**
  * @brief Read endpoint configuration - Corrected version
- * 
+ *
  * @param endpoint_idx - endpoint index
  * @return epConfig - current endpoint configuration
  */
@@ -1292,34 +1263,34 @@ epConfig bThread::epGetConfig(uint32_t endpoint_idx) {
     if (endpoint_idx >= EP_MAX_ENDPOINTS) {
         throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
     }
-
+    
     epConfig config;
-    uint32_t ep_base_reg = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG);
-
+    
 #ifdef EN_AVX
     if(fcnfg.en_avx) {
-        __m256i reg_val = cnfg_reg_avx[ep_base_reg + endpoint_idx];
+        uint32_t ep_base_reg = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG);
+        __m256i reg_val = cnfg_reg_avx[ep_base_reg];
         
-        config.base_addr = _mm256_extract_epi64(reg_val, 0);      // Low 64 bits
-        config.bound_addr = _mm256_extract_epi64(reg_val, 1);     // Next 64 bits
+        config.base_addr = _mm256_extract_epi64(reg_val, 0);      // Position 0: [63:0]
+        config.bound_addr = _mm256_extract_epi64(reg_val, 1);     // Position 1: [127:64]
         
-        uint64_t high_bits = _mm256_extract_epi64(reg_val, 3);    // High 64 bits
-        config.access_rights = static_cast<uint8_t>(high_bits & 0x3ULL);
-        config.valid = ((high_bits >> 2) & 0x1ULL) != 0;
+        uint64_t control_bits = _mm256_extract_epi64(reg_val, 2); // Position 2: control bits
+        config.access_rights = static_cast<uint8_t>(control_bits & 0x3ULL);
+        config.valid = ((control_bits >> 2) & 0x1ULL) != 0;
     } else {
 #endif
-        uint32_t reg_offset = endpoint_idx * 3;  // 3 registers per endpoint
+        uint32_t ep_base_reg = static_cast<uint32_t>(CnfgLegRegs::EP_CTRL_BASE_REG);
         
-        config.base_addr = cnfg_reg[ep_base_reg + reg_offset + 0];
-        config.bound_addr = cnfg_reg[ep_base_reg + reg_offset + 1];
+        config.base_addr = cnfg_reg[ep_base_reg];        // [63:0]
+        config.bound_addr = cnfg_reg[ep_base_reg + 1];   // [127:64]
         
-        uint64_t control_bits = cnfg_reg[ep_base_reg + reg_offset + 2];
+        uint64_t control_bits = cnfg_reg[ep_base_reg + 2];
         config.access_rights = static_cast<uint8_t>(control_bits & 0x3ULL);
         config.valid = ((control_bits >> 2) & 0x1ULL) != 0;
 #ifdef EN_AVX
     }
 #endif
-
+    
     return config;
 }
 

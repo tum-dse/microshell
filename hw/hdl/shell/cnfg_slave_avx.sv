@@ -1618,7 +1618,6 @@ begin
     end
 end    
 
-
 assign ep_ctrl = slv_reg[EP_CTRL_BASE_REG][(131*N_ENDPOINTS)-1:0];
 
 //

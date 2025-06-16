@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
     }
 
     // ---------------------------------------------------------------
-    // Configure Memory Endpoints
+    // Configure Memory Endpoints (ENHANCED DEBUG VERSION)
     // ---------------------------------------------------------------
 
     PR_HEADER("CONFIGURING MEMORY ENDPOINTS");
@@ -196,53 +196,85 @@ int main(int argc, char *argv[])
                   << (config.access_rights & EP_ACCESS_WRITE ? "W" : "-") << std::endl;
 
         try {
-            // CORRECTED: Each region uses endpoint 0 for itself
             uint32_t ep_index = 0;  
             
+            // DEBUG: Check register values BEFORE configuration
+            std::cout << "  === BEFORE CONFIGURATION ===" << std::endl;
+            try {
+                epConfig before_config = cthread[i]->epGetConfig(ep_index);
+                std::cout << "    Before Base:   0x" << std::hex << before_config.base_addr << std::dec << std::endl;
+                std::cout << "    Before Bound:  0x" << std::hex << before_config.bound_addr << std::dec << std::endl;
+                std::cout << "    Before Access: 0x" << std::hex << (uint32_t)before_config.access_rights << std::dec << std::endl;
+                std::cout << "    Before Valid:  " << before_config.valid << std::endl;
+            } catch (...) {
+                std::cout << "    Could not read initial config" << std::endl;
+            }
+            
             // Configure the endpoint
+            std::cout << "  === CONFIGURING ENDPOINT ===" << std::endl;
             cthread[i]->epConfigure(ep_index, config);
 
-            // Add small delay to ensure hardware configuration is complete
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            // DEBUG: Add longer delay and multiple verification attempts
+            std::cout << "  === WAITING FOR CONFIGURATION TO PROPAGATE ===" << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Longer delay
 
-            // Verify endpoint configuration by reading back from hardware
-            epConfig readback_config = cthread[i]->epGetConfig(ep_index);
-
-            std::cout << "  Hardware readback values:" << std::endl;
-            std::cout << "    Base:   0x" << std::hex << readback_config.base_addr << std::dec << std::endl;
-            std::cout << "    Bound:  0x" << std::hex << readback_config.bound_addr << std::dec << std::endl;
-            std::cout << "    Access: 0x" << std::hex << (uint32_t)readback_config.access_rights << std::dec << std::endl;
-            std::cout << "    Valid:  " << readback_config.valid << std::endl;
-
-            // Check if the configuration was successful
-            bool config_ok = (readback_config.base_addr == vaddr_base) &&
-                             (readback_config.bound_addr == vaddr_bound) &&
-                             (readback_config.access_rights == EP_ACCESS_RW) &&
-                             (readback_config.valid == true);
-
-            if (config_ok) {
-                std::cout << "  ✓ Configuration verified in hardware!" << std::endl;
-                endpoints_configured = true;
-            } else {
-                std::cout << "  ✗ Hardware verification failed!" << std::endl;
+            // Multiple readback attempts
+            bool config_verified = false;
+            for (int attempt = 0; attempt < 3; attempt++) {
+                std::cout << "  === VERIFICATION ATTEMPT " << (attempt + 1) << " ===" << std::endl;
                 
-                // Debug output for mismatch
-                if (readback_config.base_addr != vaddr_base) {
-                    std::cout << "    Base address mismatch: expected 0x" << std::hex << vaddr_base 
-                              << ", got 0x" << readback_config.base_addr << std::dec << std::endl;
-                }
-                if (readback_config.bound_addr != vaddr_bound) {
-                    std::cout << "    Bound address mismatch: expected 0x" << std::hex << vaddr_bound 
-                              << ", got 0x" << readback_config.bound_addr << std::dec << std::endl;
-                }
-                if (readback_config.access_rights != EP_ACCESS_RW) {
-                    std::cout << "    Access rights mismatch: expected " << EP_ACCESS_RW 
-                              << ", got " << (uint32_t)readback_config.access_rights << std::endl;
-                }
-                if (!readback_config.valid) {
-                    std::cout << "    Valid bit not set" << std::endl;
+                epConfig readback_config = cthread[i]->epGetConfig(ep_index);
+
+                std::cout << "    Readback Base:   0x" << std::hex << readback_config.base_addr << std::dec << std::endl;
+                std::cout << "    Readback Bound:  0x" << std::hex << readback_config.bound_addr << std::dec << std::endl;
+                std::cout << "    Readback Access: 0x" << std::hex << (uint32_t)readback_config.access_rights << std::dec << std::endl;
+                std::cout << "    Readback Valid:  " << readback_config.valid << std::endl;
+
+                // Check if the configuration was successful
+                bool config_ok = (readback_config.base_addr == vaddr_base) &&
+                                 (readback_config.bound_addr == vaddr_bound) &&
+                                 (readback_config.access_rights == EP_ACCESS_RW) &&
+                                 (readback_config.valid == true);
+
+                if (config_ok) {
+                    std::cout << "  ✓ Configuration verified in hardware!" << std::endl;
+                    config_verified = true;
+                    endpoints_configured = true;
+                    break;
+                } else {
+                    std::cout << "  ✗ Hardware verification failed on attempt " << (attempt + 1) << std::endl;
+                    
+                    // Detailed mismatch analysis
+                    if (readback_config.base_addr != vaddr_base) {
+                        std::cout << "    Base address mismatch: expected 0x" << std::hex << vaddr_base 
+                                  << ", got 0x" << readback_config.base_addr << std::dec << std::endl;
+                    }
+                    if (readback_config.bound_addr != vaddr_bound) {
+                        std::cout << "    Bound address mismatch: expected 0x" << std::hex << vaddr_bound 
+                                  << ", got 0x" << readback_config.bound_addr << std::dec << std::endl;
+                        
+                        // Check if bound address is zero 
+                        if (readback_config.bound_addr == 0) {
+                            std::cout << "    *** CRITICAL: Bound address is ZERO - this matches ILA observation! ***" << std::endl;
+                        }
+                    }
+                    if (readback_config.access_rights != EP_ACCESS_RW) {
+                        std::cout << "    Access rights mismatch: expected " << EP_ACCESS_RW 
+                                  << ", got " << (uint32_t)readback_config.access_rights << std::endl;
+                    }
+                    if (!readback_config.valid) {
+                        std::cout << "    Valid bit not set" << std::endl;
+                    }
+                    // Try reconfiguring if this isn't the last attempt
+                    if (attempt < 2) {
+                        std::cout << "    Retrying configuration..." << std::endl;
+                        std::this_thread::sleep_for(std::chrono::milliseconds(20));
+                        cthread[i]->epConfigure(ep_index, config);
+                        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+                    }
                 }
             }
+            
         } catch (const std::exception& e) {
             std::cout << "  ERROR: Failed to configure endpoint " << i << ": " << e.what() << std::endl;
         }

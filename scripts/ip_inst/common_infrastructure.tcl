@@ -201,6 +201,48 @@ set_property -dict [list CONFIG.C_NUM_OF_PROBES {2} CONFIG.C_EN_STRG_QUAL {1} CO
 create_ip -name ila -vendor xilinx.com -library ip -version 6.2 -module_name ila_switch_2
 set_property -dict [list CONFIG.C_NUM_OF_PROBES {10} CONFIG.C_EN_STRG_QUAL {1} CONFIG.Component_Name {ila_switch_2} CONFIG.ALL_PROBE_SAME_MU_CNT {2} CONFIG.C_PROBE8_WIDTH {8} CONFIG.C_PROBE9_WIDTH {8}] [get_ips ila_switch_2]
 
+create_ip -name ila -vendor xilinx.com -library ip -version 6.2 -module_name ila_mmu
+set_property -dict [list \
+CONFIG.C_NUM_OF_PROBES {33} \
+CONFIG.C_EN_STRG_QUAL {1} \
+CONFIG.Component_Name {ila_mmu} \
+CONFIG.ALL_PROBE_SAME_MU_CNT {2} \
+CONFIG.C_DATA_DEPTH {1024} \
+CONFIG.C_PROBE0_WIDTH {1} \
+CONFIG.C_PROBE1_WIDTH {1} \
+CONFIG.C_PROBE2_WIDTH {48} \
+CONFIG.C_PROBE3_WIDTH {28} \
+CONFIG.C_PROBE4_WIDTH {6} \
+CONFIG.C_PROBE5_WIDTH {5} \
+CONFIG.C_PROBE6_WIDTH {1} \
+CONFIG.C_PROBE7_WIDTH {1} \
+CONFIG.C_PROBE8_WIDTH {48} \
+CONFIG.C_PROBE9_WIDTH {28} \
+CONFIG.C_PROBE10_WIDTH {6} \
+CONFIG.C_PROBE11_WIDTH {5} \
+CONFIG.C_PROBE12_WIDTH {1} \
+CONFIG.C_PROBE13_WIDTH {1} \
+CONFIG.C_PROBE14_WIDTH {48} \
+CONFIG.C_PROBE15_WIDTH {28} \
+CONFIG.C_PROBE16_WIDTH {1} \
+CONFIG.C_PROBE17_WIDTH {1} \
+CONFIG.C_PROBE18_WIDTH {48} \
+CONFIG.C_PROBE19_WIDTH {28} \
+CONFIG.C_PROBE20_WIDTH {131} \
+CONFIG.C_PROBE21_WIDTH {1} \
+CONFIG.C_PROBE22_WIDTH {2} \
+CONFIG.C_PROBE23_WIDTH {64} \
+CONFIG.C_PROBE24_WIDTH {64} \
+CONFIG.C_PROBE25_WIDTH {1} \
+CONFIG.C_PROBE26_WIDTH {2} \
+CONFIG.C_PROBE27_WIDTH {64} \
+CONFIG.C_PROBE28_WIDTH {64} \
+CONFIG.C_PROBE29_WIDTH {1} \
+CONFIG.C_PROBE30_WIDTH {1} \
+CONFIG.C_PROBE31_WIDTH {1} \
+CONFIG.C_PROBE32_WIDTH {32} \
+] [get_ips ila_mmu]
+
 
 # # Interconnect
 # create_ip -name axi_interconnect -vendor xilinx.com -library ip -version 2.1 -module_name axi_stream_interconnect_0

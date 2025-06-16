@@ -146,7 +146,6 @@ memory_gateway #(
     .m_wr_req(wr_req)
 );
 
-
 // ----------------------------------------------------------------------------------------
 // Mutex 
 // ----------------------------------------------------------------------------------------
@@ -435,5 +434,55 @@ tlb_fsm #(
 `ifdef DBG_MMU_REGION_TOP
 
 `endif
+
+ila_mmu inst_ila (
+    .clk(aclk),
+    // Input request signals (from TLB FSMs to memory gateway) 
+    .probe0(s_bpss_rd_sq.valid), // [0:0] - Read request valid
+    .probe1(s_bpss_rd_sq.ready), // [0:0] - Read request ready
+    .probe2(s_bpss_rd_sq.data.vaddr), // [47:0] - Read virtual address
+    .probe3(s_bpss_rd_sq.data.len), // [27:0] - Read length
+    .probe4(s_bpss_rd_sq.data.pid), // [5:0] - Read process ID
+    .probe5(s_bpss_rd_sq.data.opcode), // [4:0] - Read opcode
+    .probe6(s_bpss_wr_sq.valid), // [0:0] - Write request valid
+    .probe7(s_bpss_wr_sq.ready), // [0:0] - Write request ready
+    .probe8(s_bpss_wr_sq.data.vaddr), // [47:0] - Write virtual address
+    .probe9(s_bpss_wr_sq.data.len), // [27:0] - Write length
+    .probe10(s_bpss_wr_sq.data.pid), // [5:0] - Write process ID
+    .probe11(s_bpss_wr_sq.data.opcode), // [4:0] - Write opcode
+    
+    // Output request signals (from memory gateway to TLB FSMs) 
+    .probe12(rd_req.valid), // [0:0] - Filtered read valid
+    .probe13(rd_req.ready), // [0:0] - Filtered read ready
+    .probe14(rd_req.data.vaddr), // [47:0] - Filtered read vaddr
+    .probe15(rd_req.data.len), // [27:0] - Filtered read length
+    .probe16(wr_req.valid), // [0:0] - Filtered write valid
+    .probe17(wr_req.ready), // [0:0] - Filtered write ready
+    .probe18(wr_req.data.vaddr), // [47:0] - Filtered write vaddr
+    .probe19(wr_req.data.len), // [27:0] - Filtered write length
+    
+    // Endpoint configuration 
+    .probe20(ep_ctrl), // [130:0] - Endpoint control
+    
+    // READ ENDPOINT DEBUG SIGNALS - Shows last read endpoint checked
+    .probe21(inst_memory_gateway.epr_valid),        // [0:0] - Read EP valid
+    .probe22(inst_memory_gateway.epr_access),       // [1:0] - Read EP access rights  
+    .probe23(inst_memory_gateway.epr_base),         // [63:0] - Read EP base address
+    .probe24(inst_memory_gateway.epr_bound),        // [63:0] - Read EP bound address
+
+    // WRITE ENDPOINT DEBUG SIGNALS - Shows last write endpoint checked
+    .probe25(inst_memory_gateway.epw_valid),        // [0:0] - Write EP valid
+    .probe26(inst_memory_gateway.epw_access),       // [1:0] - Write EP access rights  
+    .probe27(inst_memory_gateway.epw_base),         // [63:0] - Write EP base address
+    .probe28(inst_memory_gateway.epw_bound),        // [63:0] - Write EP bound address
+
+    // MEMORY GATEWAY DEBUG SIGNALS
+    .probe29(inst_memory_gateway.rd_access_allowed),  // [0:0] - Read access decision
+    .probe30(inst_memory_gateway.wr_access_allowed),  // [0:0] - Write access decision
+    .probe31(inst_memory_gateway.violation_detected), // [0:0] - Access violation flag
+    .probe32(inst_memory_gateway.violation_count)    // [31:0] - Violation counter
+
+);
+
 
 endmodule // mmu_region_top
