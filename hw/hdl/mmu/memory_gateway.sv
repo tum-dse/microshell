@@ -9,53 +9,38 @@ module memory_gateway #(
     input logic aresetn,
     
     // Control interface
-    input logic [(131*N_ENDPOINTS)-1:0] ep_ctrl,
+    input logic [(99*N_ENDPOINTS)-1:0] ep_ctrl,
     
     // Original DMA interfaces (unfiltered inputs)
-    metaIntf.s s_rd_req,  
-    metaIntf.s s_wr_req,  
+    metaIntf.s s_rd_req,
+    metaIntf.s s_wr_req,
     
     // Filtered DMA interfaces (only authorized requests)
     metaIntf.m m_rd_req,
     metaIntf.m m_wr_req
 );
 
-    // ----------------------------------------------------------------------------------------
-    // Endpoint Configuration Constants
-    // ----------------------------------------------------------------------------------------
-    
-    // Bit field definitions for each endpoint configuration
-    localparam integer EP_BASE_ADDR_BITS = 64;
-    localparam integer EP_BOUND_ADDR_BITS = 64;
-    localparam integer EP_ACCESS_BITS = 2;
-    localparam integer EP_VALID_BITS = 1;
-    localparam integer EP_TOTAL_BITS = EP_BASE_ADDR_BITS + EP_BOUND_ADDR_BITS + EP_ACCESS_BITS + EP_VALID_BITS; // 131
-    
-    // Bit field offsets within each endpoint configuration
-    localparam integer EP_BASE_ADDR_OFFSET = 0;
-    localparam integer EP_BOUND_ADDR_OFFSET = EP_BASE_ADDR_OFFSET + EP_BASE_ADDR_BITS;
-    localparam integer EP_ACCESS_OFFSET = EP_BOUND_ADDR_OFFSET + EP_BOUND_ADDR_BITS;
-    localparam integer EP_VALID_OFFSET = EP_ACCESS_OFFSET + EP_ACCESS_BITS;
+    // Signal declarations
+    endpoint_reg_t [N_ENDPOINTS-1:0] endpoint_regs;
 
-    // ----------------------------------------------------------------------------------------
-    // Security Validation - Overflow-Safe Bounds Checking 
-    // ----------------------------------------------------------------------------------------
-    
+    // Instantiate memory endpoints configuration module
+    memory_endpoints #(
+        .N_ENDPOINTS(N_ENDPOINTS)
+    ) inst_endpoints (
+        .aclk(aclk),
+        .aresetn(aresetn),
+        .ep_ctrl(ep_ctrl),
+        .endpoint_regs(endpoint_regs)
+    );
+
+    // Signal declarations
     logic rd_access_allowed, wr_access_allowed;
     logic violation_detected;
-    
-    logic [15:0] epr_start_bit;
-    logic [63:0] epr_base;
-    logic [63:0] epr_bound;
-    logic [1:0] epr_access;
-    logic epr_valid;
 
-    logic [15:0] epw_start_bit;
-    logic [63:0] epw_base;
-    logic [63:0] epw_bound;
-    logic [1:0] epw_access;
-    logic epw_valid;
-                
+    // ----------------------------------------------------------------------------------------
+    // Security Validation - Overflow-Safe Bounds Checking
+    // ----------------------------------------------------------------------------------------
+    
     always_comb begin
         // Default to deny access 
         rd_access_allowed = 1'b0;
@@ -65,89 +50,72 @@ module memory_gateway #(
         if (s_rd_req.valid && s_rd_req.data.len > 0) begin
             // Check against all endpoints 
             for (int i = 0; i < N_ENDPOINTS; i++) begin
-                // Extract endpoint config directly from ep_ctrl 
-                epr_start_bit = i * EP_TOTAL_BITS;
-                epr_base = ep_ctrl[epr_start_bit + EP_BASE_ADDR_OFFSET +: EP_BASE_ADDR_BITS];
-                epr_bound = ep_ctrl[epr_start_bit + EP_BOUND_ADDR_OFFSET +: EP_BOUND_ADDR_BITS];
-                epr_access = ep_ctrl[epr_start_bit + EP_ACCESS_OFFSET +: EP_ACCESS_BITS];
-                epr_valid = ep_ctrl[epr_start_bit + EP_VALID_OFFSET +: EP_VALID_BITS];
-                
-                // Check if endpoint is valid and has read access
-                if (epr_valid && epr_access[0] && (epr_base <= epr_bound)) begin
-                    // Extract request parameters
-                    logic [VADDR_BITS-1:0] req_vaddr = s_rd_req.data.vaddr;
-                    logic [LEN_BITS-1:0] req_len = s_rd_req.data.len;
+                if (endpoint_regs[i].valid && endpoint_regs[i].access_rights[0]) begin
+                    // Calculate endpoint size to detect malicious huge lengths
+                    logic [VADDR_BITS-1:0] endpoint_size;
+                    endpoint_size = endpoint_regs[i].vaddr_bound - endpoint_regs[i].vaddr_base + 1;
                     
-                    // Calculate endpoint size to prevent malicious huge lengths
-                    logic [63:0] ep_size = epr_bound - epr_base + 1;
-                    
-                    // SECURITY: Prevent overflow attacks by checking length vs endpoint size
-                    if (req_len <= ep_size) begin
-                        // Overflow-safe bounds check using subtraction instead of addition
-                        if ((req_vaddr >= epr_base) && 
-                            (req_vaddr <= (epr_bound - req_len + 1))) begin
+                    // Security check: Length cannot exceed endpoint size (prevents underflow attack)
+                    if (s_rd_req.data.len <= endpoint_size) begin
+                        // Overflow-safe bounds check: both start and end must be within bounds
+                        if (s_rd_req.data.vaddr >= endpoint_regs[i].vaddr_base && 
+                            s_rd_req.data.vaddr <= (endpoint_regs[i].vaddr_bound - s_rd_req.data.len + 1)) begin
                             rd_access_allowed = 1'b1;
-                            break;
+                            break; // Found valid endpoint, allow access
                         end
                     end
-                    // If req_len > ep_size, implicitly deny (skip this endpoint)
+                    // If len > endpoint_size, skip this endpoint (implicit denial)
                 end
             end
         end
         
-        // Write request validation - Same logic as read
+        // Write request validation  
         if (s_wr_req.valid && s_wr_req.data.len > 0) begin
             for (int i = 0; i < N_ENDPOINTS; i++) begin
-                // Extract endpoint config directly from ep_ctrl 
-                epw_start_bit = i * EP_TOTAL_BITS;
-                epw_base = ep_ctrl[epw_start_bit + EP_BASE_ADDR_OFFSET +: EP_BASE_ADDR_BITS];
-                epw_bound = ep_ctrl[epw_start_bit + EP_BOUND_ADDR_OFFSET +: EP_BOUND_ADDR_BITS];
-                epw_access = ep_ctrl[epw_start_bit + EP_ACCESS_OFFSET +: EP_ACCESS_BITS];
-                epw_valid = ep_ctrl[epw_start_bit + EP_VALID_OFFSET +: EP_VALID_BITS];
-                
-                // Check if endpoint is valid and has write access
-                if (epw_valid && epw_access[1] && (epw_base <= epw_bound)) begin
-                    // Extract request parameters
-                    logic [VADDR_BITS-1:0] req_vaddr = s_wr_req.data.vaddr;
-                    logic [LEN_BITS-1:0] req_len = s_wr_req.data.len;
+                if (endpoint_regs[i].valid && endpoint_regs[i].access_rights[1]) begin
+                    // Calculate endpoint size to detect malicious huge lengths
+                    logic [VADDR_BITS-1:0] endpoint_size;
+                    // The following line might overflow
+                    endpoint_size = endpoint_regs[i].vaddr_bound - endpoint_regs[i].vaddr_base + 1;
                     
-                    // Calculate endpoint size to prevent malicious huge lengths
-                    logic [63:0] ep_size = epw_bound - epw_base + 1;
-                    
-                    // SECURITY: Prevent overflow attacks by checking length vs endpoint size
-                    if (req_len <= ep_size) begin
-                        // Overflow-safe bounds check using subtraction instead of addition
-                        if ((req_vaddr >= epw_base) && 
-                            (req_vaddr <= (epw_bound - req_len + 1))) begin
+                    // Security check: Length cannot exceed endpoint size (prevents underflow attack)
+                    if (s_wr_req.data.len <= endpoint_size) begin
+                        // Overflow-safe bounds check: both start and end must be within bounds
+                        if (s_wr_req.data.vaddr >= endpoint_regs[i].vaddr_base && 
+                            s_wr_req.data.vaddr <= (endpoint_regs[i].vaddr_bound - s_wr_req.data.len + 1)) begin
                             wr_access_allowed = 1'b1;
-                            break;
+                            break; // Found valid endpoint, allow access
                         end
                     end
-                    // If req_len > ep_size, implicitly deny (skip this endpoint)
+                    // If len > endpoint_size, skip this endpoint (implicit denial)
                 end
             end
         end
     end
 
     // ----------------------------------------------------------------------------------------
-    // Request Forwarding Logic
+    // Immediate Drop for Unauthorized Requests
     // ----------------------------------------------------------------------------------------
     
     always_comb begin
+        // AUTHORIZED REQUESTS: Forward to downstream
         m_rd_req.valid = s_rd_req.valid && rd_access_allowed;
         m_rd_req.data = s_rd_req.data;
         
         m_wr_req.valid = s_wr_req.valid && wr_access_allowed;
         m_wr_req.data = s_wr_req.data;
         
+        // AUTHORIZED: Wait for downstream ready
+        // UNAUTHORIZED: Immediately drop (assert ready to consume/reject request)
         s_rd_req.ready = rd_access_allowed ? m_rd_req.ready : 1'b1;
         s_wr_req.ready = wr_access_allowed ? m_wr_req.ready : 1'b1;
     end
 
     // ----------------------------------------------------------------------------------------
-    // Access Violation Tracking
+    // Access Violation Signal - Auto-clearing
     // ----------------------------------------------------------------------------------------
     
+    // Detect violation occurrence (combinational)
     always_comb begin
         violation_detected = 
             (s_rd_req.valid && !rd_access_allowed) ||

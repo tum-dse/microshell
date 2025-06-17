@@ -160,9 +160,7 @@ metaIntf #(.STYPE(inv_t)) wr_invldt_ctrl [N_REGIONS] ();
 
 parameter integer N_ENDPOINTS = 1;
 
-logic [N_REGIONS-1:0][(131*N_ENDPOINTS)-1:0]   ep_ctrl;
-
-
+logic [N_REGIONS-1:0][(99*N_ENDPOINTS)-1:0]   ep_ctrl;
 
 // Instantiate region MMUs
 for(genvar i = 0; i < N_REGIONS; i++) begin

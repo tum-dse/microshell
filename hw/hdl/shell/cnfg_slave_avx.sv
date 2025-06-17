@@ -102,7 +102,7 @@ module cnfg_slave_avx #(
     // Control
     output logic                usr_irq,
     
-    output logic [(131*N_ENDPOINTS)-1:0] ep_ctrl
+    output logic [(99*N_ENDPOINTS)-1:0] ep_ctrl
 );
 
 // -- Decl -------------------------------------------------------------------------------
@@ -1618,7 +1618,7 @@ begin
     end
 end    
 
-assign ep_ctrl = slv_reg[EP_CTRL_BASE_REG][(131*N_ENDPOINTS)-1:0];
+assign ep_ctrl = slv_reg[EP_CTRL_BASE_REG][(99*N_ENDPOINTS)-1:0];
 
 //
 // DEBUG

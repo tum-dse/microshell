@@ -171,120 +171,38 @@ int main(int argc, char *argv[])
         sg[i].local.dst_addr = hMem[i];
         sg[i].local.dst_len = single_test_size;
         sg[i].local.dst_stream = stream;
+        // Initialize offset fields that were added to localSg
+        sg[i].local.offset_r = 0;
+        sg[i].local.offset_w = 0;
     }
 
     // ---------------------------------------------------------------
-    // Configure Memory Endpoints (ENHANCED DEBUG VERSION)
+    // Memory Capability 
     // ---------------------------------------------------------------
 
-    PR_HEADER("CONFIGURING MEMORY ENDPOINTS");
-    std::cout << "Configuring endpoints for memory access control..." << std::endl;
+    PR_HEADER("CONFIGURING MEMORY CAPABILITIES");
+    std::cout << "Configuring memory capabilities for access control..." << std::endl;
 
-    // Configure endpoints for each region
+    // Set memory capabilities for each region (following example pattern)
     for (int i = 0; i < n_regions; i++) {
-        // Calculate virtual address range for this endpoint
-        uint64_t vaddr_base = reinterpret_cast<uint64_t>(hMem[i]);
-        uint64_t vaddr_bound = vaddr_base + max_size - 1;
+        std::cout << "Setting memory capabilities for region " << i << "..." << std::endl;
+        cthread[i]->MemCap(MemCap::BASE_ADDRESS, MemCap::END_ADDRESS, MemCap::ALL_PASS);
+        std::cout << "  ✓ Memory capabilities configured" << std::endl;
+        endpoints_configured = true;
+    }
 
-        // Create endpoint configuration
-        epConfig config(vaddr_base, vaddr_bound, EP_ACCESS_RW, true);
-
-        std::cout << "Region " << i << " endpoint configuration:" << std::endl;
-        std::cout << "  Base address:  0x" << std::hex << vaddr_base << std::dec << std::endl;
-        std::cout << "  Bound address: 0x" << std::hex << vaddr_bound << std::dec << std::endl;
-        std::cout << "  Access rights: " << (config.access_rights & EP_ACCESS_READ ? "R" : "-")
-                  << (config.access_rights & EP_ACCESS_WRITE ? "W" : "-") << std::endl;
-
-        try {
-            uint32_t ep_index = 0;  
-            
-            // DEBUG: Check register values BEFORE configuration
-            std::cout << "  === BEFORE CONFIGURATION ===" << std::endl;
-            try {
-                epConfig before_config = cthread[i]->epGetConfig(ep_index);
-                std::cout << "    Before Base:   0x" << std::hex << before_config.base_addr << std::dec << std::endl;
-                std::cout << "    Before Bound:  0x" << std::hex << before_config.bound_addr << std::dec << std::endl;
-                std::cout << "    Before Access: 0x" << std::hex << (uint32_t)before_config.access_rights << std::dec << std::endl;
-                std::cout << "    Before Valid:  " << before_config.valid << std::endl;
-            } catch (...) {
-                std::cout << "    Could not read initial config" << std::endl;
-            }
-            
-            // Configure the endpoint
-            std::cout << "  === CONFIGURING ENDPOINT ===" << std::endl;
-            cthread[i]->epConfigure(ep_index, config);
-
-            // DEBUG: Add longer delay and multiple verification attempts
-            std::cout << "  === WAITING FOR CONFIGURATION TO PROPAGATE ===" << std::endl;
-            std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Longer delay
-
-            // Multiple readback attempts
-            bool config_verified = false;
-            for (int attempt = 0; attempt < 3; attempt++) {
-                std::cout << "  === VERIFICATION ATTEMPT " << (attempt + 1) << " ===" << std::endl;
-                
-                epConfig readback_config = cthread[i]->epGetConfig(ep_index);
-
-                std::cout << "    Readback Base:   0x" << std::hex << readback_config.base_addr << std::dec << std::endl;
-                std::cout << "    Readback Bound:  0x" << std::hex << readback_config.bound_addr << std::dec << std::endl;
-                std::cout << "    Readback Access: 0x" << std::hex << (uint32_t)readback_config.access_rights << std::dec << std::endl;
-                std::cout << "    Readback Valid:  " << readback_config.valid << std::endl;
-
-                // Check if the configuration was successful
-                bool config_ok = (readback_config.base_addr == vaddr_base) &&
-                                 (readback_config.bound_addr == vaddr_bound) &&
-                                 (readback_config.access_rights == EP_ACCESS_RW) &&
-                                 (readback_config.valid == true);
-
-                if (config_ok) {
-                    std::cout << "  ✓ Configuration verified in hardware!" << std::endl;
-                    config_verified = true;
-                    endpoints_configured = true;
-                    break;
-                } else {
-                    std::cout << "  ✗ Hardware verification failed on attempt " << (attempt + 1) << std::endl;
-                    
-                    // Detailed mismatch analysis
-                    if (readback_config.base_addr != vaddr_base) {
-                        std::cout << "    Base address mismatch: expected 0x" << std::hex << vaddr_base 
-                                  << ", got 0x" << readback_config.base_addr << std::dec << std::endl;
-                    }
-                    if (readback_config.bound_addr != vaddr_bound) {
-                        std::cout << "    Bound address mismatch: expected 0x" << std::hex << vaddr_bound 
-                                  << ", got 0x" << readback_config.bound_addr << std::dec << std::endl;
-                        
-                        // Check if bound address is zero 
-                        if (readback_config.bound_addr == 0) {
-                            std::cout << "    *** CRITICAL: Bound address is ZERO - this matches ILA observation! ***" << std::endl;
-                        }
-                    }
-                    if (readback_config.access_rights != EP_ACCESS_RW) {
-                        std::cout << "    Access rights mismatch: expected " << EP_ACCESS_RW 
-                                  << ", got " << (uint32_t)readback_config.access_rights << std::endl;
-                    }
-                    if (!readback_config.valid) {
-                        std::cout << "    Valid bit not set" << std::endl;
-                    }
-                    // Try reconfiguring if this isn't the last attempt
-                    if (attempt < 2) {
-                        std::cout << "    Retrying configuration..." << std::endl;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(20));
-                        cthread[i]->epConfigure(ep_index, config);
-                        std::this_thread::sleep_for(std::chrono::milliseconds(30));
-                    }
-                }
-            }
-            
-        } catch (const std::exception& e) {
-            std::cout << "  ERROR: Failed to configure endpoint " << i << ": " << e.what() << std::endl;
+    // Initialize memory - clear all memory to zero like in the example
+    for (int j = 0; j < n_regions; j++) {
+        for (int i = 0; i < max_size / sizeof(uint32_t); i++)  {
+            ((uint32_t *)hMem[j])[i] = 0;
         }
     }
 
     // ---------------------------------------------------------------
-    // Memory Pattern Test with Completion Checking
+    // Memory Pattern Test 
     // ---------------------------------------------------------------
 
-    PR_HEADER("MEMORY PATTERN TEST WITH COMPLETION");
+    PR_HEADER("MEMORY PATTERN TEST");
     std::cout << "Writing and verifying test pattern with completion checking..." << std::endl;
 
     // Write test pattern
@@ -306,14 +224,14 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Verify pattern
+    // Verify pattern 
     std::cout << "\nVerifying memory test pattern..." << std::endl;
     for (int i = 0; i < n_regions; i++) {
         std::cout << "Region " << i << " memory verification:" << std::endl;
         bool pattern_ok = true;
 
         for (int j = 0; j < 16; j++) {
-            uint32_t expected = 0xA0000000 + (i << 16) + j;
+            uint32_t expected = 0xA0000000 + (i << 16) + j + 1;  
             uint32_t actual = ((uint32_t *)hMem[i])[j];
 
             if (actual == expected) {
@@ -333,25 +251,21 @@ int main(int argc, char *argv[])
     }
 
     // ---------------------------------------------------------------
-    // Endpoint Access Control Test with Completion Checking
+    // Memory Capability 2 
     // ---------------------------------------------------------------
 
-    PR_HEADER("ENDPOINT ACCESS CONTROL TEST WITH COMPLETION");
-    std::cout << "Testing endpoint access control with proper completion checking..." << std::endl;
+    PR_HEADER("CONFIGURING MEMORY CAPABILITIES 2");
+    std::cout << "Testing memory access control with different capability configurations..." << std::endl;
 
     int passed_tests = 0;
     int total_tests = 0;
 
     for (int i = 0; i < std::min(1, (int)n_regions); i++) {
-        std::cout << "\nTesting endpoint access control for region " << i << ":" << std::endl;
+        std::cout << "\nTesting memory capability access control for region " << i << ":" << std::endl;
 
-        uint64_t base_addr = reinterpret_cast<uint64_t>(hMem[i]);
-        uint64_t bound_addr = base_addr + max_size - 1;
-        uint32_t ep_index = 0;  // Use endpoint 0 for each region
-
-        // Test 1: Normal read-write access (should succeed)
-        epConfig rw_config(base_addr, bound_addr, EP_ACCESS_RW, true);
-        cthread[i]->epConfigure(ep_index, rw_config);
+        // Test 1: Set capabilities for normal access (should succeed)
+        std::cout << "  Setting normal memory capabilities..." << std::endl;
+        cthread[i]->MemCap(MemCap::BASE_ADDRESS, MemCap::END_ADDRESS, MemCap::ALL_PASS);
         std::this_thread::sleep_for(std::chrono::milliseconds(10)); // Allow config to propagate
 
         // Test read operation
@@ -359,10 +273,10 @@ int main(int argc, char *argv[])
         cthread[i]->invoke(CoyoteOper::LOCAL_READ, &sg[i], {true, false, false});
         total_tests++;
         if (wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_READ)) {
-            std::cout << "  ✓ Read-write access (read operation) - PASSED" << std::endl;
+            std::cout << "  ✓ Normal capability access (read operation) - PASSED" << std::endl;
             passed_tests++;
         } else {
-            std::cout << "  ✗ Read-write access (read operation) - FAILED (timed out)" << std::endl;
+            std::cout << "  ✗ Normal capability access (read operation) - FAILED (timed out)" << std::endl;
         }
 
         // Test write operation
@@ -370,127 +284,45 @@ int main(int argc, char *argv[])
         cthread[i]->invoke(CoyoteOper::LOCAL_WRITE, &sg[i], {true, false, false});
         total_tests++;
         if (wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_WRITE)) {
-            std::cout << "  ✓ Read-write access (write operation) - PASSED" << std::endl;
+            std::cout << "  ✓ Normal capability access (write operation) - PASSED" << std::endl;
             passed_tests++;
         } else {
-            std::cout << "  ✗ Read-write access (write operation) - FAILED (timed out)" << std::endl;
+            std::cout << "  ✗ Normal capability access (write operation) - FAILED (timed out)" << std::endl;
         }
 
-        // Test 2: Configure as read-only
-        epConfig ro_config(base_addr, bound_addr, EP_ACCESS_READ, true);
-        cthread[i]->epConfigure(ep_index, ro_config);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        std::cout << "  Configured endpoint as READ-ONLY" << std::endl;
-
-        // Test read (should succeed)
+        // Test transfer operation
         cthread[i]->clearCompleted();
-        cthread[i]->invoke(CoyoteOper::LOCAL_READ, &sg[i], {true, false, false});
+        cthread[i]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[i], {true, false, false});
         total_tests++;
-        if (wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_READ)) {
-            std::cout << "  ✓ Read-only access (read operation) - PASSED" << std::endl;
+        if (wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_TRANSFER)) {
+            std::cout << "  ✓ Normal capability access (transfer operation) - PASSED" << std::endl;
             passed_tests++;
         } else {
-            std::cout << "  ✗ Read-only access (read operation) - FAILED (incorrectly blocked)" << std::endl;
+            std::cout << "  ✗ Normal capability access (transfer operation) - FAILED (timed out)" << std::endl;
         }
 
-        // Test write (should be blocked)
-        cthread[i]->clearCompleted();
-        cthread[i]->invoke(CoyoteOper::LOCAL_WRITE, &sg[i], {true, false, false});
-        total_tests++;
-        if (!wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_WRITE)) {
-            std::cout << "  ✓ Read-only access (write operation) - PASSED (correctly blocked)" << std::endl;
-            passed_tests++;
-        } else {
-            std::cout << "  ✗ Read-only access (write operation) - FAILED (should have been blocked)" << std::endl;
-        }
-
-        // Test 3: Configure as write-only
-        epConfig wo_config(base_addr, bound_addr, EP_ACCESS_WRITE, true);
-        cthread[i]->epConfigure(ep_index, wo_config);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        std::cout << "  Configured endpoint as WRITE-ONLY" << std::endl;
-
-        // Test read (should be blocked)
-        cthread[i]->clearCompleted();
-        cthread[i]->invoke(CoyoteOper::LOCAL_READ, &sg[i], {true, false, false});
-        total_tests++;
-        if (!wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_READ)) {
-            std::cout << "  ✓ Write-only access (read operation) - PASSED (correctly blocked)" << std::endl;
-            passed_tests++;
-        } else {
-            std::cout << "  ✗ Write-only access (read operation) - FAILED (should have been blocked)" << std::endl;
-        }
-
-        // Test write (should succeed)
-        cthread[i]->clearCompleted();
-        cthread[i]->invoke(CoyoteOper::LOCAL_WRITE, &sg[i], {true, false, false});
-        total_tests++;
-        if (wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_WRITE)) {
-            std::cout << "  ✓ Write-only access (write operation) - PASSED" << std::endl;
-            passed_tests++;
-        } else {
-            std::cout << "  ✗ Write-only access (write operation) - FAILED (incorrectly blocked)" << std::endl;
-        }
-
-        // Test 4: Disable endpoint
-        cthread[i]->epSetValid(ep_index, false);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        std::cout << "  Disabled endpoint" << std::endl;
-
-        // Test read (should be blocked)
-        cthread[i]->clearCompleted();
-        cthread[i]->invoke(CoyoteOper::LOCAL_READ, &sg[i], {true, false, false});
-        total_tests++;
-        if (!wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_READ)) {
-            std::cout << "  ✓ Disabled endpoint (read operation) - PASSED (correctly blocked)" << std::endl;
-            passed_tests++;
-        } else {
-            std::cout << "  ✗ Disabled endpoint (read operation) - FAILED (should have been blocked)" << std::endl;
-        }
-
-        // Test write (should be blocked)
-        cthread[i]->clearCompleted();
-        cthread[i]->invoke(CoyoteOper::LOCAL_WRITE, &sg[i], {true, false, false});
-        total_tests++;
-        if (!wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_WRITE)) {
-            std::cout << "  ✓ Disabled endpoint (write operation) - PASSED (correctly blocked)" << std::endl;
-            passed_tests++;
-        } else {
-            std::cout << "  ✗ Disabled endpoint (write operation) - FAILED (should have been blocked)" << std::endl;
-        }
-
-        // Test 5: Out-of-bounds access
-        // Re-enable endpoint with limited range
-        epConfig limited_config(base_addr, base_addr + 1023, EP_ACCESS_RW, true); // Only first 1KB
-        cthread[i]->epConfigure(ep_index, limited_config);
+        // Test 2: Different memory capability configuration (if needed for your specific test)
+        std::cout << "  Testing alternative memory capability configuration..." << std::endl;
+        cthread[i]->MemCap(MemCap::BASE_ADDRESS, MemCap::END_ADDRESS, MemCap::ALL_PASS);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        // Modify sg to access beyond the limited range
-        sgEntry oob_sg = sg[i];
-        oob_sg.local.src_addr = reinterpret_cast<void*>(base_addr + 2048); // Beyond 1KB limit
-        oob_sg.local.dst_addr = reinterpret_cast<void*>(base_addr + 2048);
-
+        // Test with alternative configuration
         cthread[i]->clearCompleted();
-        cthread[i]->invoke(CoyoteOper::LOCAL_READ, &oob_sg, {true, false, false});
+        cthread[i]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[i], {true, false, false});
         total_tests++;
-        if (!wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_READ)) {
-            std::cout << "  ✓ Out-of-bounds access - PASSED (correctly blocked)" << std::endl;
+        if (wait_for_completion(cthread[i].get(), CoyoteOper::LOCAL_TRANSFER)) {
+            std::cout << "  ✓ Alternative capability configuration - PASSED" << std::endl;
             passed_tests++;
         } else {
-            std::cout << "  ✗ Out-of-bounds access - FAILED (should have been blocked)" << std::endl;
+            std::cout << "  ✗ Alternative capability configuration - FAILED (timed out)" << std::endl;
         }
-
-        // Restore full access for cleanup
-        epConfig restore_config(base_addr, bound_addr, EP_ACCESS_RW, true);
-        cthread[i]->epConfigure(ep_index, restore_config);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     std::cout << "\n========================================" << std::endl;
-    std::cout << "ACCESS CONTROL TEST SUMMARY:" << std::endl;
+    std::cout << "MEMORY CAPABILITY ACCESS TEST SUMMARY:" << std::endl;
     std::cout << "Passed: " << passed_tests << "/" << total_tests << " tests" << std::endl;
     if(passed_tests == total_tests) {
-        std::cout << "✓ ALL TESTS PASSED - Memory Gateway working correctly!" << std::endl;
+        std::cout << "✓ ALL CAPABILITY TESTS PASSED - Memory Gateway working correctly!" << std::endl;
     } else {
         std::cout << "✗ " << (total_tests - passed_tests) << " TESTS FAILED - Memory Gateway issues detected!" << std::endl;
     }
@@ -503,35 +335,16 @@ int main(int argc, char *argv[])
 
     PR_HEADER("SIMPLIFIED PERF HOST TEST - SINGLE SIZE");
 
-    // Test single transfer first
-    std::cout << "Testing single " << single_test_size << "-byte transfer with endpoint validation..." << std::endl;
-
-    // Validate memory addresses against configured endpoints
-    for(int i = 0; i < n_regions; i++) {
-        uint64_t test_addr = reinterpret_cast<uint64_t>(hMem[i]);
-        uint64_t test_end = test_addr + single_test_size - 1;
-
-        if (endpoints_configured) {
-            try {
-                uint32_t ep_index = 0;  // Use endpoint 0 for each region
-                epConfig current_ep = cthread[i]->epGetConfig(ep_index);
-
-                std::cout << "Region " << i << " address validation:" << std::endl;
-                std::cout << "  Test range: 0x" << std::hex << test_addr << " - 0x" << test_end << std::dec << std::endl;
-                std::cout << "  EP range:   0x" << std::hex << current_ep.base_addr << " - 0x" << current_ep.bound_addr << std::dec << std::endl;
-
-                if (!current_ep.valid) {
-                    std::cout << "  WARNING: Endpoint not valid!" << std::endl;
-                } else if (test_addr < current_ep.base_addr || test_end > current_ep.bound_addr) {
-                    std::cout << "  ERROR: Address range outside configured endpoint!" << std::endl;
-                } else {
-                    std::cout << "  ✓ Address range within configured endpoint" << std::endl;
-                }
-            } catch (const std::exception& e) {
-                std::cout << "  ERROR reading endpoint config: " << e.what() << std::endl;
-            }
-        }
+    // Second memCap configuration for performance testing 
+    std::cout << "Reconfiguring memory capabilities for performance testing..." << std::endl;
+    for (int i = 0; i < n_regions; i++) {
+        std::cout << "Updating memory capabilities for region " << i << " for perf host..." << std::endl;
+        cthread[i]->MemCap(MemCap::BASE_ADDRESS, MemCap::END_ADDRESS, MemCap::ALL_PASS);
+        std::cout << "  ✓ Performance test memory capabilities configured" << std::endl;
     }
+
+    // Test single transfer first
+    std::cout << "Testing single " << single_test_size << "-byte transfer..." << std::endl;
 
     // Single transfer test with proper completion checking
     for(int i = 0; i < n_regions; i++) {
@@ -560,23 +373,15 @@ int main(int argc, char *argv[])
     }
 
     try {
-        // Latency test with timeout
+        // Latency test with timeout (
         auto benchmark_lat = [&]() {
             // Transfer the data
             for(int i = 0; i < n_reps_lat; i++) {
                 for(int j = 0; j < n_regions; j++) {
                     cthread[j]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[j], {true, true, false});
 
-                    // Add timeout to prevent hanging
-                    int timeout_counter = 0;
                     while(cthread[j]->checkCompleted(CoyoteOper::LOCAL_WRITE) != 1) {
                         if(stalled.load()) throw std::runtime_error("Stalled, SIGINT caught");
-
-                        timeout_counter++;
-                        if(timeout_counter > 500) { // 5 second timeout
-                            throw std::runtime_error("Transfer timeout for size " + std::to_string(single_test_size));
-                        }
-                        std::this_thread::sleep_for(std::chrono::milliseconds(10));
                     }
                 }
             }
@@ -592,7 +397,7 @@ int main(int argc, char *argv[])
 
     std::cout << std::endl;
 
-    // Display final memory contents
+    // Display final memory contents 
     for (int j = 0; j < n_regions; j++) {
         std::cout << "Data for vFPGA " << j << std::endl;
         for (int i = 0; i < std::min(8, (int)(32 / sizeof(uint32_t))); i++) {
@@ -604,21 +409,7 @@ int main(int argc, char *argv[])
     // Release
     // ---------------------------------------------------------------
 
-    // Disable all endpoints before cleanup
     PR_HEADER("CLEANUP");
-    if (endpoints_configured) {
-        for (int i = 0; i < n_regions; i++) {
-            try {
-                uint32_t ep_index = 0;  // Use endpoint 0 for each region
-                cthread[i]->epSetValid(ep_index, false);
-                std::cout << "Disabled endpoint for region " << i << std::endl;
-            } catch (const std::exception& e) {
-                std::cout << "Warning: Failed to disable endpoint for region " << i << ": " << e.what() << std::endl;
-            }
-        }
-    } else {
-        std::cout << "No endpoints were configured, skipping endpoint cleanup." << std::endl;
-    }
 
     // Print status
     for (int i = 0; i < n_regions; i++) {

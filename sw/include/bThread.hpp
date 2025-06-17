@@ -165,6 +165,17 @@ public:
 	inline auto getCSR(uint32_t offs) { return ctrl_reg[offs]; }
 
 	/**
+	 * @brief IO control switch 
+	 */
+	void ioSwitch(IODevs io_dev);
+
+	void MemCap(MemCap base_addr, MemCap top_addr, MemCap permission);
+	
+	void ioSwDbg();
+
+	void epconfig();
+
+	/**
 	 * @brief Invoke a transfer of data 
 	 * coper - Coyote Operation (i.e. a LOCAL_WRITE or a REMOTE_RDMA_WRITE)
 	 * sgEntry - 
@@ -216,39 +227,6 @@ public:
 	 */
 	void printDebug();
 
-	/**
-	 * @brief Endpoint control interface
-	 * 
-	 * @param endpoint_idx : endpoint index (0 to N_ENDPOINTS-1)
-	 * @param config : endpoint configuration structure
-	 */
-	void epConfigure(uint32_t endpoint_idx, const epConfig& config);
-
-	/**
-	 * @brief Read endpoint configuration
-	 * 
-	 * @param endpoint_idx : endpoint index (0 to N_ENDPOINTS-1)
-	 * @return epConfig : current endpoint configuration
-	 */
-	epConfig epGetConfig(uint32_t endpoint_idx);
-
-	/**
-	 * @brief Enable/disable endpoint
-	 * 
-	 * @param endpoint_idx : endpoint index
-	 * @param enable : true to enable, false to disable
-	 */
-	void epSetValid(uint32_t endpoint_idx, bool enable);
-
-	/**
-	 * @brief Get endpoint validity status
-	 * 
-	 * @param endpoint_idx : endpoint index
-	 * @return bool : true if endpoint is valid/enabled
-	 */
-	bool epIsValid(uint32_t endpoint_idx);
-
 };
 
 } /* namespace fpga */
-

@@ -14,7 +14,6 @@
 #include <random>
 
 #include "bThread.hpp"
-
 using namespace std::chrono;
 
 namespace fpga {
@@ -595,6 +594,55 @@ void bThread::freeMem(void* vaddr) {
 	}
 }
 
+/**
+ * @brief IO control switch
+ * 
+ * @param io_dev - target IO device
+ */
+void bThread::ioSwitch(IODevs io_dev) {
+	#ifdef EN_AVX
+	if(fcnfg.en_avx){
+        // std::cout << "in en_avx ioSwitch: " << static_cast<int>(io_dev) << std::endl;
+		cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)] = _mm256_set_epi64x(0, 0, 0, static_cast<uint16_t>(io_dev));
+	}
+	else
+#endif
+		cnfg_reg[static_cast<uint32_t>(CnfgLegRegs::IO_SWITCH_REG)] = static_cast<uint8_t>(io_dev);
+};
+
+void bThread::ioSwDbg() {
+	std::cout << "IO switch register: " << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x3) 
+		<< _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x2)
+		<< _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x1)
+		<< _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x0) << std::endl;
+	// std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x3) << std::endl;
+	// std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x2) << std::endl;
+	// std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x1) << std::endl;
+	// std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x0) << std::endl;
+}
+
+/**
+ * @brief Memory Gateway
+ * 
+ * @param io_dev - target MMU
+ */
+void bThread::MemCap(MemCap base_addr, MemCap top_addr, MemCap permission) {
+	#ifdef EN_AVX
+	if(fcnfg.en_avx){
+		cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_REG)] = _mm256_set_epi64x(0, 0, static_cast<uint64_t>(top_addr), static_cast<uint64_t>(base_addr));
+	}
+	else
+#endif
+		cnfg_reg[static_cast<uint32_t>(CnfgLegRegs::EP_CTRL_REG)] = static_cast<uint32_t>(base_addr);
+};
+
+void bThread::epconfig() {
+	std::cout << "Memory EP register: " << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_REG)], 0x3) 
+		<< _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_REG)], 0x2)
+		<< _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_REG)], 0x1)
+		<< _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_REG)], 0x0) << std::endl;
+}
+
 // ======-------------------------------------------------------------------------------
 // Bulk transfers
 // ======-------------------------------------------------------------------------------
@@ -618,6 +666,9 @@ void bThread::postCmd(uint64_t offs_3, uint64_t offs_2, uint64_t offs_1, uint64_
 #ifdef EN_AVX
         cmd_cnt = fcnfg.en_avx ? LOW_32(_mm256_extract_epi32(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::CTRL_REG)], 0x0)) :
                                     cnfg_reg[static_cast<uint32_t>(CnfgLegRegs::CTRL_REG)];
+        # ifdef VERBOSE
+            std::cout << "bThread: postCmd AVX: " << cmd_cnt << std::endl; 
+        # endif
 #else
         cmd_cnt = cnfg_reg[static_cast<uint32_t>(CnfgLegRegs::CTRL_REG)];
         # ifdef VERBOSE
@@ -636,6 +687,9 @@ void bThread::postCmd(uint64_t offs_3, uint64_t offs_2, uint64_t offs_1, uint64_
         // Fire AVX
         cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::CTRL_REG)] = 
             _mm256_set_epi64x(offs_3, offs_2, offs_1, offs_0);
+        # ifdef VERBOSE
+            std::cout << "bThread: postCmd AVX." << std::endl; 
+        # endif
     } else {
 #endif
         // Fire legacy
@@ -824,13 +878,20 @@ void bThread::invoke(CoyoteOper coper, sgEntry *sg_list, sgFlags sg_flags, uint3
                 // Third (remote) option (not quite clear what this means if it's not TCP or RDMA)
 
                 # ifdef VERBOSE
-                    std::cout << "bThread: Third remote option for a command." << std::endl; 
+                    std::cout << "bThread: Third local or remote option for a command." << std::endl; 
+                    std::cout << "sg_list[i].local.src_addr: " << sg_list[i].local.src_addr << std::endl;
+                    std::cout << "sg_list[i].local.dst_addr: " << sg_list[i].local.dst_addr << std::endl;
+                    std::cout << "sg_list[i].local.offset_r: " << sg_list[i].local.offset_r << std::endl;
+                    std::cout << "sg_list[i].local.offset_w: " << sg_list[i].local.offset_w << std::endl;
+                    std::cout << "ctid: " << ctid << std::endl;
+                    std::cout << "operator: " << static_cast<int>(coper) << std::endl; 
                 # endif
 
                 // Local
                 ctrl_cmd_src[i] =
                     // RD
                     ((ctid & CTRL_PID_MASK) << CTRL_PID_OFFS) |
+                    // ((sg_list[i].local.offset & CTRL_OFFS_MASK) << CTRL_OFFS_OFFS) |
                     ((sg_list[i].local.src_dest & CTRL_DEST_MASK) << CTRL_DEST_OFFS) |
                     ((i == (n_sg-1) ? ((sg_flags.last) ? CTRL_LAST : 0x0) : 0x0)) |
                     ((sg_list[i].local.src_stream & CTRL_STRM_MASK) << CTRL_STRM_OFFS) | 
@@ -839,10 +900,20 @@ void bThread::invoke(CoyoteOper coper, sgEntry *sg_list, sgFlags sg_flags, uint3
                     (static_cast<uint64_t>(sg_list[i].local.src_len) << CTRL_LEN_OFFS);
 
                 addr_cmd_src[i] = reinterpret_cast<uint64_t>(sg_list[i].local.src_addr);
+                # ifdef VERBOSE
+                    std::cout << " - bThread: addr_cmd_src " << addr_cmd_src[i] << std::endl; 
+                # endif 
+                addr_cmd_src[i] = (static_cast<uint64_t>(sg_list[i].local.offset_r & CTRL_OFFS_MASK) << CTRL_OFFS_OFFS) | addr_cmd_src[i];
+                # ifdef VERBOSE
+                    std::cout << " - bThread: ctrl_cmd_src " << ctrl_cmd_src << std::endl; 
+                    std::cout << " - bThread: addr_cmd_src " << addr_cmd_src[i] << std::endl; 
+                    // std::cout << " - bThread: offset & CTRL_OFFS_MASK " << (static_cast<uint64_t>(sg_list[i].local.offset & CTRL_OFFS_MASK) << 32) << std::endl; 
+                # endif 
 
                 ctrl_cmd_dst[i] =
                     // WR
                     ((ctid & CTRL_PID_MASK) << CTRL_PID_OFFS) |
+                    // ((sg_list[i].local.offset & CTRL_OFFS_MASK) << CTRL_OFFS_OFFS) |
                     ((sg_list[i].local.dst_dest & CTRL_DEST_MASK) << CTRL_DEST_OFFS) |
                     ((i == (n_sg-1) ? ((sg_flags.last) ? CTRL_LAST : 0x0) : 0x0)) |
                     ((sg_list[i].local.dst_stream & CTRL_STRM_MASK) << CTRL_STRM_OFFS) | 
@@ -851,6 +922,7 @@ void bThread::invoke(CoyoteOper coper, sgEntry *sg_list, sgFlags sg_flags, uint3
                     (static_cast<uint64_t>(sg_list[i].local.dst_len) << CTRL_LEN_OFFS);
 
                 addr_cmd_dst[i] = reinterpret_cast<uint64_t>(sg_list[i].local.dst_addr);
+                addr_cmd_dst[i] = (static_cast<uint64_t>(sg_list[i].local.offset_w & CTRL_OFFS_MASK) << CTRL_OFFS_OFFS) | addr_cmd_dst[i];
             }
 
             // Use the post command hook to post the previously generated command (probably to the driver)
@@ -879,9 +951,9 @@ void bThread::invoke(CoyoteOper coper, sgEntry *sg_list, sgFlags sg_flags, uint3
 uint32_t bThread::checkCompleted(CoyoteOper coper) {
     // Based on the type of operation, check completion via a read access to the configuration registers 
 
-    # ifdef VERBOSE
-        std::cout << "bThread: Check for completion of a coper " << std::endl; 
-    # endif
+    // # ifdef VERBOSE
+    //     std::cout << "bThread: Check for completion of a coper " << std::endl; 
+    // # endif
 
 	if(isCompletedLocalRead(coper)) {
 		if(fcnfg.en_wb) {
@@ -1214,121 +1286,5 @@ void bThread::printDebug()
 #endif
 	std::cout << std::endl;
 } 
-
-/**
- * @brief Configure endpoint - Corrected version matching hardware
- *
- * @param endpoint_idx - endpoint index (0 to N_ENDPOINTS-1)
- * @param config - endpoint configuration
- */
-void bThread::epConfigure(uint32_t endpoint_idx, const epConfig& config) {
-    if (endpoint_idx >= EP_MAX_ENDPOINTS) {
-        throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
-    }
-    
-    // Pack into 131-bit format: [130] valid, [129:128] access, [127:64] bound, [63:0] base
-    uint64_t control_bits = (config.access_rights & 0x3ULL) | ((config.valid ? 1ULL : 0ULL) << 2);
-
-#ifdef EN_AVX
-    if(fcnfg.en_avx) {
-        uint32_t ep_base_reg = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG);
-        
-        // Pack all 131 bits into lower portion of 256-bit register
-        // Position 0: [63:0] = base_addr
-        // Position 1: [127:64] = bound_addr  
-        // Position 2: [130:128] = valid + access_rights (only lowest 3 bits used)
-        // Position 3: unused (0)
-        cnfg_reg_avx[ep_base_reg] = 
-            _mm256_set_epi64x(0, control_bits, config.bound_addr, config.base_addr);
-    } else {
-#endif
-        // Legacy mode - use regular 64-bit registers
-        uint32_t ep_base_reg = static_cast<uint32_t>(CnfgLegRegs::EP_CTRL_BASE_REG);
-        
-        cnfg_reg[ep_base_reg] = config.base_addr;      // [63:0]
-        cnfg_reg[ep_base_reg + 1] = config.bound_addr; // [127:64]
-        cnfg_reg[ep_base_reg + 2] = control_bits;      // [130:128]
-#ifdef EN_AVX
-    }
-#endif
-}
-
-/**
- * @brief Read endpoint configuration - Corrected version
- *
- * @param endpoint_idx - endpoint index
- * @return epConfig - current endpoint configuration
- */
-epConfig bThread::epGetConfig(uint32_t endpoint_idx) {
-    if (endpoint_idx >= EP_MAX_ENDPOINTS) {
-        throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
-    }
-    
-    epConfig config;
-    
-#ifdef EN_AVX
-    if(fcnfg.en_avx) {
-        uint32_t ep_base_reg = static_cast<uint32_t>(CnfgAvxRegs::EP_CTRL_BASE_REG);
-        __m256i reg_val = cnfg_reg_avx[ep_base_reg];
-        
-        config.base_addr = _mm256_extract_epi64(reg_val, 0);      // Position 0: [63:0]
-        config.bound_addr = _mm256_extract_epi64(reg_val, 1);     // Position 1: [127:64]
-        
-        uint64_t control_bits = _mm256_extract_epi64(reg_val, 2); // Position 2: control bits
-        config.access_rights = static_cast<uint8_t>(control_bits & 0x3ULL);
-        config.valid = ((control_bits >> 2) & 0x1ULL) != 0;
-    } else {
-#endif
-        uint32_t ep_base_reg = static_cast<uint32_t>(CnfgLegRegs::EP_CTRL_BASE_REG);
-        
-        config.base_addr = cnfg_reg[ep_base_reg];        // [63:0]
-        config.bound_addr = cnfg_reg[ep_base_reg + 1];   // [127:64]
-        
-        uint64_t control_bits = cnfg_reg[ep_base_reg + 2];
-        config.access_rights = static_cast<uint8_t>(control_bits & 0x3ULL);
-        config.valid = ((control_bits >> 2) & 0x1ULL) != 0;
-#ifdef EN_AVX
-    }
-#endif
-    
-    return config;
-}
-
-/**
- * @brief Enable/disable endpoint - Corrected version
- * 
- * @param endpoint_idx - endpoint index
- * @param enable - true to enable, false to disable
- */
-void bThread::epSetValid(uint32_t endpoint_idx, bool enable) {
-    if (endpoint_idx >= EP_MAX_ENDPOINTS) {
-        throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
-    }
-
-    # ifdef VERBOSE
-        std::cout << "bThread: Setting EP" << endpoint_idx 
-                  << " valid=" << enable << std::endl;
-    # endif
-
-    // Read current config, modify valid bit, write back
-    epConfig current_config = epGetConfig(endpoint_idx);
-    current_config.valid = enable;
-    epConfigure(endpoint_idx, current_config);
-}
-
-/**
- * @brief Get endpoint validity status - Corrected version
- * 
- * @param endpoint_idx - endpoint index
- * @return bool - true if endpoint is valid/enabled
- */
-bool bThread::epIsValid(uint32_t endpoint_idx) {
-    if (endpoint_idx >= EP_MAX_ENDPOINTS) {
-        throw std::runtime_error("Invalid endpoint index: " + std::to_string(endpoint_idx));
-    }
-
-    epConfig config = epGetConfig(endpoint_idx);
-    return config.valid;
-}
 
 }

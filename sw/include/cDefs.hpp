@@ -24,7 +24,8 @@ namespace fpga {
 // ======-------------------------------------------------------------------------------
 //#define VERBOSE_DEBUG_1 // Handle
 //#define VERBOSE_DEBUG_2 // Reconfig
-//#define VERBOSE_DEBUG_3 // Perf
+#define VERBOSE_DEBUG_3 // Perf
+// #define VERBOSE         // Debug
 
 #ifdef VERBOSE_DEBUG_3
 #define VERBOSE_DEBUG_2
@@ -105,6 +106,7 @@ namespace fpga {
 #define CTRL_START                          (1UL << 21) // 2097152
 #define CTRL_CLR_STAT                       (1UL << 22) // 4194304
 #define CTRL_LEN_OFFS                       (32)
+#define CTRL_OFFS_OFFS                      (56)        // 120-64
 
 #define CTRL_OPCODE_MASK                    0x1f
 #define CTRL_STRM_MASK                      0x3
@@ -112,6 +114,7 @@ namespace fpga {
 #define CTRL_PID_MASK                       0x3f
 #define CTRL_VFID_MASK                      0xf
 #define CTRL_LEN_MASK                       0xffffffff
+#define CTRL_OFFS_MASK                      0x3f
 
 #define PID_BITS                            6
 #define VFID_BITS                           4
@@ -144,35 +147,6 @@ namespace fpga {
 #  define htols(x)                          __bswap_16(x)
 #endif
 
-/* EP Control constants */
-constexpr auto const EP_MAX_ENDPOINTS = 8;
-constexpr auto const EP_REGS_PER_ENDPOINT = 4;
-
-/* EP register offsets per endpoint */
-constexpr auto const EP_REG_BASE = 0;
-constexpr auto const EP_REG_BOUND = 1;
-constexpr auto const EP_REG_ACCESS = 2;
-constexpr auto const EP_REG_VALID = 3;
-
-/* EP access rights */
-constexpr auto const EP_ACCESS_READ = 0x1;
-constexpr auto const EP_ACCESS_WRITE = 0x2;
-constexpr auto const EP_ACCESS_RW = 0x3;
-
-/**
- * Endpoint configuration structure
- */
-struct epConfig {
-    uint64_t base_addr;
-    uint64_t bound_addr;
-    uint8_t access_rights;  // bit 0: read, bit 1: write
-    bool valid;
-
-    epConfig() : base_addr(0), bound_addr(0), access_rights(0), valid(false) {}
-    
-    epConfig(uint64_t base, uint64_t bound, uint8_t access, bool v) 
-        : base_addr(base), bound_addr(bound), access_rights(access), valid(v) {}
-};
 
 // ======-------------------------------------------------------------------------------
 // Enum
@@ -224,6 +198,81 @@ enum class CoyoteAlloc {
     GPU = 4  // GPU-memory (required for the FPGA-GPU-DMA)
 };
 
+enum class MemCap : uint64_t {
+    BASE_ADDRESS = 0xFFF1000000000000,
+    END_ADDRESS  = 0xFFFFFFFFFFFFFFFF,
+    ALL_PASS     = 0xF
+};
+
+/* IO devices */
+enum class IODevs : uint16_t {
+    Inter_3_TO_HOST_0  = 0b00001111111100,
+    Inter_3_TO_HOST_1  = 0b00011111111100,
+    Inter_3_TO_HOST_2  = 0b00101111111100,
+    Inter_3_TO_CEU_0   = 0b00111111111100,
+    Inter_3_TO_CEU_1   = 0b01001111111100,
+    Inter_3_TO_CEU_2   = 0b01011111111100,
+
+    Inter_2_TO_HOST_0  = 0b00001111111100,
+    Inter_2_TO_HOST_1  = 0b00011111111100,
+    Inter_2_TO_CEU_0   = 0b00101111111100,
+    Inter_2_TO_CEU_1   = 0b00111111111100,
+
+    // Inter_3_TO_HOST_0  = 0b00000000,
+    // Inter_3_TO_HOST_1  = 0b00100000,
+    // Inter_3_TO_HOST_2  = 0b01000000,
+    // Inter_3_TO_DTU_0   = 0b01100000,
+    // Inter_3_TO_DTU_1   = 0b10000000,
+    // Inter_3_TO_DTU_2   = 0b10100000,
+
+    // Inter_2_TO_HOST_0  = 0b00000000,
+    // Inter_2_TO_HOST_1  = 0b00100000,
+    // Inter_2_TO_DTU_0   = 0b01000000,
+    // Inter_2_TO_DTU_1   = 0b01100000,
+
+    Inter_TO_HOST_0  = 0b00000000,
+    Inter_TO_HOST_1  = 0b00001000,
+    Inter_TO_DTU_0   = 0b00010000,
+    Inter_TO_DTU_1   = 0b00011000,
+
+    Inter_HOST_TO_HOST_0  = 0b00000000,
+    Inter_HOST_TO_HOST_1  = 0b00000001,
+    Inter_HOST_TO_DTU_0  = 0b00000010,
+    Inter_HOST_TO_DTU_1  = 0b00000011,
+
+    Inter_DTU_TO_HOST_0  = 0b00000000,
+    Inter_DTU_TO_HOST_1  = 0b00000100,
+    Inter_DTU_TO_DTU_0  = 0b00001000,
+    Inter_DTU_TO_DTU_1  = 0b00001100,
+
+
+    Inter_DTU_TO_0_DTU  = 0b00000000,
+    Inter_DTU_TO_1_DTU  = 0b00000001,
+    Inter_DTU_TO_0_USER = 0b00000010,
+    Inter_DTU_TO_1_USER = 0b00000011,
+
+    Inter_USER_TO_0_DTU  = 0b00000000,
+    Inter_USER_TO_1_DTU  = 0b00000100,
+    Inter_USER_TO_0_USER = 0b00001000,
+    Inter_USER_TO_1_USER = 0b00001100,
+
+    Inter_TO_0_USER = 0b00000010,
+    Inter_TO_1_USER = 0b00000011,
+
+    ALL_DIRECT = 0b00000000,
+    Inter_TO_0 = 0b00000000,
+    Inter_TO_1 = 0b00000001,
+    Inter_TO_2 = 0b00000010,
+    Inter_TO_3 = 0b00000011,
+    WRAPPER_HOST_DIRECT = 0b00000000,
+    WRAPPER_PIPE_LEAD = 0b00000100,
+    WRAPPER_PIPE_MID = 0b00001000
+};
+
+inline IODevs operator|(IODevs lhs, IODevs rhs) {
+    return static_cast<IODevs>(static_cast<uint8_t>(lhs) | static_cast<uint8_t>(rhs));
+}
+
 /* AVX regs */
 // Control regs that get memory-mapped for controlling operations of the FPGA
 // These are the ones used for AVX-systems. Why is there a difference between AVX and legacy systems? 
@@ -244,7 +293,8 @@ enum class CnfgAvxRegs : uint32_t {
     TCP_OPEN_PORT_STAT_REG = 13,
     TCP_OPEN_CONN_REG = 14,
     TCP_OPEN_CONN_STAT_REG = 15,
-    EP_CTRL_BASE_REG = 54,
+    IO_SWITCH_REG = 53,
+    EP_CTRL_REG = 54,
     STAT_DMA_REG = 64
 };
 
@@ -289,7 +339,8 @@ enum class CnfgLegRegs : uint32_t {
     RDMA_CONN_REG_2 = 46,
     TCP_OPEN_PORT_REG = 48,
     TCP_OPEN_PORT_STAT_REG = 52,
-    EP_CTRL_BASE_REG = 54,
+    IO_SWITCH_REG = 53,
+    EP_CTRL_REG = 54,
     TCP_OPEN_CONN_REG = 56,
     TCP_OPEN_CONN_STAT_REG = 60,
     STAT_DMA_REG = 64,
@@ -611,6 +662,10 @@ struct localSg {
     uint32_t dst_len = { 0 };
     uint32_t dst_stream = { strmHost };
     uint32_t dst_dest = { 0 };
+
+    uint32_t offset_r = { 0 };
+    uint32_t offset_w = { 0 };
+
 };
 
 // RDMA SG-entry: Offset and Destination for both local and remote, stream for local as well 
