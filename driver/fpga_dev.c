@@ -342,7 +342,7 @@ int init_char_fpga_devices(struct bus_drvdata *d, dev_t dev)
     // create device class
     #if LINUX_VERSION_CODE >= KERNEL_VERSION(6,4,0)
     d->fpga_class = class_create(d->vf_dev_name);
-    #else 
+    #else
     d->fpga_class = class_create(THIS_MODULE, d->vf_dev_name);
     #endif
     d->fpga_class->devnode = fpga_class_devnode;
@@ -405,7 +405,7 @@ int init_char_pr_device(struct bus_drvdata *d, dev_t dev)
     // create device class
     #if LINUX_VERSION_CODE >= KERNEL_VERSION(6,4,0)
     d->pr_class = class_create(d->pr_dev_name);
-    #else 
+    #else
     d->pr_class = class_create(THIS_MODULE, d->pr_dev_name);
     #endif
     d->pr_class->devnode = fpga_class_devnode;

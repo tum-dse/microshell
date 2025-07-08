@@ -244,21 +244,87 @@ if(EXAMPLE STREQUAL "perf_fpga")
     create_hw()
 endif()
 
-# SVM 
-if(EXAMPLE STREQUAL "svm_speech")
-    message("** SVM Speech Recognition Example on U280")
-    set(SHELL_PROBE 1)            # Enable ILA for debug
-    set(N_REGIONS 1)              # Single vFPGA region
-    set(EN_STRM 1)               # Enable streaming interfaces
-    set(N_STRM_AXI 1)            # One AXI-Stream interface pair
-    set(EN_MEM 0)                # No memory interface needed
-    set(EN_PR 0)                 # No partial reconfiguration
+#SPEECH
+if(EXAMPLE STREQUAL "speech")
+	set(N_REGIONS 1)
+	set(EN_STRM 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
 
-    validation_checks_hw()
+	validation_checks_hw()
 
-    load_apps (
-        VFPGA_C0_0 "apps/svm_speech"    # Load SVM application
-    )
+	load_apps (
+	   VFPGA_C0_0 "apps/speech"
+	)
 
-    create_hw()
+	create_hw()
+endif()
+
+#DIGI
+if(EXAMPLE STREQUAL "digi")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/digi"
+	)
+
+	create_hw()
+endif()
+
+#SECURE
+if(EXAMPLE STREQUAL "secure")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/secure"
+	)
+
+	create_hw()
+endif()
+
+#SECURE2
+if(EXAMPLE STREQUAL "secure2")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/secure2"
+	)
+
+	create_hw()
+endif()
+
+#AUDIO
+if(EXAMPLE STREQUAL "audio")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/audio"
+	)
+
+	create_hw()
 endif()

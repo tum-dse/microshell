@@ -115,3 +115,33 @@ if(EN_GPU)
     set_target_properties(${EXEC} PROPERTIES LINKER_LANGUAGE CXX)
     target_link_libraries(${EXEC} PUBLIC hip::device  numa pthread drm drm_amdgpu rt dl hsa-runtime64 hsakmt)
 endif()
+
+#Speech
+if(EXAMPLE STREQUAL "speech")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech")
+    message("** Example: Speech Recognition (Coyote daemon)")
+endif()
+
+#DigiSign
+if(EXAMPLE STREQUAL "digi_sign")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/digi_sign")
+    message("** Example: Digital Signature (Coyote daemon)")
+endif()
+
+#Secure
+if(EXAMPLE STREQUAL "secure")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure")
+    message("** Example: Secure Storage (Coyote daemon)")
+endif()
+
+#Secure2
+if(EXAMPLE STREQUAL "secure2")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure2")
+    message("** Example: Secure Storage 2 (Coyote daemon)")
+endif()
+
+#Audio
+if(EXAMPLE STREQUAL "audio")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/audio")
+    message("** Example: Audio Compression (Coyote daemon)")
+endif()
