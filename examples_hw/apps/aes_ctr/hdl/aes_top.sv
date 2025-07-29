@@ -54,8 +54,6 @@ assign axis_src.tkeep = axis_src_tkeep;
 assign axis_src.tid = axis_sink.tid;
 assign axis_src_tready = axis_src.tready;
 
-// Note: tdest and tuser are used internally by AES engine but not exposed through AXI4SR interface
-
 // Instantiate the AES engine
 AES_engine #(
     .AXI_DATA_WIDTH(512),
@@ -127,18 +125,7 @@ ila_0 ila_aes (
     .probe10(axis_src_tdata[127:0]),  // 128 bits - first AES block
     .probe11(axis_src_tkeep[15:0]),   // 16 bits - keep for first block
     .probe12(axis_src_tdest),         // 3 bits
-    .probe13(axis_src_tuser),         // 1 bit
-    
-    // Debug counters and status
-    .probe14(input_packet_count),     // 32 bits
-    .probe15(output_packet_count),    // 32 bits
-    .probe16(stall_counter),          // 32 bits
-    .probe17(m_credit_control_internal), // 2 bits
-    
-    // Control signals
-    .probe18(aresetn),                // 1 bit
-    .probe19(input_packet_start),     // 1 bit
-    .probe20(output_packet_start)     // 1 bit
+    .probe13(axis_src_tuser)         // 1 bit
 );
 
 endmodule

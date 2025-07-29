@@ -1,11 +1,8 @@
 `timescale 1ns / 1ps
-
 import lynxTypes::*;
-
 `include "axi_macros.svh"
-
 /**
- * Perf local example
+ * Modular RSA
  * 
  */
 module r_top (
@@ -29,14 +26,7 @@ logic [255:0] axis_host_send_tdata;
 logic [31:0]  axis_host_send_tkeep;
 logic [15:0] axis_host_send_tid;
 logic        axis_host_send_tlast;
-    
-AXI4SR axis_sink_int ();
-AXI4SR axis_src_int ();
-
-// Stream routing with proper interface connections
-axisr_reg inst_reg_sink (.aclk(aclk),.aresetn(aresetn),.s_axis(axis_sink),.m_axis(axis_sink_int));
-axisr_reg inst_reg_src (.aclk(aclk),.aresetn(aresetn),.s_axis(axis_src_int),.m_axis(axis_src));
-    
+        
 always_comb begin
     axis_host_recv_tkeep = 1;
     axis_host_send_tkeep = 1;
@@ -48,11 +38,11 @@ end
 dwidth_converter_512_256 inst_dwidth_recv (
     .aclk(aclk),
     .aresetn(aresetn),
-    .s_axis_tvalid(axis_sink_int.tvalid),
-    .s_axis_tready(axis_sink_int.tready),
-    .s_axis_tdata(axis_sink_int.tdata),
-    .s_axis_tlast(axis_sink_int.tlast),
-    .s_axis_tid(axis_sink_int.tid),
+    .s_axis_tvalid(axis_sink.tvalid),
+    .s_axis_tready(axis_sink.tready),
+    .s_axis_tdata(axis_sink.tdata),
+    .s_axis_tlast(axis_sink.tlast),
+    .s_axis_tid(axis_sink.tid),
     .m_axis_tvalid(axis_host_recv_tvalid),
     .m_axis_tready(axis_host_recv_tready),
     .m_axis_tdata(axis_host_recv_tdata),
@@ -99,11 +89,11 @@ dwidth_converter_256_512 inst_dwidth_send (
     .s_axis_tdata(axis_host_send_tdata),
     .s_axis_tlast(axis_host_send_tlast),
     .s_axis_tid(axis_host_send_tid),
-    .m_axis_tvalid(axis_src_int.tvalid),
-    .m_axis_tready(axis_src_int.tready),
-    .m_axis_tdata(axis_src_int.tdata),
-    .m_axis_tlast(axis_src_int.tlast),
-    .m_axis_tid(axis_src_int.tid)
+    .m_axis_tvalid(axis_src.tvalid),
+    .m_axis_tready(axis_src.tready),
+    .m_axis_tdata(axis_src.tdata),
+    .m_axis_tlast(axis_src.tlast),
+    .m_axis_tid(axis_src.tid)
 );
 
 endmodule

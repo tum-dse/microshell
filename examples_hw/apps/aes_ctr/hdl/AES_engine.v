@@ -50,7 +50,7 @@ module AES_engine #
 
     parameter NODE_ID = 1,
 
-    parameter INIT_CREDIT_NUM = 2
+    parameter INIT_CREDIT_NUM = 64
 )
 (
     input  wire                       clk,
@@ -102,7 +102,7 @@ wire [SWITCH_USER_WIDTH-1:0]      m_input_fifo_tuser;
 
 assign m_input_fifo_tready = m_input_fifo_tready_reg;
 axis_fifo #(
-    .DEPTH(64 * SWITCH_KEEP_WIDTH),
+    .DEPTH(512 * SWITCH_KEEP_WIDTH),
     .DATA_WIDTH(SWITCH_DATA_WIDTH),
     .KEEP_ENABLE(1),
     .KEEP_WIDTH(SWITCH_KEEP_WIDTH),
@@ -262,7 +262,7 @@ end
 
 // max two packet
 axis_fifo #(
-    .DEPTH(1024 * SWITCH_KEEP_WIDTH),
+    .DEPTH(32768 * SWITCH_KEEP_WIDTH),
     .DATA_WIDTH(SWITCH_DATA_WIDTH),
     .KEEP_ENABLE(1),
     .KEEP_WIDTH(SWITCH_KEEP_WIDTH),
@@ -293,7 +293,7 @@ data_buffer_fifo (
 );
 
 axis_fifo #(
-    .DEPTH(4),
+    .DEPTH(32),
     .DATA_WIDTH(SWITCH_DATA_WIDTH),
     .KEEP_ENABLE(0),
     .LAST_ENABLE(0),
@@ -376,7 +376,7 @@ always @(posedge clk) begin
 end
 
 axis_fifo #(
-    .DEPTH(64),
+    .DEPTH(2048),
     .DATA_WIDTH(`PANIC_DESC_WIDTH),
     .KEEP_ENABLE(0),
     .LAST_ENABLE(0),
@@ -432,7 +432,7 @@ wire [SWITCH_KEEP_WIDTH-1:0]         m_aes_data_out_fifo_tkeep;
 wire                                 m_aes_data_out_fifo_tlast;
 
 axis_fifo #(
-    .DEPTH(128),
+    .DEPTH(4096),
     .DATA_WIDTH(SWITCH_KEEP_WIDTH+1),
     .KEEP_ENABLE(0),
     .LAST_ENABLE(0),
@@ -472,7 +472,7 @@ assign s_aes_data_in_fifo_tkeep  = m_data_buffer_fifo_tkeep;
 
 
 axis_fifo_adapter  #(
-    .DEPTH(256 * SWITCH_KEEP_WIDTH),
+    .DEPTH(8192 * SWITCH_KEEP_WIDTH),
     .S_DATA_WIDTH(SWITCH_DATA_WIDTH),
     .M_DATA_WIDTH(128),
     .S_KEEP_ENABLE (1),
@@ -504,7 +504,7 @@ aes_data_in_fifo (
 );
 
 axis_fifo_adapter  #(
-    .DEPTH(256 * SWITCH_KEEP_WIDTH),
+    .DEPTH(8192 * SWITCH_KEEP_WIDTH),
     .S_DATA_WIDTH(128),
     .M_DATA_WIDTH(SWITCH_DATA_WIDTH),
     .S_KEEP_ENABLE (1),
@@ -546,7 +546,7 @@ assign m_aes_shape_fifo_tready = m_aes_shape_fifo_tready_reg;
 
 reg [7:0]  shape_counter;
 axis_fifo #(
-    .DEPTH(512 * SWITCH_KEEP_WIDTH),
+    .DEPTH(16384 * SWITCH_KEEP_WIDTH),
     .DATA_WIDTH(SWITCH_DATA_WIDTH),
     .KEEP_ENABLE(1),
     .KEEP_WIDTH(SWITCH_KEEP_WIDTH),
@@ -599,7 +599,7 @@ wire                                   s_aes_tiny_fifo_tready;
 reg   [15:0]                           aes_tiny_fifo_counter;
 wire                                   aes_tiny_fifo_half_full;
 
-assign aes_tiny_fifo_half_full   = (aes_tiny_fifo_counter >= 32);
+assign aes_tiny_fifo_half_full   = (aes_tiny_fifo_counter >= 32768);
 assign m_aes_data_in_fifo_tvalid = m_aes_data_in_fifo_tvalid_tmp && !aes_tiny_fifo_half_full;
 
 always @(posedge clk) begin
@@ -617,7 +617,7 @@ always @(posedge clk) begin
 end
 
 axis_fifo #(
-    .DEPTH(1024),
+    .DEPTH(32768),
     .DATA_WIDTH(128),
     .KEEP_ENABLE(0),
     .LAST_ENABLE(0),
@@ -803,7 +803,7 @@ switch_out_mux (
 
 
 axis_fifo #(
-    .DEPTH(512 * SWITCH_KEEP_WIDTH),
+    .DEPTH(16384 * SWITCH_KEEP_WIDTH),
     .DATA_WIDTH(SWITCH_DATA_WIDTH),
     .KEEP_ENABLE(1),
     .KEEP_WIDTH(SWITCH_KEEP_WIDTH),

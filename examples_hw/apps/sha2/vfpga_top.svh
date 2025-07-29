@@ -1,61 +1,54 @@
-// Interface declarations
+/**
+ * VFPGA Top Module
+ */
 import lynxTypes::*;
 
+// Interface declarations
+AXI4SR axis_sink_int ();
+AXI4SR axis_src_int ();
+AXI4SR sha2_to_counter ();
 
-`ifdef EN_STRM
-sha2_top inst_host_sha2 (
-    .axis_sink          (axis_host_recv[0]),
-    .axis_src           (axis_host_send[0]),
+// Cycle counter outputs
+logic [31:0] pipeline_cycle_count;
+logic        pipeline_count_valid;
 
-    .aclk               (aclk),
-    .aresetn            (aresetn)
+// Host stream routing
+axisr_reg inst_reg_sink (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_host_recv[0]), .m_axis(axis_sink_int));
+axisr_reg inst_reg_src (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int), .m_axis(axis_host_send[0]));
+
+// SHA2 
+sha2_top inst_sha2 (
+    .axis_sink      (axis_sink_int),
+    .axis_src       (sha2_to_counter),
+    .aclk           (aclk),
+    .aresetn        (aresetn)
 );
 
-// ILA
-ila_sha2_host inst_ila_sha2_host_c1 (
-    .clk(aclk),
-    .probe0(axis_host_recv[0].tvalid),
-    .probe1(axis_host_recv[0].tready),
-    .probe2(axis_host_recv[0].tlast),
-    .probe3(axis_host_send[0].tvalid),
-    .probe4(axis_host_send[0].tready),
-    .probe5(axis_host_send[0].tlast)
-);
-`endif
-
-`ifdef EN_MEM
-sha2_top inst_card_sha2 (
-    .axis_sink          (axis_card_recv[0]),
-    .axis_src           (axis_card_send[0]),
-
-    .aclk               (aclk),
-    .aresetn            (aresetn)
+// Cycle Counter
+counter_top inst_counter (
+    .axis_sink      (sha2_to_counter),
+    .axis_src       (axis_src_int),
+    .aclk           (aclk),
+    .aresetn        (aresetn),
+    .cycle_count    (pipeline_cycle_count),
+    .count_valid    (pipeline_count_valid)
 );
 
-// ILA
-ila_sha2_host_2 inst_ila_sha2_host_c1 (
-    .clk(aclk),
-    .probe0(axis_host_recv[0].tvalid),
-    .probe1(axis_host_recv[0].tready),
-    .probe2(axis_host_recv[0].tlast),
-    .probe3(axis_host_send[0].tvalid),
-    .probe4(axis_host_send[0].tready),
-    .probe5(axis_host_send[0].tlast),
-    .probe6(axis_card_recv[0].tvalid),
-    .probe7(axis_card_recv[0].tready),
-    .probe8(axis_card_recv[0].tlast),
-    .probe9(axis_card_send[0].tvalid),
-    .probe10(axis_card_send[0].tready),
-    .probe11(axis_card_send[0].tlast)
-);
-`endif
+// Register to store cycle count result
+logic [31:0] latency_result_reg;
 
-// Tie-off unused
+always_ff @(posedge aclk or negedge aresetn) begin
+    if (!aresetn) begin
+        latency_result_reg <= '0;
+    end else if (pipeline_count_valid) begin
+        latency_result_reg <= pipeline_cycle_count;
+    end
+end
+
+// Tie-off unused interfaces
 always_comb axi_ctrl.tie_off_s();
 always_comb notify.tie_off_m();
 always_comb sq_rd.tie_off_m();
 always_comb sq_wr.tie_off_m();
 always_comb cq_rd.tie_off_s();
 always_comb cq_wr.tie_off_s();
-
-assign user_data = 0;
