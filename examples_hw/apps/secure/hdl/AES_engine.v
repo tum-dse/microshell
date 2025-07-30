@@ -472,7 +472,7 @@ assign s_aes_data_in_fifo_tkeep  = m_data_buffer_fifo_tkeep;
 
 
 axis_fifo_adapter  #(
-    .DEPTH(2048  * SWITCH_KEEP_WIDTH),
+    .DEPTH(2048 * SWITCH_KEEP_WIDTH),
     .S_DATA_WIDTH(SWITCH_DATA_WIDTH),
     .M_DATA_WIDTH(128),
     .S_KEEP_ENABLE (1),
