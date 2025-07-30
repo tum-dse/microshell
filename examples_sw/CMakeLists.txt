@@ -134,10 +134,10 @@ if(EXAMPLE STREQUAL "secure")
     message("** Example: Secure Storage (Coyote daemon)")
 endif()
 
-#Secure2
-if(EXAMPLE STREQUAL "secure2")
-    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure2")
-    message("** Example: Secure Storage 2 (Coyote daemon)")
+#SignComp
+if(EXAMPLE STREQUAL "signcomp")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/signcomp")
+    message("** Example: Signed Compression (Coyote daemon)")
 endif()
 
 #Audio

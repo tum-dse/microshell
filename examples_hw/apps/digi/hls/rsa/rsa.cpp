@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,9 +29,17 @@ void rsa(
     #pragma HLS INTERFACE ap_none port=modulus
     #pragma HLS INTERFACE ap_none port=exponent
     #pragma HLS INTERFACE ap_ctrl_none port=return
-    #pragma HLS DATAFLOW
-
+    
     xf::security::rsa processor;
     processor.updateKey(modulus, exponent);
-    processor.process(message, result);
+    
+    // Continuous processing loop for ap_ctrl_none
+    while (true) {
+        #pragma HLS PIPELINE off
+        
+        // Process messages when available
+        if (!message.empty()) {
+            processor.process(message, result);
+        }
+    }
 }

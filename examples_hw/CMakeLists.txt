@@ -295,8 +295,8 @@ if(EXAMPLE STREQUAL "secure")
 	create_hw()
 endif()
 
-#SECURE2
-if(EXAMPLE STREQUAL "secure2")
+#SIGNCOMP
+if(EXAMPLE STREQUAL "signcomp")
 	set(EN_STRM 1)
 	set(N_REGIONS 1)
 	set(N_STRM_AXI 1)
@@ -306,7 +306,7 @@ if(EXAMPLE STREQUAL "secure2")
 	validation_checks_hw()
 
 	load_apps (
-	   VFPGA_C0_0 "apps/secure2"
+	   VFPGA_C0_0 "apps/signcomp"
 	)
 
 	create_hw()

@@ -75,6 +75,7 @@ module fft_quantizer (
     logic [5:0] sample_count;  
     logic [511:0] output_buffer;  
     logic output_tlast;
+    logic saw_tlast;  // Track if we've seen tlast during collection
     
     // Extract real and imaginary parts and quantize
     logic [31:0] real_part, imag_part;
@@ -86,7 +87,7 @@ module fft_quantizer (
     assign imag_abs = imag_part[31] ? (~imag_part + 1) : imag_part;
     assign magnitude_approx = real_abs + imag_abs;
     
-    // FIXED: Much more sensitive thresholds for audio FFT magnitudes
+    // Much more sensitive thresholds for audio FFT magnitudes
     logic [7:0] quantized_byte;
     always_comb begin
         if (magnitude_approx < 32'd500) begin           // Very low magnitude
@@ -113,6 +114,7 @@ module fft_quantizer (
             sample_count <= 0;
             output_buffer <= 0;
             output_tlast <= 0;
+            saw_tlast <= 0;
         end
         else begin
             state <= next_state;
@@ -122,6 +124,7 @@ module fft_quantizer (
                     sample_count <= 0;
                     output_buffer <= 0;
                     output_tlast <= 0;
+                    saw_tlast <= 0;
                 end
                 
                 COLLECT: begin
@@ -130,8 +133,9 @@ module fft_quantizer (
                         output_buffer[sample_count*8 +: 8] <= quantized_byte;
                         sample_count <= sample_count + 1;
                         
+                        // Remember if we saw tlast
                         if (s_axis_tlast) begin
-                            output_tlast <= 1'b1;
+                            saw_tlast <= 1'b1;
                         end
                     end
                 end
@@ -140,7 +144,8 @@ module fft_quantizer (
                     if (m_axis_tready) begin
                         sample_count <= 0;
                         output_buffer <= 0;
-                        output_tlast <= 0;
+                        output_tlast <= saw_tlast;  // Propagate tlast
+                        saw_tlast <= 0;
                     end
                 end
             endcase
@@ -160,7 +165,11 @@ module fft_quantizer (
             
             COLLECT: begin
                 if (s_axis_tvalid && s_axis_tready) begin
-                    if (sample_count == 6'd63 || s_axis_tlast) begin  
+                    // Output when:
+                    // 1. Just filled the buffer (after this sample, count will be 64)
+                    // 2. This is the last sample (tlast) AND we have something
+                    if ((sample_count == 6'd63) || 
+                        (s_axis_tlast && (sample_count > 6'd0))) begin  
                         next_state = OUTPUT;
                     end
                 end
@@ -168,7 +177,7 @@ module fft_quantizer (
             
             OUTPUT: begin
                 if (m_axis_tready) begin
-                    next_state = (output_tlast) ? IDLE : COLLECT;
+                    next_state = saw_tlast ? IDLE : COLLECT;
                 end
             end
         endcase
@@ -178,6 +187,6 @@ module fft_quantizer (
     assign s_axis_tready = (state == COLLECT);
     assign m_axis_tvalid = (state == OUTPUT);
     assign m_axis_tdata = output_buffer;
-    assign m_axis_tlast = output_tlast;
+    assign m_axis_tlast = saw_tlast && (state == OUTPUT);
 
 endmodule
