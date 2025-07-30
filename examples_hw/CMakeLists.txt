@@ -434,7 +434,7 @@ if(EXAMPLE STREQUAL "secure")
     create_hw()
 endif()
 
-if(EXAMPLE STREQUAL "secure2")
+if(EXAMPLE STREQUAL "signcomp")
     set(BUILD_SHELL 1)
     set(BUILD_OPT 1)
     set(N_REGIONS 2)
@@ -511,7 +511,7 @@ if(EXAMPLE STREQUAL "audio_mono")
     create_hw()
 endif()
 
-
+# BRAM Usage exceeds with 2 secure apps
 if(EXAMPLE STREQUAL "secure_mono")
     set(BUILD_SHELL 1)
     set(BUILD_OPT 1)
@@ -525,13 +525,13 @@ if(EXAMPLE STREQUAL "secure_mono")
 
     load_apps (
         VFPGA_C0_0 "apps/secure"
-        VFPGA_C0_1 "apps/secure"
+        VFPGA_C0_1 "apps/perf_local"
     )
 
     create_hw()
 endif()
 
-if(EXAMPLE STREQUAL "secure2_mono")
+if(EXAMPLE STREQUAL "signcomp_mono")
     set(BUILD_SHELL 1)
     set(BUILD_OPT 1)
     set(N_REGIONS 2)
@@ -543,8 +543,8 @@ if(EXAMPLE STREQUAL "secure2_mono")
     validation_checks_hw()
 
     load_apps (
-        VFPGA_C0_0 "apps/secure2"
-        VFPGA_C0_1 "apps/secure2"
+        VFPGA_C0_0 "apps/signcomp"
+        VFPGA_C0_1 "apps/signcomp"
     )
 
     create_hw()

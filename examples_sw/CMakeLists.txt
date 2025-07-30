@@ -129,10 +129,10 @@ endif()
 
 # Application examples
 
-# 1DFFT
-if(EXAMPLE STREQUAL "1dfft")
-    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/1dfft")
-    message("** Example: 1DFFT App")
+# FFT
+if(EXAMPLE STREQUAL "fft")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/fft")
+    message("** Example: FFT App")
 endif()
 
 # AES-CTR
@@ -165,10 +165,22 @@ if(EXAMPLE STREQUAL "svm")
     message("** Example: SVM App")
 endif()
 
+# QUANT
+if(EXAMPLE STREQUAL "quant")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/quant")
+    message("** Example: FFT Quantization App")
+endif()
+
 # Audio Processing
 if(EXAMPLE STREQUAL "audio")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/audio")
     message("** Example: Audio Processing App")
+endif()
+
+#Audio_Mono
+if(EXAMPLE STREQUAL "audio_mono")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/audio_mono")
+    message("** Example: Audio Processing Monolithic App")
 endif()
 
 # Digital Signature App
@@ -177,16 +189,34 @@ if(EXAMPLE STREQUAL "digi_sign")
     message("** Example: Digital Signature App")
 endif()
 
+#DigiSign_Mono
+if(EXAMPLE STREQUAL "digi_sign_mono")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/digi_sign_mono")
+    message("** Example: Digital Signature Monolithic App")
+endif()
+
 # Secure Storage App
 if(EXAMPLE STREQUAL "secure")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure")
     message("** Example: Secure Storage App")
 endif()
 
-# Secure Storage 2 App
-if(EXAMPLE STREQUAL "secure2")
-    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure2")
-    message("** Example: Secure Storage 2 App")
+#Secure_Mono
+if(EXAMPLE STREQUAL "secure_mono")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure_mono")
+    message("** Example: Secure Storage Monolithic App")
+endif()
+
+# Signed Compression App
+if(EXAMPLE STREQUAL "signcomp")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/signcomp")
+    message("** Example: Signed Compression App")
+endif()
+
+#SignComp_Mono
+if(EXAMPLE STREQUAL "signcomp_mono")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/signcomp_mono")
+    message("** Example: Signed Compression Monolithic App")
 endif()
 
 # Speech Recognition App
@@ -195,6 +225,11 @@ if(EXAMPLE STREQUAL "speech")
     message("** Example: Speech Recognition App")
 endif()
 
+#Speech_Mono
+if(EXAMPLE STREQUAL "speech_mono")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech_mono")
+    message("** Example: Speech Recognition Monolithic App")
+endif()
 
 #
 # Create build targets
