@@ -156,6 +156,6 @@ ax.text(0.5, 0.98, 'Higher is better ↑', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=16, ha='center', va='top')
 
 plt.tight_layout()
-plt.savefig("pipeline_performance_updated.png", dpi=300, bbox_inches='tight')
-plt.savefig("pipeline_performance_updated.pdf", bbox_inches='tight')
+plt.savefig("plot_e2e.png", dpi=300, bbox_inches='tight')
+plt.savefig("plot_e2e.pdf", bbox_inches='tight')
 plt.show()

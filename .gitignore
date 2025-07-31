@@ -1,6 +1,5 @@
 build*/
 bstreams/
-bitstreams/
 examples_hw/speech/
 examples_hw/speech_mono/
 examples_hw/digi_sign/
