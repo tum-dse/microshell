@@ -511,7 +511,6 @@ if(EXAMPLE STREQUAL "audio_mono")
     create_hw()
 endif()
 
-# BRAM Usage exceeds with 2 secure apps
 if(EXAMPLE STREQUAL "secure_mono")
     set(BUILD_SHELL 1)
     set(BUILD_OPT 1)
@@ -525,7 +524,7 @@ if(EXAMPLE STREQUAL "secure_mono")
 
     load_apps (
         VFPGA_C0_0 "apps/secure"
-        VFPGA_C0_1 "apps/perf_local"
+        VFPGA_C0_1 "apps/secure"
     )
 
     create_hw()

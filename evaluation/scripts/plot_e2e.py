@@ -30,13 +30,13 @@ display_names = ["Audio Processing", "Digital Signature", "Secure Storage", "Sig
 data_sizes = ["8KB", "256KB", "1MB"]
 
 # Updated measurements from the table
-# Format: [baseline, µShell, µShell_mono] for each data size
+# Format: [baseline, µShell_mono, µShell] for each data size
 data = {
-    "Audio Processing": [108.1, 105.6, 104.5, 227.9, 219.7, 226.4, 225.6, 221.4, 226.3],
-    "Digital Signature": [89.1, 87.7, 89.0, 232.4, 228.2, 233.4, 239.2, 233.5, 239.1],
-    "Secure Storage": [148.3, 144.1, 147.4, 160.5, 155.3, 159.6, 159.3, 154.1, 158.8],
-    "Signed Compression": [72.2, 69.4, 73.8, 149.8, 144.1, 150.4, 154.1, 150.8, 154.3],
-    "Speech Recognition": [75.4, 73.1, 80.3, 69.7, 70.2, 69.9, 69.6, 70.4, 69.6]
+    "Audio Processing": [108.1, 104.5, 105.6, 227.9, 226.4, 219.7, 225.6, 226.3, 221.4],
+    "Digital Signature": [89.1, 89.0, 87.7, 232.4, 233.4, 228.2, 239.2, 239.1, 233.5],
+    "Secure Storage": [148.3, 147.4, 144.1, 160.5, 159.6, 155.3, 159.3, 158.8, 154.1],
+    "Signed Compression": [72.2, 73.8, 69.4, 149.8, 150.4, 144.1, 154.1, 154.3, 150.8],
+    "Speech Recognition": [75.4, 80.3, 73.1, 69.7, 69.9, 68.2, 69.6, 69.6, 68.3]
 }
 
 # Create plot with clean proportions
@@ -58,20 +58,20 @@ for size_idx, size in enumerate(data_sizes):
 
     for app_idx, app in enumerate(applications):
         baseline_val = data[app][size_idx * 3]
-        ushell_val = data[app][size_idx * 3 + 1]
-        ushell_mono_val = data[app][size_idx * 3 + 2]
+        ushell_mono_val = data[app][size_idx * 3 + 1]
+        ushell_val = data[app][size_idx * 3 + 2]
 
         if baseline_val is not None:
             baseline_values.append(baseline_val)
             x_baseline.append(x_positions[app_idx] + size_idx * (bar_width * 3))
 
-        if ushell_val is not None:
-            ushell_values.append(ushell_val)
-            x_ushell.append(x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width)
-
         if ushell_mono_val is not None:
             ushell_mono_values.append(ushell_mono_val)
-            x_ushell_mono.append(x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width * 2)
+            x_ushell_mono.append(x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width)
+
+        if ushell_val is not None:
+            ushell_values.append(ushell_val)
+            x_ushell.append(x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width * 2)
 
     # Plot baseline bars (solid) - with full saturation like reference
     if baseline_values:
@@ -146,8 +146,8 @@ for size_idx, (size, color) in enumerate(zip(data_sizes, size_colors)):
 
 # Platform patterns - full saturation (keeping original labels)
 legend_elements.append(Patch(facecolor='gray', alpha=1.0, label='Coyote'))
-legend_elements.append(Patch(facecolor='gray', alpha=1.0, hatch='..', label='µShell'))
 legend_elements.append(Patch(facecolor='gray', alpha=1.0, hatch='//', label='µShell_mono'))
+legend_elements.append(Patch(facecolor='gray', alpha=1.0, hatch='..', label='µShell'))
 
 ax.legend(bbox_to_anchor=(1, 1.005), handles=legend_elements, loc='upper right', frameon=True, ncol=2, fontsize=16)
 
