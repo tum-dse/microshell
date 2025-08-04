@@ -328,3 +328,206 @@ if(EXAMPLE STREQUAL "audio")
 
 	create_hw()
 endif()
+
+# TEST CONFIGURATIONS (EFFECTIVENESS)
+
+#AES_CTR
+if(EXAMPLE STREQUAL "aes_ctr")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/aes_ctr"
+	)
+
+	create_hw()
+endif()
+
+#RSA
+if(EXAMPLE STREQUAL "rsa")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/rsa"
+	)
+
+	create_hw()
+endif()
+
+#FFT
+if(EXAMPLE STREQUAL "fft")          
+	set(N_REGIONS 1)              
+	set(EN_STRM 1)               
+	set(N_STRM_AXI 1)           
+	set(EN_MEM 0)                
+	set(EN_PR 0)
+
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/fft"    
+	)
+
+	create_hw()
+endif()
+
+#SVM
+if(EXAMPLE STREQUAL "svm")
+	set(N_REGIONS 1)
+	set(EN_STRM 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/svm"
+	)
+
+	create_hw()
+endif()
+
+#SHA
+if(EXAMPLE STREQUAL "sha")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/sha"
+	)
+
+	create_hw()
+endif()
+
+#QUANT
+if(EXAMPLE STREQUAL "quant")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/quant"
+	)
+
+	create_hw()
+endif()
+
+#RLE
+if(EXAMPLE STREQUAL "rle")
+	set(EN_STRM 1)
+	set(N_REGIONS 1)
+	set(N_STRM_AXI 1)
+	set(EN_MEM 0)
+	set(EN_PR 0)
+	
+	validation_checks_hw()
+
+	load_apps (
+	   VFPGA_C0_0 "apps/rle"
+	)
+
+	create_hw()
+endif()
+
+
+# TEST CONFIGURATIONS (SCALABILITY)
+
+if(EXAMPLE STREQUAL "1vfpga")
+    set(BUILD_SHELL 1)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 1)
+    set(EN_STRM 1)
+    set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/perf_local"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "2vfpga")
+    set(BUILD_SHELL 1)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 2)
+    set(EN_STRM 1)
+    #set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/perf_local"
+        VFPGA_C0_1 "apps/perf_local"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "4vfpga")
+    set(BUILD_SHELL 1)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 4)
+    set(EN_STRM 1)
+    set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/perf_local"
+        VFPGA_C0_1 "apps/perf_local"
+        VFPGA_C0_2 "apps/perf_local"
+        VFPGA_C0_3 "apps/perf_local"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "8vfpga")
+    set(BUILD_SHELL 1)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 8)
+    set(EN_STRM 1)
+    #set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/perf_local"
+        VFPGA_C0_1 "apps/perf_local"
+        VFPGA_C0_2 "apps/perf_local"
+        VFPGA_C0_3 "apps/perf_local"
+		VFPGA_C0_4 "apps/perf_local"
+        VFPGA_C0_5 "apps/perf_local"
+        VFPGA_C0_6 "apps/perf_local"
+        VFPGA_C0_7 "apps/perf_local"
+    )
+
+    create_hw()
+endif()
