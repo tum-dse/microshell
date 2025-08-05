@@ -145,3 +145,45 @@ if(EXAMPLE STREQUAL "audio")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/audio")
     message("** Example: Audio Compression (Coyote daemon)")
 endif()
+
+#AES-CTR 
+if(EXAMPLE STREQUAL "aes_ctr")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/aes_ctr")
+    message("** Example: AES-CTR (Coyote daemon)")
+endif()
+
+#SHA 
+if(EXAMPLE STREQUAL "sha")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/sha")
+    message("** Example: SHA (Coyote daemon)")
+endif()
+
+#FFT 
+if(EXAMPLE STREQUAL "1dfft")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/1dfft")
+    message("** Example: FFT (Coyote daemon)")
+endif()
+
+#RSA
+if(EXAMPLE STREQUAL "rsa")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/rsa")
+    message("** Example: RSA (Coyote daemon)")
+endif()
+
+#SVM
+if(EXAMPLE STREQUAL "svm")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/svm")
+    message("** Example: SVM (Coyote daemon)")
+endif()
+
+#RLE
+if(EXAMPLE STREQUAL "rle")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/rle")
+    message("** Example: RLE (Coyote daemon)")
+endif()
+
+#Quant
+if(EXAMPLE STREQUAL "quant")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/quant")
+    message("** Example: Quant (Coyote daemon)")
+endif()

@@ -1,3 +1,7 @@
+/**
+ * Signed Compression Pipeline
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -34,6 +38,19 @@ constexpr auto const RSA_OUTPUT_SIZE = 32;  // 256-bit RSA output (in bytes)
 constexpr auto const defHuge = true;   
 constexpr auto const defMapped = true; 
 constexpr auto const defStream = 1;    
+
+// Helper function to print latency statistics
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
+    std::cout << "Processing started at: 0 ns" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+              << (1000.0 * data_size_bytes) / avg_latency_ns 
+              << " MB/s" << std::endl;
+}
 
 // Generate TRUE 4:1 compression pattern for RLE input
 void generateStreamingRLEPattern(uint8_t* buffer, size_t size) {
@@ -275,15 +292,13 @@ int main(int argc, char *argv[]) {
         // Analyze the pipeline output
         analyzePipelineOutput((uint8_t*)outputData, output_size, input_chunks);
         
-        // Performance metrics
-        double throughput_mbps = (input_size / 1024.0 / 1024.0) / (bench.getAvg() / 1000000.0);
-        std::cout << "\nPipeline Performance:" << std::endl;
-        std::cout << "  Total latency: " << bench.getAvg() << " ns" << std::endl;
-        std::cout << "  Input throughput: " << std::fixed << std::setprecision(2) << throughput_mbps << " MB/s" << std::endl;
+        // Print performance metrics using printLatencyStats
+        PR_HEADER("LATENCY MEASUREMENTS");
+        printLatencyStats(bench.getAvg(), input_size, 1);
         
         // Calculate overall compression + encryption metrics
         double space_efficiency = static_cast<double>(input_size) / output_size;
-        std::cout << "  Space efficiency: " << std::fixed << std::setprecision(1) 
+        std::cout << "\nSpace efficiency: " << std::fixed << std::setprecision(1) 
                   << space_efficiency << ":1 (input:output ratio)" << std::endl;
 
         

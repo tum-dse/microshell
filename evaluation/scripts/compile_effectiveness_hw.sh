@@ -7,7 +7,7 @@ set -e  # Exit on any error
 
 # Get the base directory from user input or use current directory
 if [ -z "$1" ]; then
-    echo "Usage: $0 <path_to_coyote_directory>"
+    echo "Usage: $0 <path_to_baseline_directory>"
     exit 1
 fi
 

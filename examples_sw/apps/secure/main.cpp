@@ -1,3 +1,7 @@
+/**
+ * Secure Storage Pipeline 
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -39,6 +43,19 @@ constexpr uint8_t test_plaintext[16] = {
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
     'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'
 };
+
+// Helper function to print latency statistics
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
+    std::cout << "Processing started at: 0 ns" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+              << (1000.0 * data_size_bytes) / avg_latency_ns 
+              << " MB/s" << std::endl;
+}
 
 // Generate AES-compatible pattern for secure pipeline
 void generateSecurePipelinePattern(uint8_t* buffer, size_t size) {
@@ -266,10 +283,9 @@ int main(int argc, char *argv[])
         // Summary
         std::cout << "\nPipeline Status: " << (overall_success ? "Working" : "Failed") << std::endl;
         
-        // Performance
-        double total_throughput = (1000.0 * size * n_reps) / bench.getAvg();
-        std::cout << "Performance: " << bench.getAvg() << " us, " 
-                  << std::fixed << std::setprecision(2) << total_throughput << " MB/s" << std::endl;
+        // Print performance metrics using printLatencyStats
+        PR_HEADER("LATENCY MEASUREMENTS");
+        printLatencyStats(bench.getAvg() / n_reps, size, n_reps);
 
         // Cleanup
         for(int i = 0; i < n_reps; i++) {

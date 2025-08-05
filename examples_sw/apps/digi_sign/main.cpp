@@ -1,3 +1,7 @@
+/**
+ * Digital Signature Pipeline
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -69,7 +73,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
     std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
     std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
     std::cout << "Throughput: " << std::setw(8) 
-              << (1000000000 * data_size_bytes * n_reps) / (avg_latency_ns * n_reps) 
+              << (1000.0 * data_size_bytes) / avg_latency_ns 
               << " MB/s" << std::endl;
 }
 

@@ -7,7 +7,7 @@ set -e  # Exit on any error
 
 # Get the base directory from user input or use current directory
 if [ -z "$1" ]; then
-    echo "Usage: $0 <path_to_coyote_directory>"
+    echo "Usage: $0 <path_to_ushell_directory>"
     exit 1
 fi
 
@@ -26,7 +26,7 @@ if ! command -v tmux &> /dev/null; then
 fi
 
 # Specify the hardware examples to build
-examples=("audio" "digi_sign" "secure" "signcomp" "speech")
+examples=("audio" "digi_sign" "secure" "signcomp" "speech" "audio_mono" "digi_sign_mono" "secure_mono" "signcomp_mono" "speech_mono")
 
 echo "Starting parallel builds for hardware examples in $BASE_DIR"
 echo "=========================================================="

@@ -1,3 +1,7 @@
+/**
+ * Speech Recognition Pipeline 
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -35,11 +39,16 @@ constexpr auto const defReps = 1;
 constexpr auto const defSize = 32;  // Default: single 32-point FFT
 
 // Helper function to print latency statistics
-void printLatencyStats(double latency_ns) {
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
     std::cout << "Processing started at: 0 ns" << std::endl;
-    std::cout << "Processing completed at: " << latency_ns << " ns" << std::endl;
-    std::cout << "Total latency: " << latency_ns << " ns (" << (latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+              << (1000.0 * data_size_bytes) / avg_latency_ns 
+              << " MB/s" << std::endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -181,15 +190,9 @@ int main(int argc, char *argv[]) {
 
         bench.runtime(benchmark_thr);
 
-        // Print basic results
-        std::cout << std::fixed << std::setprecision(2);
-        std::cout << "Size: " << std::setw(8) << size << ", thr: " 
-                  << std::setw(8) << (1000 * input_buffer_size) / (bench.getAvg() / n_reps) 
-                  << " MB/s" << std::endl << std::endl;
-
-        // Print latency statistics
+        // Print performance metrics using printLatencyStats
         PR_HEADER("LATENCY MEASUREMENTS");
-        printLatencyStats(bench.getAvg() / n_reps);
+        printLatencyStats(bench.getAvg() / n_reps, input_buffer_size, n_reps);
 
         PR_HEADER("RESULTS");
         // Print all classification results

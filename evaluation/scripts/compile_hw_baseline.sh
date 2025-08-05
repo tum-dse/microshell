@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Parallel build script for scalability examples using tmux sessions
-# This script builds each scalability example in separate tmux sessions
+# Parallel build script for hardware examples using tmux sessions
+# This script builds each hardware example in separate tmux sessions
 
 set -e  # Exit on any error
 
@@ -26,7 +26,7 @@ if ! command -v tmux &> /dev/null; then
 fi
 
 # Specify the hardware examples to build
-examples=("1vfpga" "2vfpga" "4vfpga" "8vfpga")
+examples=("audio" "digi_sign" "secure" "signcomp" "speech")
 
 echo "Starting parallel builds for hardware examples in $BASE_DIR"
 echo "=========================================================="
@@ -83,9 +83,9 @@ echo ""
 echo "All build sessions started successfully!"
 echo ""
 echo "To monitor the builds:"
-echo "  tmux list-sessions                   # List all sessions"
+echo "  tmux list-sessions                    # List all sessions"
 echo "  tmux attach -t build_<example>_hw    # Attach to a specific build"
-echo "  tmux attach -t build_1vfpga          # Example: attach to 1vfpga build"
+echo "  tmux attach -t build_audio_hw        # Example: attach to audio build"
 echo ""
 echo "Active build sessions:"
 for name in "${examples[@]}"; do
@@ -94,5 +94,3 @@ done
 echo ""
 echo "Note: Bitstream generation can take several hours per example."
 echo "You can safely close this terminal - the builds will continue in tmux."
-
-

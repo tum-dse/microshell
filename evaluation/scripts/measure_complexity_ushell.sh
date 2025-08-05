@@ -1,5 +1,36 @@
 #!/bin/bash
 
+# Check for arguments
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <ushell_base_dir>"
+    echo ""
+    echo "Arguments:"
+    echo "  ushell_base_dir - Path to ushell base directory"
+    echo ""
+    echo "Example:"
+    echo "  $0 /path/to/ushell"
+    echo "  $0 ../.."  # If running from evaluation/scripts/"
+    echo ""
+    exit 1
+fi
+
+# Get ushell base directory
+ushell_BASE="$1"
+
+# Convert to absolute path
+ushell_BASE=$(realpath "$ushell_BASE" 2>/dev/null)
+if [ $? -ne 0 ]; then
+    echo "Error: Invalid path: $1"
+    exit 1
+fi
+
+# Validate ushell base directory
+if [ ! -d "$ushell_BASE/examples_sw/apps" ]; then
+    echo "Error: Invalid ushell base directory: $ushell_BASE"
+    echo "Directory examples_sw/apps not found"
+    exit 1
+fi
+
 # Function to check if a command exists
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -75,7 +106,8 @@ if ! command_exists scc; then
 fi
 
 # Host code
-echo "Baseline Host application Complexity Measurement"
+echo "µShell Host application Complexity Measurement"
+echo "ushell base directory: $ushell_BASE"
 echo "==============================================================="
 
 # Function to run scc with error handling
@@ -96,11 +128,11 @@ run_scc() {
 }
 
 # Run complexity measurements
-run_scc "examples_sw/apps/audio" "Audio Compression"
-run_scc "examples_sw/apps/digi_sign" "Digital Signature"
-run_scc "examples_sw/apps/secure" "Secure Storage"
-run_scc "examples_sw/apps/signcomp" "Signed Compression"
-run_scc "examples_sw/apps/speech" "Speech Recognition"
+run_scc "$ushell_BASE/examples_sw/apps/audio" "Audio Compression"
+run_scc "$ushell_BASE/examples_sw/apps/digi_sign" "Digital Signature"
+run_scc "$ushell_BASE/examples_sw/apps/secure" "Secure Storage"
+run_scc "$ushell_BASE/examples_sw/apps/signcomp" "Signed Compression"
+run_scc "$ushell_BASE/examples_sw/apps/speech" "Speech Recognition"
 
 echo "==============================================================="
 echo "Complexity measurement complete!"
