@@ -1,3 +1,7 @@
+/**
+ * AES CTR Encryption
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -8,18 +12,20 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <iomanip>
-#ifdef EN_AVX
-#include <x86intrin.h>
-#endif
 #include <signal.h>
 #include <boost/program_options.hpp>
 #include <any>
-#include "cBench.hpp"
-#include "cThread.hpp"
+#include <cstring>
+#include <thread>
+
+// Include our high-level ushell API
+#include "dfg.hpp"
+#include "ushell.hpp"
 
 using namespace std;
 using namespace std::chrono;
 using namespace fpga;
+using namespace ushell;
 
 /* Signal handler */
 std::atomic<bool> stalled(false); 
@@ -27,14 +33,18 @@ void gotInt(int) {
     stalled.store(true);
 }
 
-/* Def params */
+/* Default parameters */
 constexpr auto const defDevice = 0;
-constexpr auto const targetVfid = 0;  
-constexpr auto const defReps = 1;
+constexpr auto const nRegions = 1;  // Single stage: AES encryption
+constexpr auto const defHuge = true;
+constexpr auto const defMapped = true;
+constexpr auto const defStream = 1;
+constexpr auto const nRepsThr = 1;
+constexpr auto const nRepsLat = 1;
 constexpr auto const defSize = 1024;   // Start with smaller size: 1KB
-constexpr auto const defDW = 64;       // 512-bit for AES hardware interface
+constexpr auto const nBenchRuns = 1;
 
-// Simple test pattern - let's try minimal data first
+// Simple test pattern
 constexpr uint8_t test_plaintext[16] = {
     0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
     0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
@@ -61,50 +71,28 @@ constexpr uint64_t plain_word1 =
     ((uint64_t)test_plaintext[14] << 8) |
     ((uint64_t)test_plaintext[15]);
 
-// Create descriptor based on NEW panic_define.v format (128-bit descriptor)
+// Create descriptor based on panic_define.v format (128-bit descriptor)
 void createPanicDescriptor(uint8_t* desc_ptr, uint32_t data_size) {
     // Initialize descriptor to zero (128 bits = 16 bytes)
     memset(desc_ptr, 0, 16);
     
-    // Based on NEW panic_define.v:
-    // Bits 0-31: Length (PANIC_DESC_LEN_OF = 0, PANIC_DESC_LEN_SIZE = 32)
+    // Bits 0-31: Length
     desc_ptr[0] = data_size & 0xFF;
     desc_ptr[1] = (data_size >> 8) & 0xFF;
     desc_ptr[2] = (data_size >> 16) & 0xFF;
     desc_ptr[3] = (data_size >> 24) & 0xFF;
     
-    // Bits 32-47: Cell ID (PANIC_DESC_CELL_ID_OF = 32, PANIC_DESC_CELL_ID_SIZE = 16) 
-    desc_ptr[4] = 0x00;  // Cell ID low
-    desc_ptr[5] = 0x00;  // Cell ID high
+    // Bits 32-47: Cell ID
+    desc_ptr[4] = 0x00;
+    desc_ptr[5] = 0x00;
     
-    // Bits 48-63: Chain (PANIC_DESC_CHAIN_OF = 48, PANIC_DESC_CHAIN_SIZE = 16)
-    // Set chain to 0x0001 (destination 1 = DMA engine)
-    desc_ptr[6] = 0x01;  // Chain low - destination 1
-    desc_ptr[7] = 0x00;  // Chain high
+    // Bits 48-63: Chain (Set to 0x0001 for DMA engine)
+    desc_ptr[6] = 0x01;
+    desc_ptr[7] = 0x00;
     
-    // Bits 64-71: Priority (PANIC_DESC_PRIO_OF = 64, PANIC_DESC_PRIO_SIZE = 8)
-    desc_ptr[8] = 0x00;  // Priority
-    
-    // Bits 72-83: Time (PANIC_DESC_TIME_OF = 72, PANIC_DESC_TIME_SIZE = 12)
-    desc_ptr[9] = 0x00;   // Time low
-    desc_ptr[10] = 0x00;  // Time high (4 bits)
-    
-    // Bit 84: Drop (PANIC_DESC_DROP_OF = 84)
-    // Bits 85-92: Flow (PANIC_DESC_FLOW_OF = 85, PANIC_DESC_FLOW_SIZE = 8)
-    desc_ptr[10] |= 0x00; // Drop bit + Flow low bits
-    desc_ptr[11] = 0x00;  // Flow high bits
-    
-    // Bits 93-110: Timestamp (PANIC_DESC_TS_OF = 93, PANIC_DESC_TS_SIZE = 18)
-    desc_ptr[11] |= 0x00; // TS low bits
-    desc_ptr[12] = 0x00;  // TS mid bits
-    desc_ptr[13] = 0x00;  // TS high bits
-    
-    // Bit 111: Port (PANIC_DESC_PORT_OF = 111)
-    desc_ptr[13] |= 0x00; // Port bit
-    
-    // Bits 112-127: Unused/padding
-    desc_ptr[14] = 0x00;
-    desc_ptr[15] = 0x00;
+    // Remaining fields set to 0
+    // Priority, Time, Drop, Flow, Timestamp, Port
+    memset(&desc_ptr[8], 0, 8);
 }
 
 // Helper function to print hex data
@@ -116,6 +104,25 @@ void printHexData(const char* label, uint64_t* data, int words) {
     }
 }
 
+// Helper function to print latency statistics
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
+    std::cout << "Processing started at: 0 ns" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+            << (1000.0 * data_size_bytes) / avg_latency_ns 
+            << " MB/s" << std::endl;
+}
+
+// Helper function to print header
+void print_header(const std::string& header) {
+    std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
+    std::cout << "-----------------------------------------------" << std::endl;
+}
+
 int main(int argc, char *argv[])  
 {
     // Signal handler setup
@@ -125,184 +132,208 @@ int main(int argc, char *argv[])
     sigfillset(&sa.sa_mask);
     sigaction(SIGINT, &sa, NULL);
 
-    // Read arguments
-    boost::program_options::options_description programDescription("Options:");
+    // ---------------------------------------------------------------
+    // Command Line Arguments
+    // ---------------------------------------------------------------
+    boost::program_options::options_description programDescription("AES Encryption Pipeline Options:");
     programDescription.add_options()
+        ("bitstream,b", boost::program_options::value<string>(), "Shell bitstream")
+        ("device,d", boost::program_options::value<uint32_t>(), "Target device")
+        ("regions,g", boost::program_options::value<uint32_t>(), "Number of vFPGAs")
         ("size,s", boost::program_options::value<uint32_t>(), "Data size")
-        ("reps,r", boost::program_options::value<uint32_t>(), "Number of reps");
+        ("reps,r", boost::program_options::value<uint32_t>(), "Number of reps")
+        ("hugepages,h", boost::program_options::value<bool>(), "Use hugepages (default: true)")
+        ("mapped,m", boost::program_options::value<bool>(), "Use mapped memory (default: true)")
+        ("stream,t", boost::program_options::value<bool>(), "Use streaming interface (default: true)")
+        ("help", "Show help message");
     
     boost::program_options::variables_map commandLineArgs;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, programDescription), commandLineArgs);
     boost::program_options::notify(commandLineArgs);
 
-    uint32_t data_size = defSize;
-    uint32_t n_reps = defReps;
+    if(commandLineArgs.count("help")) {
+        std::cout << programDescription << std::endl;
+        return EXIT_SUCCESS;
+    }
 
+    // Parse arguments with defaults
+    string bstream_path = "";
+    uint32_t cs_dev = defDevice;
+    uint32_t n_regions = nRegions;
+    uint32_t data_size = defSize;
+    uint32_t n_reps = nRepsLat;
+    bool huge = defHuge;
+    bool mapped = defMapped;
+    bool stream = defStream;
+
+    // Process command line arguments
+    if(commandLineArgs.count("bitstream") > 0) { 
+        bstream_path = commandLineArgs["bitstream"].as<string>();
+        
+        std::cout << std::endl << "Shell loading (path: " << bstream_path << ") ..." << std::endl;
+        cRnfg crnfg(cs_dev);
+        crnfg.shellReconfigure(bstream_path);
+    }
+    if(commandLineArgs.count("device") > 0) cs_dev = commandLineArgs["device"].as<uint32_t>();
+    if(commandLineArgs.count("regions") > 0) n_regions = commandLineArgs["regions"].as<uint32_t>();
     if(commandLineArgs.count("size") > 0) data_size = commandLineArgs["size"].as<uint32_t>();
     if(commandLineArgs.count("reps") > 0) n_reps = commandLineArgs["reps"].as<uint32_t>();
+    if(commandLineArgs.count("hugepages") > 0) huge = commandLineArgs["hugepages"].as<bool>();
+    if(commandLineArgs.count("mapped") > 0) mapped = commandLineArgs["mapped"].as<bool>();
+    if(commandLineArgs.count("stream") > 0) stream = commandLineArgs["stream"].as<bool>();
 
     // Ensure data size is multiple of 128 bits (16 bytes) for AES blocks
     data_size = ((data_size + 15) / 16) * 16;
     
-    // CRITICAL: Descriptor length field is only 16 bits (max 65535)
-    // For 1MB support, we need to split large packets or modify the descriptor format
+    // Limit data size to 16-bit descriptor field
     if(data_size > 65535) {
         std::cout << "WARNING: Data size " << data_size << " exceeds 16-bit length field limit (65535)." << std::endl;
         std::cout << "Limiting to 65520 bytes (65535 rounded down to 16-byte boundary)." << std::endl;
-        data_size = 65520;  // 65535 rounded down to 16-byte boundary
+        data_size = 65520;
     }
     
-    // The descriptor is now 128 bits (16 bytes), but we still pad to 512-bit boundary
-    // AES engine expects descriptor in first 512-bit word
+    // Descriptor is 128 bits (16 bytes), padded to 512-bit boundary
     constexpr uint32_t DESC_SIZE_BYTES = 64;  // 512-bit word for descriptor
-    constexpr uint32_t ACTUAL_DESC_SIZE = 16; // Actual descriptor is now 128 bits
+    constexpr uint32_t ACTUAL_DESC_SIZE = 16; // Actual descriptor is 128 bits
     uint32_t total_packet_size = DESC_SIZE_BYTES + data_size;
 
-    uint32_t n_pages_host = (total_packet_size + hugePageSize - 1) / hugePageSize;
-
-    PR_HEADER("PARAMS");
-    std::cout << "vFPGA ID: " << targetVfid << std::endl;
-    std::cout << "Number of allocated pages per run: " << n_pages_host << std::endl;
-    std::cout << "Descriptor size: " << DESC_SIZE_BYTES << " bytes" << std::endl;
+    print_header("PARAMS");
+    std::cout << "Pipeline: AES Encryption with PANIC Descriptor" << std::endl;
+    std::cout << "Number of regions: " << n_regions << std::endl;
+    std::cout << "Descriptor size: " << DESC_SIZE_BYTES << " bytes (includes padding)" << std::endl;
     std::cout << "Data size: " << data_size << " bytes (" << data_size/16 << " x 128-bit AES blocks)" << std::endl;
     std::cout << "Total packet size: " << total_packet_size << " bytes" << std::endl;
     std::cout << "Number of reps: " << n_reps << std::endl;
+    std::cout << "Hugepages: " << huge << std::endl;
+    std::cout << "Mapped: " << mapped << std::endl;
+    std::cout << "Streaming: " << (stream ? "HOST" : "CARD") << std::endl;
 
     try {
-        // Initialize thread
-        std::unique_ptr<cThread<std::any>> cthread(new cThread<std::any>(targetVfid, getpid(), defDevice));
-        cthread->start();
-
-        // Memory allocation
-        std::vector<uint64_t*> input_packets(n_reps, nullptr);
-        std::vector<uint64_t*> output_packets(n_reps, nullptr);
-
-        // Memory allocation and packet setup
+        // ---------------------------------------------------------------
+        // Dataflow Setup using ushell's fluent API
+        // ---------------------------------------------------------------
+        print_header("DATAFLOW SETUP");
+        
+        // Create AES encryption dataflow
+        Dataflow aes_dataflow("aes_encryption_pipeline");
+        
+        // Create processing task
+        Task& aes_encryptor = aes_dataflow.add_task("aes_encryptor", "encryption");
+        
+        // Create buffers
+        Buffer& plaintext_buffer = aes_dataflow.add_buffer(total_packet_size, "plaintext_buffer");
+        Buffer& ciphertext_buffer = aes_dataflow.add_buffer(total_packet_size, "ciphertext_buffer");
+        
+        // Set up the AES encryption pipeline using fluent API
+        aes_dataflow.to(plaintext_buffer, aes_encryptor.in)
+                   .to(aes_encryptor.out, ciphertext_buffer);
+        
+        std::cout << "Creating AES encryption dataflow:" << std::endl;
+        std::cout << "  plaintext_buffer → aes_encryptor → ciphertext_buffer" << std::endl;
+        
+        // Check and build the dataflow
+        if (!aes_dataflow.check()) {
+            throw std::runtime_error("Failed to validate dataflow");
+        }
+        
+        // ---------------------------------------------------------------
+        // Data Generation and Buffer Initialization
+        // ---------------------------------------------------------------
+        print_header("DATA GENERATION");
+        
+        // Generate test data for all repetitions
+        std::vector<std::vector<uint64_t>> test_data(n_reps);
+        std::vector<std::vector<uint64_t>> result_data(n_reps);
+        
         for(int i = 0; i < n_reps; i++) {
-            input_packets[i] = (uint64_t*) cthread->getMem({CoyoteAlloc::HPF, n_pages_host});
-            output_packets[i] = (uint64_t*) cthread->getMem({CoyoteAlloc::HPF, n_pages_host});
+            test_data[i].resize(total_packet_size / sizeof(uint64_t));
+            result_data[i].resize(total_packet_size / sizeof(uint64_t));
             
-            if (!input_packets[i] || !output_packets[i]) {
-                throw std::runtime_error("Memory allocation failed");
-            }
-
-            // Create descriptor at the beginning (96 bits in first 512-bit word)
-            memset(input_packets[i], 0, DESC_SIZE_BYTES);  // Clear entire first word
-            createPanicDescriptor((uint8_t*)input_packets[i], data_size);
+            // Create descriptor at the beginning
+            memset(test_data[i].data(), 0, DESC_SIZE_BYTES / sizeof(uint64_t));
+            createPanicDescriptor((uint8_t*)test_data[i].data(), data_size);
             
-            // Fill data portion with simple test pattern
-            uint64_t* data_ptr = input_packets[i] + (DESC_SIZE_BYTES / 8);
+            // Fill data portion with test pattern
+            uint64_t* data_ptr = test_data[i].data() + (DESC_SIZE_BYTES / sizeof(uint64_t));
             
-            // Fill with alternating pattern of our test data
+            // Fill with alternating pattern of test data
             for(int j = 0; j < data_size / 16; j++) {
                 data_ptr[j*2] = plain_word0;     // Low 64 bits
                 data_ptr[j*2 + 1] = plain_word1; // High 64 bits
             }
-            
-            // Initialize output buffer to zero
-            memset(output_packets[i], 0, total_packet_size);
         }
-
+        
         // Print input packet for debugging
-        PR_HEADER("INPUT PACKET DEBUG");
+        print_header("INPUT PACKET DEBUG");
         std::cout << "128-bit Descriptor (16 bytes):" << std::endl;
-        uint8_t* desc_bytes = (uint8_t*)input_packets[0];
+        uint8_t* desc_bytes = (uint8_t*)test_data[0].data();
         for(int i = 0; i < 16; i++) {
             std::cout << "  Byte[" << i << "]: 0x" << std::hex << std::setfill('0') 
                       << std::setw(2) << (int)desc_bytes[i] << std::dec << std::endl;
         }
         
-        printHexData("Full Descriptor Word:", input_packets[0], 8);
-        printHexData("Input Data (first 8 words):", input_packets[0] + 8, 8);
-
-        // Setup scatter-gather entries for transfer
-        sgEntry sg;
-        sgFlags sg_flags = { true, true, false };
-
-        // Benchmark setup
-        cBench bench(1);
-        PR_HEADER("AES ENGINE TEST");
-
-        // Clear any previous completions
-        cthread->clearCompleted();
-
-        std::cout << "Starting transfer..." << std::endl;
+        printHexData("Full Descriptor Word:", test_data[0].data(), 8);
+        printHexData("Input Data (first 8 words):", test_data[0].data() + 8, 8);
+        
+        // ---------------------------------------------------------------
+        // Performance Benchmarking
+        // ---------------------------------------------------------------
+        print_header("AES ENGINE TEST");
+        
+        // Create benchmark object
+        cBench bench(n_reps);
+        
+        std::cout << "Starting transfers..." << std::endl;
         
         auto benchmark_thr = [&]() {
-            // Queue transfers with detailed logging
-            for(int i = 0; i < n_reps; i++) {
-                std::cout << "Queuing transfer " << i << std::endl;
-                
-                memset(&sg, 0, sizeof(localSg));
-                sg.local.src_addr = input_packets[i];
-                sg.local.src_len = total_packet_size;
-                sg.local.src_stream = strmHost;
-                sg.local.src_dest = targetVfid;
-
-                sg.local.dst_addr = output_packets[i];
-                sg.local.dst_len = total_packet_size;
-                sg.local.dst_stream = strmHost;
-                sg.local.dst_dest = targetVfid;
-
-                if(i == n_reps-1) sg_flags.last = true;
-                
-                cthread->invoke(CoyoteOper::LOCAL_TRANSFER, &sg, sg_flags);
-                std::cout << "Transfer " << i << " queued" << std::endl;
-            }
-
-            // Wait for completion with frequent status updates
             auto start_time = std::chrono::high_resolution_clock::now();
-            int completed = 0;
-            int timeout_count = 0;
             
-            while(completed < n_reps) {
-                if(stalled.load()) throw std::runtime_error("Stalled, SIGINT caught");
+            for(int i = 0; i < n_reps; i++) {
+                std::cout << "Processing transfer " << i << std::endl;
                 
-                completed = cthread->checkCompleted(CoyoteOper::LOCAL_TRANSFER);
+                // Write input data
+                write_dataflow_buffer(plaintext_buffer, test_data[i].data(), total_packet_size);
                 
-                auto current_time = std::chrono::high_resolution_clock::now();
-                auto elapsed = std::chrono::duration_cast<std::chrono::seconds>
-                             (current_time - start_time).count();
+                // Clear completion counters
+                aes_dataflow.clear_completed();
                 
-                // Print status every 5 seconds
-                if(elapsed > timeout_count * 5) {
-                    std::cout << "Status: " << completed << "/" << n_reps 
-                              << " completed after " << elapsed << " seconds" << std::endl;
-                    timeout_count++;
-                }
+                // Execute the dataflow
+                aes_dataflow.execute(total_packet_size);
                 
-                if (elapsed > 30) {
-                    std::cout << "Timeout after 30 seconds" << std::endl;
-                    throw std::runtime_error("Transfer timeout");
-                }
+                // Read output data
+                read_dataflow_buffer(ciphertext_buffer, result_data[i].data(), total_packet_size);
                 
-                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                std::cout << "Transfer " << i << " completed" << std::endl;
             }
             
-            std::cout << "All transfers completed!" << std::endl;
+            auto end_time = std::chrono::high_resolution_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time).count();
+            std::cout << "All transfers completed in " << elapsed << " seconds!" << std::endl;
         };
-
+        
         bench.runtime(benchmark_thr);
-
-        // Print results
-        PR_HEADER("OUTPUT PACKET DEBUG");
+        
+        // ---------------------------------------------------------------
+        // Results Verification
+        // ---------------------------------------------------------------
+        print_header("OUTPUT PACKET DEBUG");
         std::cout << "128-bit Output Descriptor (16 bytes):" << std::endl;
-        uint8_t* out_desc_bytes = (uint8_t*)output_packets[0];
+        uint8_t* out_desc_bytes = (uint8_t*)result_data[0].data();
         for(int i = 0; i < 16; i++) {
             std::cout << "  Byte[" << i << "]: 0x" << std::hex << std::setfill('0') 
                       << std::setw(2) << (int)out_desc_bytes[i] << std::dec << std::endl;
         }
         
-        printHexData("Full Output Descriptor Word:", output_packets[0], 8);
-        printHexData("Output Data (first 8 words):", output_packets[0] + 8, 8);
-
+        printHexData("Full Output Descriptor Word:", result_data[0].data(), 8);
+        printHexData("Output Data (first 8 words):", result_data[0].data() + 8, 8);
+        
         // Verify results
-        PR_HEADER("VERIFICATION");
+        print_header("VERIFICATION");
         bool success = true;
         
         for(int i = 0; i < n_reps && success; i++) {
-            uint64_t* output_data = output_packets[i] + (DESC_SIZE_BYTES / 8);
-            uint64_t* input_data = input_packets[i] + (DESC_SIZE_BYTES / 8);
+            uint64_t* output_data = result_data[i].data() + (DESC_SIZE_BYTES / 8);
+            uint64_t* input_data = test_data[i].data() + (DESC_SIZE_BYTES / 8);
             
             // Check for non-zero output
             bool has_output = false;
@@ -333,23 +364,22 @@ int main(int argc, char *argv[])
         }
         
         std::cout << "Test result: " << (success ? "PASSED" : "FAILED") << std::endl;
-
-        // Cleanup
-        for(int i = 0; i < n_reps; i++) {
-            if(input_packets[i]) {
-                cthread->freeMem(input_packets[i]);
-                input_packets[i] = nullptr;
-            }
-            if(output_packets[i]) {
-                cthread->freeMem(output_packets[i]);
-                output_packets[i] = nullptr;
-            }
-        }
-
+        
+        // Performance metrics using printLatencyStats
+        print_header("PERFORMANCE");
+        printLatencyStats(bench.getAvg() / n_reps, data_size, n_reps);
+        
+        // ---------------------------------------------------------------
+        // Resource Cleanup (Automatic with RAII)
+        // ---------------------------------------------------------------
+        
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
+    
+    print_header("AES ENCRYPTION COMPLETE");
+    std::cout << "AES encryption pipeline executed successfully!" << std::endl;
     
     return EXIT_SUCCESS;
 }

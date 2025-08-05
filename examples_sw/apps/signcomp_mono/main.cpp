@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2021, Systems Group, ETH Zurich
- * All rights reserved.
- *
- * Signed Compression Pipeline - Converted to use ushell API
+ * Signed Compression Pipeline (Monolithic)
  */
 
 #include <iostream>
@@ -103,6 +100,19 @@ void analyzePipelineOutput(uint8_t* buffer, size_t buffer_size, uint32_t input_c
             break;
         }
     }
+}
+
+// Helper function to print latency statistics
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
+    std::cout << "Processing started at: 0 ns" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+            << (1000.0 * data_size_bytes) / avg_latency_ns 
+            << " MB/s" << std::endl;
 }
 
 // Helper function to print header
@@ -298,9 +308,6 @@ int main(int argc, char *argv[]) {
 
         bench.runtime(benchmark_thr);
         
-        std::cout << "Size: " << std::setw(8) << input_size 
-                  << " bytes, Latency: " << std::setw(8) << bench.getAvg() / n_reps_lat << " ns" << std::endl;
-        
         // ---------------------------------------------------------------
         // Results Verification
         // ---------------------------------------------------------------
@@ -316,24 +323,16 @@ int main(int argc, char *argv[]) {
         // Analyze the pipeline output
         analyzePipelineOutput(signature_result.data(), output_size, input_chunks);
         
-        // Performance metrics
-        double time_seconds = bench.getAvg() / 1000000000.0;
-        double time_us = bench.getAvg() / 1000.0;
-        double throughput_mbps = (input_size / 1024.0 / 1024.0) / time_seconds;
-        
-        std::cout << "Performance Metrics:" << std::endl;
-        std::cout << "  Execution time: " << std::fixed << std::setprecision(3) 
-                  << time_us << " µs" << std::endl;
-        std::cout << "  Latency per KB input: " << std::setprecision(3)
-                  << (time_us / (input_size / 1024.0)) << " µs/KB" << std::endl;
-        std::cout << "  Input processing rate: " << std::setw(8) << std::setprecision(1)
-                  << throughput_mbps << " MB/s" << std::endl;
-        std::cout << "  Compression ratio: " << input_size << ":" << expected_rle_compressed 
-                  << " (1:" << std::fixed << std::setprecision(1) 
-                  << (double)input_size/expected_rle_compressed << ")" << std::endl;
+        // Print performance metrics using printLatencyStats
+        print_header("LATENCY MEASUREMENTS");
+        printLatencyStats(bench.getAvg() / n_reps_lat, input_size, n_reps_lat);
         
         // Calculate space efficiency
         double space_efficiency = static_cast<double>(input_size) / output_size;
+        std::cout << "\nPipeline metrics:" << std::endl;
+        std::cout << "  Compression ratio: " << input_size << ":" << expected_rle_compressed 
+                  << " (1:" << std::fixed << std::setprecision(1) 
+                  << (double)input_size/expected_rle_compressed << ")" << std::endl;
         std::cout << "  Space efficiency: " << space_efficiency 
                   << ":1 (input:output ratio)" << std::endl;
         

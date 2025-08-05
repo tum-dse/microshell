@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2021, Systems Group, ETH Zurich
- * All rights reserved.
- *
- * Digital Signature Pipeline - Converted to use ushell API
+ * Digital Signature Pipeline (Monolithic)
  */
 
 #include <iostream>

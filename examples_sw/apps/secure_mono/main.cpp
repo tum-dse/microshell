@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2021, Systems Group, ETH Zurich
- * All rights reserved.
- *
- * Secure Storage Pipeline - Converted to use ushell API
+ * Secure Storage Pipeline (Monolithic)
  */
 
 #include <iostream>
@@ -153,6 +150,19 @@ void analyzePipelineOutput(uint8_t* buffer, size_t buffer_size, size_t input_siz
               << (double)input_size / total_non_zero << ":1" << std::endl;
 }
 
+// Helper function to print latency statistics
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
+    std::cout << "Processing started at: 0 ns" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+            << (1000.0 * data_size_bytes) / avg_latency_ns 
+            << " MB/s" << std::endl;
+}
+
 // Helper function to print header
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
@@ -205,7 +215,7 @@ int main(int argc, char *argv[]) {
     uint32_t data_size = commandLineArgs.count("size") ? 
         commandLineArgs["size"].as<uint32_t>() : defSize;
     uint32_t n_reps = commandLineArgs.count("reps") ? 
-        commandLineArgs["reps"].as<uint32_t>() : defReps;
+        commandLineArgs["reps"].as<uint32_t>() : nRepsLat;
     PatternType pattern = static_cast<PatternType>(
         commandLineArgs.count("pattern") ? commandLineArgs["pattern"].as<int>() : 0);
     bool huge = defHuge;
@@ -261,25 +271,25 @@ int main(int argc, char *argv[]) {
         print_header("DATAFLOW SETUP");
         
         // Create secure storage dataflow
-        Dataflow secure_storage_dataflow("secure_storage_pipeline");
+        Dataflow secure_dataflow("secure_pipeline");
         
         // Create processing tasks
         // Note: In the combined pipeline, both operations happen in the same vFPGA
-        Task& secure_processor = secure_storage_dataflow.add_task("secure_processor", "secure_storage");
+        Task& secure_processor = secure_dataflow.add_task("secure_processor", "secure");
         
         // Create buffers
-        Buffer& input_buffer = secure_storage_dataflow.add_buffer(data_size, "input_buffer");
-        Buffer& output_buffer = secure_storage_dataflow.add_buffer(pipeline_output_size, "output_buffer");
+        Buffer& input_buffer = secure_dataflow.add_buffer(data_size, "input_buffer");
+        Buffer& output_buffer = secure_dataflow.add_buffer(pipeline_output_size, "output_buffer");
         
         // Set up the pipeline using fluent API
-        secure_storage_dataflow.to(input_buffer, secure_processor.in)
+        secure_dataflow.to(input_buffer, secure_processor.in)
                               .to(secure_processor.out, output_buffer);
         
         std::cout << "Creating secure storage dataflow:" << std::endl;
         std::cout << "  input_buffer → secure_processor → output_buffer" << std::endl;
         
         // Check and build the dataflow
-        if (!secure_storage_dataflow.check()) {
+        if (!secure_dataflow.check()) {
             throw std::runtime_error("Failed to validate dataflow");
         }
         
@@ -328,10 +338,10 @@ int main(int argc, char *argv[]) {
                 write_dataflow_buffer(input_buffer, test_data[i].data(), data_size);
                 
                 // Clear completion counters
-                secure_storage_dataflow.clear_completed();
+                secure_dataflow.clear_completed();
                 
                 // Execute the dataflow
-                secure_storage_dataflow.execute(data_size);
+                secure_dataflow.execute(data_size);
                 
                 // Read output data
                 read_dataflow_buffer(output_buffer, result_data[i].data(), pipeline_output_size);
@@ -354,42 +364,8 @@ int main(int argc, char *argv[]) {
         // ---------------------------------------------------------------
         // Performance Metrics
         // ---------------------------------------------------------------
-        print_header("PERFORMANCE");
-        
-        // Get average latency in nanoseconds
-        double avg_latency_ns = bench.getAvg() / n_reps;
-        double avg_latency_us = avg_latency_ns / 1e3;  // Convert to microseconds
-        double avg_latency_ms = avg_latency_ns / 1e6;  // Convert to milliseconds
-        
-        // Calculate total data processed
-        uint64_t total_bytes = (uint64_t)data_size * n_reps;
-        
-        // Calculate throughput
-        double throughput_mbps = (data_size / 1024.0 / 1024.0) / (avg_latency_ns / 1e9);  // MB/s
-        double throughput_gbps = throughput_mbps / 1000.0;  // GB/s
-        
-        // Display results
-        std::cout << "Average latency: " << std::fixed << std::setprecision(3);
-        if (avg_latency_us < 1000) {
-            std::cout << avg_latency_us << " μs" << std::endl;
-        } else {
-            std::cout << avg_latency_ms << " ms" << std::endl;
-        }
-        
-        std::cout << "Throughput: " << std::fixed << std::setprecision(2);
-        if (throughput_mbps >= 1000) {
-            std::cout << throughput_gbps << " GB/s" << std::endl;
-        } else {
-            std::cout << throughput_mbps << " MB/s" << std::endl;
-        }
-        
-        // Additional performance details
-        std::cout << "Total data processed: " << total_bytes << " bytes" << std::endl;
-        
-        if (n_reps > 1) {
-            std::cout << "Min latency: " << bench.getMin() / 1e6 << " ms" << std::endl;
-            std::cout << "Max latency: " << bench.getMax() / 1e6 << " ms" << std::endl;
-        }
+        print_header("LATENCY MEASUREMENTS");
+        printLatencyStats(bench.getAvg() / n_reps, data_size, n_reps);
         
         // ---------------------------------------------------------------
         // Resource Cleanup (Automatic with RAII)

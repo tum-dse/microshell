@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2021, Systems Group, ETH Zurich
- * All rights reserved.
- *
- * FFT Quantization Pipeline - Converted to use ushell API
+ * FFT Quantization 
  */
 
 #include <iostream>
@@ -81,6 +78,19 @@ std::string interpretQuantizedByte(uint8_t byte) {
         case 0x50: return "P (Peak)";
         default: return "Unknown";
     }
+}
+
+// Helper function to print latency statistics
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
+    std::cout << "Processing started at: 0 ns" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+            << (1000.0 * data_size_bytes) / avg_latency_ns 
+            << " MB/s" << std::endl;
 }
 
 // Helper function to print header
@@ -277,18 +287,9 @@ int main(int argc, char *argv[])
         
         bench.runtime(benchmark_thr);
         
-        // Print performance results
-        std::cout << std::fixed << std::setprecision(2);
-        double throughput_mbps = (1000.0 * input_buffer_size) / (bench.getAvg() / n_reps);
-        double samples_per_sec = (1000000000.0 * num_complex_samples) / (bench.getAvg() / n_reps);
-        
-        std::cout << "Size: " << std::setw(8) << size_bytes << " bytes"
-                  << ", Throughput: " << std::setw(8) << throughput_mbps << " MB/s"
-                  << ", Sample rate: " << std::setw(10) << (samples_per_sec / 1000000.0) << " MSamples/s" 
-                  << std::endl;
-        
-        double latency_ns = bench.getAvg() / n_reps;
-        std::cout << "Latency: " << latency_ns << " ns (" << (latency_ns / 1000) << " us)" << std::endl << std::endl;
+        // Print performance results using printLatencyStats
+        print_header("LATENCY MEASUREMENTS");
+        printLatencyStats(bench.getAvg() / n_reps, input_buffer_size, n_reps);
         
         // ---------------------------------------------------------------
         // Results Analysis

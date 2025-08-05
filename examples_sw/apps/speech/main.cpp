@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2021, Systems Group, ETH Zurich
- * All rights reserved.
- *
- * FFT + SVM Pipeline - Converted to use ushell API
+ * Speech Recognition Pipeline 
  */
 
 #include <iostream>
@@ -47,11 +44,16 @@ constexpr auto const defSize = 32;  // Default: single 32-point FFT
 constexpr auto const nBenchRuns = 1;
 
 // Helper function to print latency statistics
-void printLatencyStats(double latency_ns) {
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
     std::cout << "Processing started at: 0 ns" << std::endl;
-    std::cout << "Processing completed at: " << latency_ns << " ns" << std::endl;
-    std::cout << "Total latency: " << latency_ns << " ns (" << (latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+            << (1000.0 * data_size_bytes) / avg_latency_ns 
+            << " MB/s" << std::endl;
 }
 
 // Helper function to print header
@@ -156,28 +158,28 @@ int main(int argc, char *argv[]) {
         print_header("DATAFLOW SETUP");
         
         // Create an FFT + SVM dataflow
-        Dataflow fft_svm_dataflow("fft_svm_dataflow");
+        Dataflow speech_dataflow("speech_dataflow");
         
         // Create processing tasks
-        Task& fft_processor = fft_svm_dataflow.add_task("fft_processor", "signal_processing");
-        Task& svm_classifier = fft_svm_dataflow.add_task("svm_classifier", "machine_learning");
+        Task& fft_processor = speech_dataflow.add_task("fft_processor", "signal_processing");
+        Task& svm_classifier = speech_dataflow.add_task("svm_classifier", "machine_learning");
         
         // Create buffers
-        Buffer& signal_input_buffer = fft_svm_dataflow.add_buffer(input_buffer_size, "signal_input_buffer");
-        Buffer& fft_output_buffer = fft_svm_dataflow.add_buffer(fft_output_size, "fft_output_buffer");
-        Buffer& classification_buffer = fft_svm_dataflow.add_buffer(svm_output_size, "classification_buffer");
+        Buffer& signal_input_buffer = speech_dataflow.add_buffer(input_buffer_size, "signal_input_buffer");
+        Buffer& fft_output_buffer = speech_dataflow.add_buffer(fft_output_size, "fft_output_buffer");
+        Buffer& classification_buffer = speech_dataflow.add_buffer(svm_output_size, "classification_buffer");
         
         // Set up the FFT + SVM pipeline using fluent API
-        fft_svm_dataflow.to(signal_input_buffer, fft_processor.in)
+        speech_dataflow.to(signal_input_buffer, fft_processor.in)
                        .to(fft_processor.out, fft_output_buffer)
                        .to(fft_output_buffer, svm_classifier.in)
                        .to(svm_classifier.out, classification_buffer);
         
-        std::cout << "Creating FFT + SVM dataflow:" << std::endl;
+        std::cout << "Creating speech recognition dataflow:" << std::endl;
         std::cout << "  signal_input_buffer → fft_processor → fft_output_buffer → svm_classifier → classification_buffer" << std::endl;
         
         // Check and build the dataflow
-        if (!fft_svm_dataflow.check()) {
+        if (!speech_dataflow.check()) {
             throw std::runtime_error("Failed to validate dataflow");
         }
         
@@ -231,31 +233,27 @@ int main(int argc, char *argv[]) {
         // ---------------------------------------------------------------
         // Performance Benchmarking
         // ---------------------------------------------------------------
-        print_header("FFT + SVM PROCESSING");
+        print_header("SPEECH RECOGNITION PROCESSING");
         
         // Create benchmark object
         cBench bench(nBenchRuns);
         
-        fft_svm_dataflow.clear_completed();
+        speech_dataflow.clear_completed();
         
         auto benchmark_thr = [&]() {
             for (int i = 0; i < n_reps_lat; i++) {
-                fft_svm_dataflow.execute(input_buffer_size);
+                speech_dataflow.execute(input_buffer_size);
             }
         };
 
         bench.runtime(benchmark_thr);
 
-        // Print basic results
-        std::cout << std::fixed << std::setprecision(2);
-        std::cout << "Size: " << std::setw(8) << size << ", thr: " 
-                  << std::setw(8) << (1000 * input_buffer_size) / (bench.getAvg() / n_reps_lat) 
-                  << " MB/s" << std::endl << std::endl;
-
         // Print latency statistics
         print_header("LATENCY MEASUREMENTS");
-        printLatencyStats(bench.getAvg() / n_reps_lat);
+        printLatencyStats(bench.getAvg() / n_reps_lat, input_buffer_size, n_reps_lat);
 
+
+        /*
         // ---------------------------------------------------------------
         // Results Verification
         // ---------------------------------------------------------------
@@ -286,7 +284,7 @@ int main(int argc, char *argv[]) {
             }
             std::cout << std::endl;
         }
-        
+        */
         // ---------------------------------------------------------------
         // Resource Cleanup (Automatic with RAII)
         // ---------------------------------------------------------------
@@ -295,9 +293,9 @@ int main(int argc, char *argv[]) {
         std::cerr << "Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
-    
-    print_header("FFT + SVM PROCESSING COMPLETE");
-    std::cout << "Signal processing and classification dataflow executed successfully!" << std::endl;
-    
+
+    print_header("SPEECH RECOGNITION PROCESSING COMPLETE");
+    std::cout << "Speech recognition pipeline executed successfully!" << std::endl;
+
     return EXIT_SUCCESS;
 }

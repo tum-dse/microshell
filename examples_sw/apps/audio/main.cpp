@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2021, Systems Group, ETH Zurich
- * All rights reserved.
- *
- * Audio Processing Pipeline - Converted to use ushell API
+ * Audio Processing Pipeline 
  */
 
 #include <iostream>
@@ -67,6 +64,19 @@ void generateCompressibleAudio(float* audio_data, uint32_t input_size) {
         audio_data[2*sample_idx] = real;        // Real part
         audio_data[2*sample_idx + 1] = 0.0f;    // Imaginary part (zero for real audio)
     }
+}
+
+// Helper function to print latency statistics
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
+    std::cout << "Processing started at: 0 ns" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+            << (1000.0 * data_size_bytes) / avg_latency_ns 
+            << " MB/s" << std::endl;
 }
 
 // Helper function to print header
@@ -220,9 +230,10 @@ int main(int argc, char *argv[])
             
             bench.runtime(benchmark_lat);
             
-            std::cout << "Size: " << std::setw(8) << current_byte_size 
-                      << " bytes, Samples: " << std::setw(6) << (current_byte_size / (sizeof(float) * 2))
-                      << ", Latency: " << std::setw(8) << bench.getAvg() / n_reps_lat << " ns" << std::endl;
+            // Use printLatencyStats instead of inline printing
+            std::cout << "\nSize: " << current_byte_size << " bytes (" 
+                      << (current_byte_size / (sizeof(float) * 2)) << " samples)";
+            printLatencyStats(bench.getAvg() / n_reps_lat, current_byte_size, n_reps_lat);
             
             current_byte_size *= 2;
         }

@@ -1,3 +1,7 @@
+/**
+ * FFT 
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -9,31 +13,31 @@
 #include <unistd.h>
 #include <iomanip>
 #include <signal.h>
-#ifdef EN_AVX
-#include <x86intrin.h>
-#endif
 #include <boost/program_options.hpp>
 #include <any>
 #include <cmath>
 #include <random>
 #include <vector>
-#include "cBench.hpp"
-#include "cThread.hpp"
+
+// Include high-level ushell API
+#include "dfg.hpp"
+#include "ushell.hpp"
 
 using namespace std;
 using namespace std::chrono;
 using namespace fpga;
+using namespace ushell;
 
+/* Signal handler */
 std::atomic<bool> stalled(false); 
 void gotInt(int) {
     stalled.store(true);
 }
 
+/* Default parameters */
 constexpr auto const defDevice = 0;
-constexpr auto const targetVfid = 0;  
 constexpr auto const defReps = 1;
 constexpr auto const defSize = 32;       
-constexpr auto const defDW = 4;
 constexpr float const sampleRate = 44100.0f;
 
 // Generate sine wave value
@@ -71,33 +75,69 @@ void printRawFFT(float* output_ptr, int size) {
 }
 
 // Helper function to print latency statistics
-void printLatencyStats(double latency_ns) {
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
     std::cout << "Processing started at: 0 ns" << std::endl;
-    std::cout << "Processing completed at: " << latency_ns << " ns" << std::endl;
-    std::cout << "Total latency: " << latency_ns << " ns (" << (latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+            << (1000.0 * data_size_bytes) / avg_latency_ns 
+            << " MB/s" << std::endl;
 }
 
-int main(int argc, char *argv[]) {
+// Helper function to print header
+void print_header(const std::string& header) {
+    std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
+    std::cout << "-----------------------------------------------" << std::endl;
+}
+
+int main(int argc, char *argv[])  
+{
+    // Signal handler setup
     struct sigaction sa;
     memset(&sa, 0, sizeof(sa));
     sa.sa_handler = gotInt;
     sigfillset(&sa.sa_mask);
     sigaction(SIGINT, &sa, NULL);
 
-    boost::program_options::options_description programDescription("Options:");
+    // ---------------------------------------------------------------
+    // Command Line Arguments
+    // ---------------------------------------------------------------
+    boost::program_options::options_description programDescription("FFT Pipeline Options:");
     programDescription.add_options()
+        ("bitstream,b", boost::program_options::value<string>(), "Shell bitstream")
+        ("device,d", boost::program_options::value<uint32_t>(), "Target device")
         ("size,s", boost::program_options::value<uint32_t>(), "FFT size (must be multiple of 32)")
         ("reps,r", boost::program_options::value<uint32_t>(), "Number of reps")
-        ("freq,f", boost::program_options::value<float>(), "Input signal frequency (Hz)");
+        ("freq,f", boost::program_options::value<float>(), "Input signal frequency (Hz)")
+        ("help", "Show help message");
     
     boost::program_options::variables_map commandLineArgs;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, programDescription), commandLineArgs);
     boost::program_options::notify(commandLineArgs);
 
+    if(commandLineArgs.count("help")) {
+        std::cout << programDescription << std::endl;
+        return EXIT_SUCCESS;
+    }
+
+    // Parse arguments with defaults
+    string bstream_path = "";
+    uint32_t cs_dev = defDevice;
     uint32_t n_reps = defReps;
-    uint32_t size = defSize; 
-    
+    uint32_t size = defSize;
+
+    // Process command line arguments
+    if(commandLineArgs.count("bitstream") > 0) { 
+        bstream_path = commandLineArgs["bitstream"].as<string>();
+        
+        std::cout << std::endl << "Shell loading (path: " << bstream_path << ") ..." << std::endl;
+        cRnfg crnfg(cs_dev);
+        crnfg.shellReconfigure(bstream_path);
+    }
+    if(commandLineArgs.count("device") > 0) cs_dev = commandLineArgs["device"].as<uint32_t>();
     if(commandLineArgs.count("size") > 0) size = commandLineArgs["size"].as<uint32_t>();
     if(commandLineArgs.count("reps") > 0) n_reps = commandLineArgs["reps"].as<uint32_t>();
 
@@ -111,12 +151,10 @@ int main(int argc, char *argv[]) {
     uint32_t input_size = size;                    // Total complex samples
     uint32_t complex_size = 2 * input_size;       // Total floats (real + imag)
     uint32_t buffer_size = complex_size * sizeof(float);  // Total bytes
-    uint32_t n_pages = (buffer_size + hugePageSize - 1) / hugePageSize;
     uint32_t num_ffts = size / 32;                 // Number of 32-point FFTs
 
-    PR_HEADER("PARAMS");
-    std::cout << "vFPGA ID: " << targetVfid << std::endl;
-    std::cout << "Number of allocated pages per run: " << n_pages << std::endl;
+    print_header("PARAMS");
+    std::cout << "Pipeline: FFT Processing" << std::endl;
     std::cout << "Total size: " << size << " points (" << num_ffts << " x 32-point FFTs)" << std::endl;
     std::cout << "Buffer size: " << buffer_size << " bytes" << std::endl;
     std::cout << "Number of reps: " << n_reps << std::endl;
@@ -124,14 +162,41 @@ int main(int argc, char *argv[]) {
     std::cout << "Frequency resolution: " << (sampleRate/32) << " Hz/bin (per FFT)" << std::endl;
 
     try {
-        std::unique_ptr<cThread<std::any>> cthread(new cThread<std::any>(targetVfid, getpid(), defDevice));
-        cthread->start();
+        // ---------------------------------------------------------------
+        // Dataflow Setup using ushell's fluent API
+        // ---------------------------------------------------------------
+        print_header("DATAFLOW SETUP");
         
-        std::vector<float*> input_buffers(n_reps, nullptr);
-        std::vector<float*> output_buffers(n_reps, nullptr);
-
+        // Create FFT processing dataflow
+        Dataflow fft_dataflow("fft_processing_pipeline");
+        
+        // Create processing task
+        Task& fft_processor = fft_dataflow.add_task("fft_processor", "fft");
+        
+        // Create buffers
+        Buffer& input_buffer = fft_dataflow.add_buffer(buffer_size, "input_buffer");
+        Buffer& output_buffer = fft_dataflow.add_buffer(buffer_size, "output_buffer");
+        
+        // Set up the FFT pipeline using fluent API
+        fft_dataflow.to(input_buffer, fft_processor.in)
+                    .to(fft_processor.out, output_buffer);
+        
+        std::cout << "Creating FFT dataflow:" << std::endl;
+        std::cout << "  input_buffer → fft_processor → output_buffer" << std::endl;
+        
+        // Check and build the dataflow
+        if (!fft_dataflow.check()) {
+            throw std::runtime_error("Failed to validate dataflow");
+        }
+        
+        // ---------------------------------------------------------------
+        // Data Generation
+        // ---------------------------------------------------------------
+        print_header("DATA GENERATION");
+        
+        // Generate test data
         std::vector<float> test_data(complex_size, 0.0f);
-
+        
         std::cout << "\nFirst 32 input values:\n";
         for (uint32_t i = 0; i < min(32U, input_size); ++i) {
             test_data[2*i] = generateSineValue(i);      // Real part
@@ -147,96 +212,80 @@ int main(int argc, char *argv[]) {
             test_data[2*i + 1] = 0.0f;                  // Imaginary part
         }
         std::cout << "\n";
-
-        // Allocate and initialize memory
-        for(int i = 0; i < n_reps; i++) {
-            input_buffers[i] = (float*) cthread->getMem({CoyoteAlloc::HPF, n_pages});
-            output_buffers[i] = (float*) cthread->getMem({CoyoteAlloc::HPF, n_pages});
-            
-            if (!input_buffers[i] || !output_buffers[i]) {
-                throw std::runtime_error("Memory allocation failed");
-            }
-
-            memcpy(input_buffers[i], test_data.data(), buffer_size);
-            memset(output_buffers[i], 0, buffer_size);
-        }
-
-        sgEntry sg;
-        sgFlags sg_flags = { true, true, false };
-
+        
+        // ---------------------------------------------------------------
+        // Performance Benchmarking
+        // ---------------------------------------------------------------
+        print_header("FFT PROCESSING");
+        
+        // Create benchmark object
         cBench bench(n_reps);
-        PR_HEADER("FFT PROCESSING");
-
-        cthread->clearCompleted();
-
+        
+        // Store output data for verification
+        std::vector<std::vector<float>> output_data(n_reps);
+        for(int i = 0; i < n_reps; i++) {
+            output_data[i].resize(complex_size);
+        }
+        
         auto benchmark_thr = [&]() {
             for(int i = 0; i < n_reps; i++) {
-                memset(&sg, 0, sizeof(localSg));
+                // Write input data to buffer
+                write_dataflow_buffer(input_buffer, test_data.data(), buffer_size);
                 
-                sg.local.src_addr = input_buffers[i];
-                sg.local.src_len = buffer_size;
-                sg.local.src_stream = strmHost;
-                sg.local.src_dest = targetVfid;
-
-                sg.local.dst_addr = output_buffers[i];
-                sg.local.dst_len = buffer_size;
-                sg.local.dst_stream = strmHost;
-                sg.local.dst_dest = targetVfid;
-
-                sg_flags.last = (i == n_reps-1);
+                // Clear completion counters
+                fft_dataflow.clear_completed();
                 
-                cthread->invoke(CoyoteOper::LOCAL_TRANSFER, &sg, sg_flags);
-            }
-
-            while(cthread->checkCompleted(CoyoteOper::LOCAL_WRITE) != 1) {
-                if(stalled.load()) throw std::runtime_error("Stalled");
+                // Execute the dataflow
+                fft_dataflow.execute(buffer_size);
+                
+                // Read output data
+                read_dataflow_buffer(output_buffer, output_data[i].data(), buffer_size);
+                
+                if(stalled.load()) throw std::runtime_error("Stalled, SIGINT caught");
             }
         };
-
+        
         bench.runtime(benchmark_thr);
-
-        // Print basic results
-        std::cout << std::fixed << std::setprecision(2);
-        std::cout << "Size: " << std::setw(8) << size << ", thr: " 
-                  << std::setw(8) << (1000 * buffer_size) / (bench.getAvg() / n_reps) 
-                  << " MB/s" << std::endl << std::endl;
-
+        
         // Print latency statistics
-        PR_HEADER("LATENCY MEASUREMENTS");
-        printLatencyStats(bench.getAvg() / n_reps);
-
-        // Print FFT results - show first few FFT outputs
-        PR_HEADER("RESULTS");
+        print_header("LATENCY MEASUREMENTS");
+        printLatencyStats(bench.getAvg() / n_reps, buffer_size, n_reps);
+        
+        // ---------------------------------------------------------------
+        // Results Verification
+        // ---------------------------------------------------------------
+        print_header("RESULTS");
         int max_ffts_to_show = min(3, (int)num_ffts);  // Show max 3 FFT results
+        
         for(int i = 0; i < n_reps; i++) {
             for(int fft_idx = 0; fft_idx < max_ffts_to_show; fft_idx++) {
                 std::cout << "\n--- FFT #" << (fft_idx + 1) << " of " << num_ffts << " ---";
-                printRawFFT(output_buffers[i] + (fft_idx * 64), 32);  // Each FFT is 64 floats
+                printRawFFT(output_data[i].data() + (fft_idx * 64), 32);  // Each FFT is 64 floats
             }
             if(num_ffts > max_ffts_to_show) {
                 std::cout << "\n... (remaining " << (num_ffts - max_ffts_to_show) 
                          << " FFT outputs omitted for brevity)\n";
             }
         }
-
-        cthread->printDebug();
-
-        // Cleanup
-        for(int i = 0; i < n_reps; i++) {
-            if(input_buffers[i]) {
-                cthread->freeMem(input_buffers[i]);
-                input_buffers[i] = nullptr;
-            }
-            if(output_buffers[i]) {
-                cthread->freeMem(output_buffers[i]);
-                output_buffers[i] = nullptr;
-            }
+        
+        // Print debug information if needed
+        if (fft_dataflow.get_debug_level() > 1) {
+            fft_dataflow.print_graph();
+            fft_dataflow.print_connections();
+            fft_dataflow.print_capability_tree();
         }
-
+        
+        // ---------------------------------------------------------------
+        // Resource Cleanup (Automatic with RAII)
+        // ---------------------------------------------------------------
+        
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
+    
+    print_header("FFT PROCESSING COMPLETE");
+    std::cout << "FFT pipeline executed successfully!" << std::endl;
     
     return EXIT_SUCCESS;
 }

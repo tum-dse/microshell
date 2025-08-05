@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2021, Systems Group, ETH Zurich
- * All rights reserved.
- *
- * RLE Compression + AES Encryption Pipeline - Converted to use ushell API
+ * Secure Storage Pipeline
  */
 
 #include <iostream>
@@ -53,11 +50,11 @@ constexpr uint8_t test_plaintext[16] = {
     'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'
 };
 
-// Generate pattern optimized for RLE + AES pipeline
+// Generate pattern optimized for secure storage pipeline
 void generatePipelineOptimizedPattern(uint8_t* buffer, size_t size) {
     memset(buffer, 0, size);
     
-    std::cout << "Generating pipeline-optimized pattern for RLE + AES:" << std::endl;
+    std::cout << "Generating pipeline-optimized pattern for secure storage:" << std::endl;
     
     // Each 64-byte input chunk should compress to 16 bytes of 'abcdefghijklmnop'
     for (size_t chunk = 0; chunk < size / 64; chunk++) {
@@ -91,6 +88,19 @@ void generateStreamingRLEPattern(uint8_t* buffer, size_t size) {
     }
 
     std::cout << "Expected compression: AAAABBBBCCCC...PPPP → ABCDEFGHIJKLMNOP (TRUE 4:1 ratio)" << std::endl;
+}
+
+// Helper function to print latency statistics
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
+    std::cout << "Processing started at: 0 ns" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+            << (1000.0 * data_size_bytes) / avg_latency_ns 
+            << " MB/s" << std::endl;
 }
 
 // Helper function to print header
@@ -181,11 +191,11 @@ int main(int argc, char *argv[])
         print_header("DATAFLOW SETUP");
         
         // Create a compression + encryption dataflow
-        Dataflow rle_aes_dataflow("rle_aes_dataflow");
+        Dataflow secure_dataflow("secure_dataflow");
         
         // Create processing tasks
-        Task& rle_compressor = rle_aes_dataflow.add_task("rle_compressor", "compression");
-        Task& aes_encryptor = rle_aes_dataflow.add_task("aes_encryptor", "encryption");
+        Task& rle_compressor = secure_dataflow.add_task("rle_compressor", "compression");
+        Task& aes_encryptor = secure_dataflow.add_task("aes_encryptor", "encryption");
         
         // Calculate buffer sizes
         uint32_t input_buffer_size = max_size;
@@ -193,21 +203,21 @@ int main(int argc, char *argv[])
         uint32_t encrypted_buffer_size = compressed_buffer_size;  // AES doesn't change size
         
         // Create buffers
-        Buffer& raw_data_buffer = rle_aes_dataflow.add_buffer(input_buffer_size, "raw_data_buffer");
-        Buffer& compressed_data_buffer = rle_aes_dataflow.add_buffer(compressed_buffer_size, "compressed_data_buffer");
-        Buffer& encrypted_data_buffer = rle_aes_dataflow.add_buffer(encrypted_buffer_size, "encrypted_data_buffer");
+        Buffer& raw_data_buffer = secure_dataflow.add_buffer(input_buffer_size, "raw_data_buffer");
+        Buffer& compressed_data_buffer = secure_dataflow.add_buffer(compressed_buffer_size, "compressed_data_buffer");
+        Buffer& encrypted_data_buffer = secure_dataflow.add_buffer(encrypted_buffer_size, "encrypted_data_buffer");
         
         // Set up the pipeline using fluent API
-        rle_aes_dataflow.to(raw_data_buffer, rle_compressor.in)
+        secure_dataflow.to(raw_data_buffer, rle_compressor.in)
                        .to(rle_compressor.out, compressed_data_buffer)
                        .to(compressed_data_buffer, aes_encryptor.in)
                        .to(aes_encryptor.out, encrypted_data_buffer);
         
-        std::cout << "Creating RLE + AES dataflow:" << std::endl;
+        std::cout << "Creating secure storage dataflow:" << std::endl;
         std::cout << "  raw_data_buffer → rle_compressor → compressed_data_buffer → aes_encryptor → encrypted_data_buffer" << std::endl;
         
         // Check and build the dataflow
-        if (!rle_aes_dataflow.check()) {
+        if (!secure_dataflow.check()) {
             throw std::runtime_error("Failed to validate dataflow");
         }
         
@@ -232,7 +242,7 @@ int main(int argc, char *argv[])
         // ---------------------------------------------------------------
         // Performance Benchmarking
         // ---------------------------------------------------------------
-        print_header("COMPRESSION + ENCRYPTION PERFORMANCE");
+        print_header("PERFORMANCE");
         
         // Create benchmark object
         cBench bench(nBenchRuns);
@@ -240,18 +250,18 @@ int main(int argc, char *argv[])
         uint32_t current_size = curr_size;
         
         while (current_size <= max_size) {
-            rle_aes_dataflow.clear_completed();
+            secure_dataflow.clear_completed();
             
             auto benchmark_lat = [&]() {
                 for (int i = 0; i < n_reps_lat; i++) {
-                    rle_aes_dataflow.execute(current_size);
+                    secure_dataflow.execute(current_size);
                 }
             };
             
             bench.runtime(benchmark_lat);
             
-            std::cout << "Size: " << std::setw(8) << current_size 
-                      << " bytes, Latency: " << std::setw(8) << bench.getAvg() / n_reps_lat << " ns" << std::endl;
+            std::cout << "\nSize: " << current_size << " bytes";
+            printLatencyStats(bench.getAvg() / n_reps_lat, current_size, n_reps_lat);
             
             current_size *= 2;
         }
@@ -259,7 +269,7 @@ int main(int argc, char *argv[])
         // ---------------------------------------------------------------
         // Results Verification
         // ---------------------------------------------------------------
-        print_header("RESULTS VERIFICATION");
+        print_header("RESULTS");
         
         // Read the encrypted output
         std::vector<uint8_t> encrypted_result(encrypted_buffer_size);
@@ -279,8 +289,8 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
     
-    print_header("RLE + AES PROCESSING COMPLETE");
-    std::cout << "Compression and encryption dataflow executed successfully!" << std::endl;
+    print_header("SECURE STORAGE COMPLETE");
+    std::cout << "Secure storage pipeline executed successfully!" << std::endl;
     
     return EXIT_SUCCESS;
 }

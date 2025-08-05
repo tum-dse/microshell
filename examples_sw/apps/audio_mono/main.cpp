@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2021, Systems Group, ETH Zurich
- * All rights reserved.
- *
- * Audio Processing Pipeline - Converted to use ushell API
+ * Audio Processing Pipeline (Monolithic)
  */
 
 #include <iostream>

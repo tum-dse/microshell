@@ -1,3 +1,7 @@
+/**
+ * Digital Signature Pipeline 
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -116,20 +120,20 @@ int main(int argc, char *argv[])
         print_header("DATAFLOW SETUP");
         
         // Create a dataflow with modern fluent API
-        Dataflow digi_sig_dataflow("digi_sig_dataflow");
+        Dataflow digi_sign_dataflow("digi_sign_dataflow");
         
         // Create tasks using fluent interface
-        Task& sha256_task = digi_sig_dataflow.add_task("sha256_task", "processing");
-        Task& rsa_task = digi_sig_dataflow.add_task("rsa_task", "processing");
+        Task& sha256_task = digi_sign_dataflow.add_task("sha256_task", "processing");
+        Task& rsa_task = digi_sign_dataflow.add_task("rsa_task", "processing");
         
         // Create buffers with appropriate sizes
-        Buffer& input_buffer = digi_sig_dataflow.add_buffer(max_size, "input_buffer");
-        Buffer& hash_buffer = digi_sig_dataflow.add_buffer(SHA256_DIGEST_LENGTH, "hash_buffer");
-        Buffer& signature_buffer = digi_sig_dataflow.add_buffer(RSA_OUTPUT_SIZE, "signature_buffer");
+        Buffer& input_buffer = digi_sign_dataflow.add_buffer(max_size, "input_buffer");
+        Buffer& hash_buffer = digi_sign_dataflow.add_buffer(SHA256_DIGEST_LENGTH, "hash_buffer");
+        Buffer& signature_buffer = digi_sign_dataflow.add_buffer(RSA_OUTPUT_SIZE, "signature_buffer");
         
         // Set up the digital signature pipeline using fluent API
         // Flow: input_buffer → sha256_task → hash_buffer → rsa_task → signature_buffer
-        digi_sig_dataflow.to(input_buffer, sha256_task.in)
+        digi_sign_dataflow.to(input_buffer, sha256_task.in)
                         .to(sha256_task.out, hash_buffer)
                         .to(hash_buffer, rsa_task.in)
                         .to(rsa_task.out, signature_buffer);
@@ -137,13 +141,13 @@ int main(int argc, char *argv[])
         std::cout << "Creating dataflow: input_buffer → sha256_task → hash_buffer → rsa_task → signature_buffer" << std::endl;
         
         // Check and build the dataflow
-        if (!digi_sig_dataflow.check()) {
+        if (!digi_sign_dataflow.check()) {
             throw std::runtime_error("Failed to validate dataflow");
         }
         std::cout << "Digital signature dataflow created and validated successfully" << std::endl;
         
         // Optional: Print the graph structure for verification
-        digi_sig_dataflow.print_graph();
+        digi_sign_dataflow.print_graph();
         
         // ---------------------------------------------------------------
         // Buffer Initialization
@@ -174,12 +178,12 @@ int main(int argc, char *argv[])
         
         uint32_t test_size = curr_size;
         while (test_size <= max_size) {
-            digi_sig_dataflow.clear_completed();
+            digi_sign_dataflow.clear_completed();
             
             // Benchmark using ushell's execute method
             auto benchmark_thr = [&]() {
                 for (int i = 0; i < n_reps; i++) {
-                    digi_sig_dataflow.execute(test_size);
+                    digi_sign_dataflow.execute(test_size);
                 }
             };
             
@@ -221,14 +225,14 @@ int main(int argc, char *argv[])
         // ---------------------------------------------------------------
         // Additional Debugging Information
         // ---------------------------------------------------------------
-        if (digi_sig_dataflow.get_debug_level() > 0) {
+        if (digi_sign_dataflow.get_debug_level() > 0) {
             print_header("DEBUG INFORMATION");
             std::cout << "Dataflow connections:" << std::endl;
-            digi_sig_dataflow.print_connections();
+            digi_sign_dataflow.print_connections();
             
             // Optional: Print capability tree for advanced debugging
-            if (digi_sig_dataflow.get_debug_level() > 1) {
-                digi_sig_dataflow.print_capability_tree();
+            if (digi_sign_dataflow.get_debug_level() > 1) {
+                digi_sign_dataflow.print_capability_tree();
             }
         }
         

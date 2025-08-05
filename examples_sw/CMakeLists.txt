@@ -132,103 +132,103 @@ endif()
 # FFT
 if(EXAMPLE STREQUAL "fft")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/fft")
-    message("** Example: FFT App")
+    message("** Example: FFT (µShell daemon)")
 endif()
 
 # AES-CTR
 if(EXAMPLE STREQUAL "aes_ctr")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/aes_ctr")
-    message("** Example: AES-CTR App")
+    message("** Example: AES-CTR (µShell daemon)")
 endif()
 
 # RLE
 if(EXAMPLE STREQUAL "rle")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/rle")
-    message("** Example: RLE App")
+    message("** Example: RLE (µShell daemon)")
 endif()
 
 # RSA
 if(EXAMPLE STREQUAL "rsa")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/rsa")
-    message("** Example: RSA App")
+    message("** Example: RSA (µShell daemon)")
 endif()
 
 # SHA2
 if(EXAMPLE STREQUAL "sha2")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/sha2")
-    message("** Example: SHA2 App")
+    message("** Example: SHA2 (µShell daemon)")
 endif()
 
 # SVM
 if(EXAMPLE STREQUAL "svm")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/svm")
-    message("** Example: SVM App")
+    message("** Example: SVM (µShell daemon)")
 endif()
 
 # QUANT
 if(EXAMPLE STREQUAL "quant")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/quant")
-    message("** Example: FFT Quantization App")
+    message("** Example: FFT Quantization (µShell daemon)")
 endif()
 
 # Audio Processing
 if(EXAMPLE STREQUAL "audio")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/audio")
-    message("** Example: Audio Processing App")
+    message("** Example: Audio Processing (µShell daemon)")
 endif()
 
 #Audio_Mono
 if(EXAMPLE STREQUAL "audio_mono")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/audio_mono")
-    message("** Example: Audio Processing Monolithic App")
+    message("** Example: Audio Processing Monolithic (µShell daemon)")
 endif()
 
 # Digital Signature App
 if(EXAMPLE STREQUAL "digi_sign")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/digi_sign")
-    message("** Example: Digital Signature App")
+    message("** Example: Digital Signature (µShell daemon)")
 endif()
 
 #DigiSign_Mono
 if(EXAMPLE STREQUAL "digi_sign_mono")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/digi_sign_mono")
-    message("** Example: Digital Signature Monolithic App")
+    message("** Example: Digital Signature Monolithic (µShell daemon)")
 endif()
 
 # Secure Storage App
 if(EXAMPLE STREQUAL "secure")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure")
-    message("** Example: Secure Storage App")
+    message("** Example: Secure Storage (µShell daemon)")
 endif()
 
 #Secure_Mono
 if(EXAMPLE STREQUAL "secure_mono")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure_mono")
-    message("** Example: Secure Storage Monolithic App")
+    message("** Example: Secure Storage Monolithic (µShell daemon)")
 endif()
 
 # Signed Compression App
 if(EXAMPLE STREQUAL "signcomp")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/signcomp")
-    message("** Example: Signed Compression App")
+    message("** Example: Signed Compression (µShell daemon)")
 endif()
 
 #SignComp_Mono
 if(EXAMPLE STREQUAL "signcomp_mono")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/signcomp_mono")
-    message("** Example: Signed Compression Monolithic App")
+    message("** Example: Signed Compression Monolithic (µShell daemon)")
 endif()
 
 # Speech Recognition App
 if(EXAMPLE STREQUAL "speech")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech")
-    message("** Example: Speech Recognition App")
+    message("** Example: Speech Recognition (µShell daemon)")
 endif()
 
 #Speech_Mono
 if(EXAMPLE STREQUAL "speech_mono")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech_mono")
-    message("** Example: Speech Recognition Monolithic App")
+    message("** Example: Speech Recognition Monolithic (µShell daemon)")
 endif()
 
 #

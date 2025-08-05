@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# Parallel build script for hardware examples using tmux sessions
-# This script builds each hardware example in separate tmux sessions
+# Parallel build script for scalability examples using tmux sessions
+# This script builds each scalability example in separate tmux sessions
 
 set -e  # Exit on any error
 
 # Get the base directory from user input or use current directory
 if [ -z "$1" ]; then
-    echo "Usage: $0 <path_to_coyote_directory>"
+    echo "Usage: $0 <path_to_baseline_directory>"
     exit 1
 fi
 
@@ -26,7 +26,7 @@ if ! command -v tmux &> /dev/null; then
 fi
 
 # Specify the hardware examples to build
-examples=("audio" "digi_sign" "secure" "signcomp" "speech" "audio_mono" "digi_sign_mono" "secure_mono" "signcomp_mono" "speech_mono")
+examples=("1vfpga" "2vfpga" "4vfpga" "8vfpga")
 
 echo "Starting parallel builds for hardware examples in $BASE_DIR"
 echo "=========================================================="
@@ -83,9 +83,9 @@ echo ""
 echo "All build sessions started successfully!"
 echo ""
 echo "To monitor the builds:"
-echo "  tmux list-sessions                    # List all sessions"
+echo "  tmux list-sessions                   # List all sessions"
 echo "  tmux attach -t build_<example>_hw    # Attach to a specific build"
-echo "  tmux attach -t build_audio_hw        # Example: attach to audio build"
+echo "  tmux attach -t build_1vfpga          # Example: attach to 1vfpga build"
 echo ""
 echo "Active build sessions:"
 for name in "${examples[@]}"; do
@@ -94,3 +94,5 @@ done
 echo ""
 echo "Note: Bitstream generation can take several hours per example."
 echo "You can safely close this terminal - the builds will continue in tmux."
+
+

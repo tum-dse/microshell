@@ -1,8 +1,5 @@
 /**
- * Copyright (c) 2021, Systems Group, ETH Zurich
- * All rights reserved.
- *
- * Secure Storage Pipeline - Converted to use ushell API
+ * Signed Compression Pipeline 
  */
 
 #include <iostream>
@@ -82,6 +79,19 @@ void printHexBuffer(uint32_t* buffer, size_t words, const char* label) {
     std::cout << std::dec << std::endl;
 }
 
+// Helper function to print latency statistics
+void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\nLatency Measurements:" << std::endl;
+    std::cout << "Processing started at: 0 ns" << std::endl;
+    std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
+    std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
+    std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
+    std::cout << "Throughput: " << std::setw(8) 
+            << (1000.0 * data_size_bytes) / avg_latency_ns 
+            << " MB/s" << std::endl;
+}
+
 // Helper function to print header
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
@@ -99,7 +109,7 @@ int main(int argc, char *argv[]) {
     // ---------------------------------------------------------------
     // Command Line Arguments
     // ---------------------------------------------------------------
-    boost::program_options::options_description programDescription("Options:");
+    boost::program_options::options_description programDescription("Signed Compression Pipeline Options:");
     programDescription.add_options()
         ("bitstream,b", boost::program_options::value<string>(), "Shell bitstream")
         ("device,d", boost::program_options::value<uint32_t>(), "Target device")
@@ -169,7 +179,7 @@ int main(int argc, char *argv[]) {
     uint32_t output_size = RSA_OUTPUT_SIZE;  // Final RSA output is always 32 bytes (256-bit)
 
     print_header("PARAMS");
-    std::cout << "Pipeline: RLE Compression → RSA Encryption" << std::endl;
+    std::cout << "Pipeline: Signed Compression (RLE → RSA)" << std::endl;
     std::cout << "Number of regions: " << n_regions << std::endl;
     std::cout << "RLE input size: " << input_size << " bytes";
     if (input_size >= 1024) {
@@ -190,29 +200,29 @@ int main(int argc, char *argv[]) {
         // ---------------------------------------------------------------
         print_header("DATAFLOW SETUP");
         
-        // Create a secure storage dataflow
-        Dataflow secure_storage_dataflow("secure_storage_dataflow");
+        // Create a signed compression dataflow
+        Dataflow signcomp_dataflow("signcomp_dataflow");
         
         // Create processing tasks
-        Task& rle_compressor = secure_storage_dataflow.add_task("rle_compressor", "compression");
-        Task& rsa_encryptor = secure_storage_dataflow.add_task("rsa_encryptor", "encryption");
+        Task& rle_compressor = signcomp_dataflow.add_task("rle_compressor", "compression");
+        Task& rsa_encryptor = signcomp_dataflow.add_task("rsa_encryptor", "encryption");
         
         // Create buffers
-        Buffer& raw_input_buffer = secure_storage_dataflow.add_buffer(input_size, "raw_input_buffer");
-        Buffer& compressed_buffer = secure_storage_dataflow.add_buffer(expected_rle_compressed, "compressed_buffer");
-        Buffer& encrypted_output_buffer = secure_storage_dataflow.add_buffer(output_size, "encrypted_output_buffer");
+        Buffer& raw_input_buffer = signcomp_dataflow.add_buffer(input_size, "raw_input_buffer");
+        Buffer& compressed_buffer = signcomp_dataflow.add_buffer(expected_rle_compressed, "compressed_buffer");
+        Buffer& encrypted_output_buffer = signcomp_dataflow.add_buffer(output_size, "encrypted_output_buffer");
         
-        // Set up the secure storage pipeline using fluent API
-        secure_storage_dataflow.to(raw_input_buffer, rle_compressor.in)
-                              .to(rle_compressor.out, compressed_buffer)
-                              .to(compressed_buffer, rsa_encryptor.in)
-                              .to(rsa_encryptor.out, encrypted_output_buffer);
+        // Set up the signed compression pipeline using fluent API
+        signcomp_dataflow.to(raw_input_buffer, rle_compressor.in)
+                        .to(rle_compressor.out, compressed_buffer)
+                        .to(compressed_buffer, rsa_encryptor.in)
+                        .to(rsa_encryptor.out, encrypted_output_buffer);
         
-        std::cout << "Creating secure storage dataflow:" << std::endl;
+        std::cout << "Creating signed compression dataflow:" << std::endl;
         std::cout << "  raw_input_buffer → rle_compressor → compressed_buffer → rsa_encryptor → encrypted_output_buffer" << std::endl;
         
         // Check and build the dataflow
-        if (!secure_storage_dataflow.check()) {
+        if (!signcomp_dataflow.check()) {
             throw std::runtime_error("Failed to validate dataflow");
         }
         
@@ -260,23 +270,20 @@ int main(int argc, char *argv[]) {
         // ---------------------------------------------------------------
         // Performance Benchmarking
         // ---------------------------------------------------------------
-        print_header("SECURE STORAGE PERFORMANCE");
+        print_header("SIGNED COMPRESSION PERFORMANCE");
         
         // Create benchmark object
         cBench bench(nBenchRuns);
         
-        secure_storage_dataflow.clear_completed();
+        signcomp_dataflow.clear_completed();
         
         auto benchmark_thr = [&]() {
             for (int i = 0; i < n_reps_lat; i++) {
-                secure_storage_dataflow.execute(input_size);
+                signcomp_dataflow.execute(input_size);
             }
         };
 
         bench.runtime(benchmark_thr);
-        
-        std::cout << "Size: " << std::setw(8) << input_size 
-                  << " bytes, Latency: " << std::setw(8) << bench.getAvg() / n_reps_lat << " ns" << std::endl;
         
         // ---------------------------------------------------------------
         // Results Verification
@@ -290,14 +297,13 @@ int main(int argc, char *argv[]) {
         // Display the RSA encrypted output
         printHexBuffer((uint32_t*)encrypted_result.data(), output_size/4, "RSA Output");
         
-        // Performance metrics
-        double throughput_mbps = (input_size / 1024.0 / 1024.0) / (bench.getAvg() / 1000000000.0);
-        std::cout << "\nPipeline Performance:" << std::endl;
-        std::cout << "  Total latency: " << bench.getAvg() / n_reps_lat << " ns" << std::endl;
-        std::cout << "  Input throughput: " << std::fixed << std::setprecision(2) << throughput_mbps << " MB/s" << std::endl;
+        // Print performance metrics using printLatencyStats
+        print_header("LATENCY MEASUREMENTS");
+        printLatencyStats(bench.getAvg() / n_reps_lat, input_size, n_reps_lat);
         
         // Calculate overall compression + encryption metrics
         double space_efficiency = static_cast<double>(input_size) / output_size;
+        std::cout << "\nPipeline metrics:" << std::endl;
         std::cout << "  Space efficiency: " << std::fixed << std::setprecision(1) 
                   << space_efficiency << ":1 (input:output ratio)" << std::endl;
         
@@ -310,8 +316,8 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
     
-    print_header("SECURE STORAGE COMPLETE");
-    std::cout << "RLE compression and RSA encryption dataflow executed successfully!" << std::endl;
+    print_header("SIGNED COMPRESSION COMPLETE");
+    std::cout << "Signed compression (RLE + RSA) dataflow executed successfully!" << std::endl;
     
     return EXIT_SUCCESS;
 }
