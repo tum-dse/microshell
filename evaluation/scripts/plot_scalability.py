@@ -121,6 +121,6 @@ ax.text(0.5, 1.05, 'Higher is better ↑', transform=ax.transAxes,
 
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
-plt.savefig("plot_scalability_analysis.png", dpi=300, bbox_inches='tight')
-plt.savefig("plot_scalability_analysis.pdf", bbox_inches='tight')
+#plt.savefig("plot_scalability_analysis.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/plot_scalability_analysis.pdf", bbox_inches='tight')
 plt.show()

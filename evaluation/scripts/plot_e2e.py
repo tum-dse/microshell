@@ -190,6 +190,6 @@ ax.text(0.5, 0.98, 'Higher is better ↑', transform=ax.transAxes,
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
 plt.subplots_adjust(top=0.98)
-plt.savefig("plot_e2e.png", dpi=300, bbox_inches='tight')
-plt.savefig("plot_e2e.pdf", bbox_inches='tight')
+#plt.savefig("plot_e2e.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/plot_e2e.pdf", bbox_inches='tight')
 plt.show()
