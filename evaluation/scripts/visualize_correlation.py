@@ -44,7 +44,7 @@ def plot_half_correlation_matrix(csv_path, csv_path_2, output_file='correlation_
                                fontsize=10)
     
     # Customize plot
-    plt.title('Correlation Matrix', fontsize=16)
+    plt.title('Correlation Matrix (Lower Triangle)', fontsize=16)
     plt.xticks(np.arange(n), folders, rotation=45, ha='right', fontsize=12)
     plt.yticks(np.arange(n), folders, rotation=45, fontsize=12)
     
