@@ -479,14 +479,26 @@ make clean && make
 - **µShell APIs**: `microShell/sw/include/` and `microShell/sw/src/`
 
 
-# For analyzing Vitis Vision Library components
+## For analyzing Vitis Vision Library components
 
 This evaluation consists of three steps. The `process_cv_files.py` goes through all the files and generate component reuse raw statics, `file_functions.txt`.
-The `analyze_functions.py` process the `file_functions.txt` and generate data for plotting `top_10_functions` and `correlation_matrix.csv`. 
+The `analyze_functions.py` process the `file_functions.txt` and generate data for plotting `top_10_functions` and `similarity_matrix.csv` and `overlap_matrix.csv`. 
 The `visualize_correlation.py` generates the correlation matrix.
 
 ```
 python3 process_cv_files.py vision/L3/examples/ 
 python3 analyze_functions.py 
-python3 visualize_correlation.py correlation_matrix.csv -o visualization.png
+python visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o visualization.png
 ```
+```
+
+
+## 6.3 Scheduling improvement
+
+The script `plot_sched.py` will generate the plot for all five metrics for two scheduling algorithms. Currently it expects the data to be in the same folder as the script. 
+
+```
+python3 plot_sched.py
+```
+
+

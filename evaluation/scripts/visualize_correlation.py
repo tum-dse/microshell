@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_half_correlation_matrix(csv_path, output_file='correlation_heatmap_half.png'):
+def plot_half_correlation_matrix(csv_path, csv_path_2, output_file='correlation_heatmap_half.png'):
     # Read and process data
     df = pd.read_csv(csv_path, index_col=0)
     matrix = df.values.astype(float)
@@ -12,6 +12,12 @@ def plot_half_correlation_matrix(csv_path, output_file='correlation_heatmap_half
     # Create mask for upper triangle
     mask = np.triu_indices(n, k=1)
     matrix[mask] = np.nan
+
+    df_2 = pd.read_csv(csv_path_2, index_col=0)
+    matrix_2 = df_2.values.astype(float)
+    
+    # Create mask for upper triangle
+    matrix_2[mask] = np.nan
     
     # Create custom colormap
     cmap = plt.cm.Blues.copy()
@@ -21,7 +27,7 @@ def plot_half_correlation_matrix(csv_path, output_file='correlation_heatmap_half
     plt.figure(figsize=(12, 10))
     
     # Create heatmap with masked values
-    heatmap = plt.imshow(matrix, cmap=cmap, vmin=0, vmax=1)
+    heatmap = plt.imshow(matrix_2, cmap=cmap, vmin=0, vmax=1)
     
     # Add colorbar
     cbar = plt.colorbar(heatmap, fraction=0.046, pad=0.04)
@@ -31,9 +37,9 @@ def plot_half_correlation_matrix(csv_path, output_file='correlation_heatmap_half
     for i in range(n):
         for j in range(n):
             if not np.isnan(matrix[i, j]):
-                text = plt.text(j, i, f'{matrix[i, j]:.2f}',
+                text = plt.text(j, i, f'{matrix[i, j]:.0f}',
                                ha="center", va="center", 
-                               color="white" if matrix[i, j] > 0.5 else "black")
+                               color="white" if matrix_2[i, j] > 0.5 else "black")
     
     # Customize plot
     plt.title('Folder Correlation Matrix (Lower Triangle)')
@@ -51,10 +57,11 @@ def plot_half_correlation_matrix(csv_path, output_file='correlation_heatmap_half
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='Visualize lower triangle correlation matrix')
-    parser.add_argument('input_csv', help='Path to correlation_matrix.csv')
+    parser.add_argument('input_csv', help='Path to similarity_matrix.csv')
+    parser.add_argument('input_csv_2', help='Path to overlap_matrix.csv')
     parser.add_argument('-o', '--output', help='Output filename', default='correlation_heatmap_half.png')
     args = parser.parse_args()
     
-    plot_half_correlation_matrix(args.input_csv, args.output)
+    plot_half_correlation_matrix(args.input_csv, args.input_csv_2, args.output)
 
-`python visualize_correlation.py correlation_matrix.csv -o visualization.png`
+# python visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o visualization.png

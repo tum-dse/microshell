@@ -24,7 +24,7 @@ def process_repo(repo_dir):
                 funcs = extract_xf_cv_functions(code)
                 if funcs:
                     folder_path = os.path.dirname(cpp_file)
-                    out_file.write(f"Folder: {folder_path}\nFile: {cpp_file}\nFunctions:\n")
+                    out_file.write(f"Folder: {folder_path}\nFile: {cpp_file}\nNumber of Functions: {len(funcs)}\nFunctions:\n")
                     for func in funcs:
                         out_file.write(f"  xf::cv::{func}\n")
                     out_file.write("\n")
@@ -37,4 +37,4 @@ if __name__ == "__main__":
         sys.exit(1)
     process_repo(sys.argv[1])
 
-`python3 process_files.py vision/L3/examples/`
+# python3 process_cv_files.py vision/L3/examples/
