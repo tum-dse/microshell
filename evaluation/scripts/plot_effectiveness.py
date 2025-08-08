@@ -3,16 +3,16 @@ import seaborn as sns
 import numpy as np
 
 # ===== FONT AND STYLE SETTINGS =====
-FONT_SIZE = 10
-LABEL_SIZE = 11
-TICK_SIZE = 10
+FONT_SIZE = 9
+LABEL_SIZE = 9
+TICK_SIZE = 9
 LEGEND_SIZE = 9
-ANNOTATION_SIZE = 10
+ANNOTATION_SIZE = 9
 SPEEDUP_SIZE = 7
 
 # Set font to match ASPLOS paper style
-plt.rcParams['font.family'] = 'serif'
-plt.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif', 'Computer Modern Roman']
+# plt.rcParams['font.family'] = 'serif'
+# plt.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif', 'Computer Modern Roman']
 plt.rcParams['mathtext.fontset'] = 'cm'
 plt.rcParams['font.size'] = FONT_SIZE
 plt.rcParams['axes.labelsize'] = LABEL_SIZE
@@ -26,7 +26,7 @@ color1 = palette[0]  # Blue for CPU-sync
 color2 = palette[1]  # Orange for direct communication (IPC)
 
 # ===== DATA =====
-applications = ["Audio\nProcessing", "Digital\nSignature", "Secure\nStorage", "Signed\nCompression", "Speech\nRecognition"]
+applications = ["Audio\nProcess.", "Digital\nSignature", "Secure\nStorage", "Signed\nCompres.", "Speech\nRecogn."]
 
 # Throughput values (MB/s)
 cpu_sync_values = [85.9, 208.0, 139.9, 146.0, 29.2]
@@ -37,7 +37,9 @@ cpu_sync_errors = [3.2, 5.1, 4.2, 3.8, 1.2]
 ipc_errors = [4.5, 5.8, 3.9, 4.1, 2.1]
 
 # ===== PLOT SETUP =====
-fig, ax = plt.subplots(figsize=(10, 4))
+width = 4.0
+height = 2.8
+fig, ax = plt.subplots(figsize=(width, height))
 
 # Bar settings
 bar_width = 0.35
@@ -60,7 +62,7 @@ bars1 = ax.bar(x_positions - bar_width/2, cpu_sync_values, bar_width,
 # IPC bars (with pattern)
 bars2 = ax.bar(x_positions + bar_width/2, ipc_values, bar_width,
                 yerr=ipc_errors, color=color2, hatch='\\\\',
-                label='direct communication (IPC)', **bar_props)
+                label='Direct communication', **bar_props)
 
 # ===== SPEEDUP ANNOTATIONS =====
 for i, (cpu_val, ipc_val, cpu_err, ipc_err) in enumerate(zip(cpu_sync_values, ipc_values, cpu_sync_errors, ipc_errors)):
@@ -91,10 +93,10 @@ sns.despine(ax=ax)
 # ===== LEGEND =====
 ax.legend(loc='upper right', frameon=True, ncol=1,
           handlelength=2.0, handletextpad=0.5,
-          bbox_to_anchor=(1, 1))
+          bbox_to_anchor=(1, 0.94))
 
 # ===== ANNOTATIONS =====
-ax.text(0.5, 0.98, 'Higher is better ↑', transform=ax.transAxes,
+ax.text(0.5, 1.01, 'Higher is better ↑', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
         ha='center', va='top')
 
