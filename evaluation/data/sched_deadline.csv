@@ -1,0 +1,7 @@
+Number of tasks,Deadline misses,Policy
+8,4,Custom
+12,8.8,Custom
+16,17,Custom
+8,12.8,FIFO
+12,17.8,FIFO
+16,29,FIFO

@@ -1,0 +1,7 @@
+Number of tasks,Latency[ms],Policy
+8,564.978,Custom
+12,619.3296,Custom
+16,959.3496,Custom
+8,756.4404,FIFO
+12,1002.3422,FIFO
+16,1512.814,FIFO
