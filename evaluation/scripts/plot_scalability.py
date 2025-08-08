@@ -4,15 +4,15 @@ import numpy as np
 
 # ===== FONT AND STYLE SETTINGS =====
 FONT_SIZE = 10
-LABEL_SIZE = 12
+LABEL_SIZE = 10
 TICK_SIZE = 10
-LEGEND_SIZE = 10
-ANNOTATION_SIZE = 11
+LEGEND_SIZE = 9
+ANNOTATION_SIZE = 9
 VALUE_SIZE = 7
 
 # Set font to match ASPLOS paper style
-plt.rcParams['font.family'] = 'serif'
-plt.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif', 'Computer Modern Roman']
+# plt.rcParams['font.family'] = 'serif'
+# plt.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif', 'Computer Modern Roman']
 plt.rcParams['mathtext.fontset'] = 'cm'
 plt.rcParams['font.size'] = FONT_SIZE
 plt.rcParams['axes.labelsize'] = LABEL_SIZE
@@ -43,7 +43,9 @@ vfpga4_errors = [0.5, 0.6, 0.5, 0.4]
 vfpga8_errors = [0.3, 0.3, 0.3, 0.2]
 
 # ===== PLOT SETUP =====
-fig, ax = plt.subplots(figsize=(12, 4.5))
+width = 4.2
+height = 2.8
+fig, ax = plt.subplots(figsize=(width, height))
 
 # Bar settings
 bar_width = 0.18
@@ -83,7 +85,7 @@ bars4 = ax.bar(x_positions + 1.5*bar_width, vfpga8_values, bar_width,
 def add_value_labels(bars, values, errors):
     for bar, val, err in zip(bars, values, errors):
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2., height + err + 1,
+        ax.text(bar.get_x() + bar.get_width()/2. + 0.1, height + err + 1,
                 f'{val:.1f}%', ha='center', va='bottom',
                 fontsize=VALUE_SIZE, rotation=0)
 
@@ -95,7 +97,7 @@ add_value_labels(bars4, vfpga8_values, vfpga8_errors)
 
 # ===== AXIS FORMATTING =====
 ax.set_ylabel('Available resource per vFPGA (%)')
-ax.set_ylim(0, 100)  
+ax.set_ylim(0, 120)  
 ax.set_yticks([0, 20, 40, 60, 80, 100])
 
 # X-axis
@@ -110,12 +112,12 @@ ax.set_axisbelow(True)
 sns.despine(ax=ax)
 
 # ===== LEGEND =====
-ax.legend(loc='upper right', frameon=True, ncol=1,
+ax.legend(loc='upper right', frameon=True, ncol=2,
           handlelength=2.0, handletextpad=0.5,
-          bbox_to_anchor=(1, 1))
+          bbox_to_anchor=(1, 1.14))
 
 # ===== ANNOTATIONS =====
-ax.text(0.5, 1.05, 'Higher is better ↑', transform=ax.transAxes,
+ax.text(0.1, 1.10, 'Higher is better ↑', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
         ha='center', va='top')
 
