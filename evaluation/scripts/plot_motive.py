@@ -14,7 +14,7 @@ FONTSIZE = 14
 sns.set(font_scale=1.6)
 sns.set_style("ticks")
 
-data1 = pandas.read_csv("sched_motive.csv")
+data1 = pandas.read_csv("../data/sched_motive.csv")
 
 print(data1.head())
 # print(data["app"][0])

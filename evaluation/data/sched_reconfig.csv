@@ -1,0 +1,7 @@
+Number of tasks,Reconfig count,Policy
+8,5.6,Custom
+12,6.2,Custom
+16,6.6,Custom
+8,16,FIFO
+12,24,FIFO
+16,32,FIFO
