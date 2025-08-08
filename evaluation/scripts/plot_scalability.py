@@ -55,7 +55,7 @@ x_positions = np.arange(len(resources))
 bar_props = {
     'alpha': 1.0,
     'edgecolor': 'k',
-    'linewidth': 0.5,
+    'linewidth': 1.0,
     'error_kw': {'ecolor': 'black', 'elinewidth': 1, 'capsize': 2}
 }
 
@@ -85,7 +85,7 @@ bars4 = ax.bar(x_positions + 1.5*bar_width, vfpga8_values, bar_width,
 def add_value_labels(bars, values, errors):
     for bar, val, err in zip(bars, values, errors):
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2. + 0.1, height + err + 1,
+        ax.text(bar.get_x() + bar.get_width()/2. + 0.12, height + err + 1,
                 f'{val:.1f}%', ha='center', va='bottom',
                 fontsize=VALUE_SIZE, rotation=0)
 
