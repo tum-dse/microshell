@@ -22,9 +22,10 @@ plt.rcParams['legend.fontsize'] = LEGEND_SIZE
 
 # ===== COLOR SETUP =====
 palette = sns.color_palette("pastel")
-color1 = palette[1]  # Orange for vFPGA=1
-color2 = palette[0]  # Blue for vFPGA=2
-color3 = '#2E8B57'    # Sea Green for vFPGA=4
+color1 = palette[0]  # Blue for vFPGA=1
+color2 = palette[1]  # Orange for vFPGA=2
+color3 = palette[2]  # Green for vFPGA=4
+# color3 = '#2E8B57'    # Sea Green for vFPGA=4
 color4 = palette[3]  # Red for vFPGA=8
 
 # ===== DATA =====
@@ -43,7 +44,7 @@ vfpga4_errors = [0.5, 0.6, 0.5, 0.4]
 vfpga8_errors = [0.3, 0.3, 0.3, 0.2]
 
 # ===== PLOT SETUP =====
-width = 4.2
+width = 4.0
 height = 2.8
 fig, ax = plt.subplots(figsize=(width, height))
 
@@ -113,11 +114,11 @@ sns.despine(ax=ax)
 
 # ===== LEGEND =====
 ax.legend(loc='upper right', frameon=True, ncol=2,
-          handlelength=2.0, handletextpad=0.5,
+          handlelength=2.0, handletextpad=0.5, columnspacing=1.0,
           bbox_to_anchor=(1, 1.14))
 
 # ===== ANNOTATIONS =====
-ax.text(0.1, 1.10, 'Higher is better ↑', transform=ax.transAxes,
+ax.text(0.1, 1.08, 'Higher is better ↑', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
         ha='center', va='top')
 

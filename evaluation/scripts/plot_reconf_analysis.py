@@ -19,7 +19,7 @@ plt.rcParams['ytick.labelsize'] = TICK_SIZE
 plt.rcParams['legend.fontsize'] = LEGEND_SIZE
 
 # ===== DATA =====
-resources = ["100%", "75%", "50%", "25%", "0%"]
+resources = ["0%", "25%", "50%", "75%", "100%"]
 
 df = pandas.read_csv("../data/sched_motive.csv")
 print(df)
@@ -33,8 +33,8 @@ pr_values = df_pr['Reconfig overhead (ms)'].tolist()
 
 # ===== COLOR SETUP =====
 palette = sns.color_palette("pastel")
-color1 = palette[1]
-color2 = palette[0]
+color1 = palette[0]
+color2 = palette[1]
 color3 = palette[2]
 # palette_console = [color1, color2]
 
