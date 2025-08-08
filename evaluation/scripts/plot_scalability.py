@@ -63,7 +63,7 @@ bar_props = {
 # ===== PLOTTING BARS =====
 # vFPGA=1 bars (solid)
 bars1 = ax.bar(x_positions - 1.5*bar_width, vfpga1_values, bar_width,
-                yerr=vfpga1_errors, color=color1,
+                yerr=vfpga1_errors, color=color1, hatch='//',
                 label='vFPGA=1', **bar_props)
 
 # vFPGA=2 bars (diagonal pattern)

@@ -49,14 +49,14 @@ x_positions = np.arange(len(applications))
 bar_props = {
     'alpha': 1.0,
     'edgecolor': 'k',
-    'linewidth': 0.5,
+    'linewidth': 1.0,
     'error_kw': {'ecolor': 'black', 'elinewidth': 1, 'capsize': 2}
 }
 
 # ===== PLOTTING BARS =====
 # CPU-sync bars (solid)
 bars1 = ax.bar(x_positions - bar_width/2, cpu_sync_values, bar_width,
-                yerr=cpu_sync_errors, color=color1, 
+                yerr=cpu_sync_errors, color=color1, hatch='//',
                 label='CPU-sync', **bar_props)
 
 # IPC bars (with pattern)
