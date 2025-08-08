@@ -6,11 +6,11 @@ examples_hw/digi_sign/
 examples_hw/digi_sign_mono/
 examples_hw/audio/
 examples_hw/audio_mono/
-examples_hw/secure2/
-examples_hw/secure2_mono/
+examples_hw/signcomp/
+examples_hw/signcomp_mono/
 examples_hw/secure/
-examples_hw/static/
 examples_hw/secure_mono/
+examples_hw/static/
 iprepo/
 tmp/
 hd_visual/
