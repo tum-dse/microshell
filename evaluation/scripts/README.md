@@ -488,7 +488,7 @@ The `visualize_correlation.py` generates the correlation matrix.
 ```
 python3 process_cv_files.py vision/L3/examples/ 
 python3 analyze_functions.py 
-python visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o visualization.png
+python3 visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o visualization.pdf
 ```
 ```
 

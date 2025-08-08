@@ -2,6 +2,26 @@ import os
 import csv
 from collections import defaultdict
 
+app_names_abb = {
+    "all_in_one":           "allinone",
+    "all_in_one_adas":      "allinone_ad",
+    "colordetect":          "colordetect",
+    "cornertracker":        "cornertrack",
+    "defect_detection":     "defct_detct",
+    "gaussiandifference":   "gaussidiff",
+    "isp_24bit_decompand":  "isp_decomp",
+    "isp_multistream":      "isp_mltstrm",
+    "isppipeline":          "isp_pipe",
+    "isppipeline_autogain": "isp_pipe_ag",
+    "isppipeline_gtm":      "isp_pipe_gt",
+    "isppipeline_hdr":      "isp_pipe_hd",
+    "isppipeline_mono":     "isp_pipe_mn",
+    "isppipeline_rgbir":    "isp_pipe_rg",
+    "letterbox":            "letterbox",
+    "stereopipeline":       "stereo_pipe",
+    "tvl1":                 "tvl1",
+}
+
 def parse_function_file():
     folder_funcs = defaultdict(set)
     file_counts = defaultdict(int)
@@ -62,7 +82,7 @@ def main():
     for folder in folders:
         basename = os.path.basename(folder)
         count = folder_counts.get(folder, 0)
-        display_names.append(f"{basename} ({count})")
+        display_names.append(f"{app_names_abb[basename]} ({count})")
     
     # Write similarity matrix (Jaccard index)
     with open('similarity_matrix.csv', 'w', newline='') as csvfile:
@@ -71,7 +91,7 @@ def main():
         for i, folder in enumerate(folders):
             basename = os.path.basename(folder)
             count = folder_counts.get(folder, 0)
-            writer.writerow([f"{basename} ({count})"] + similarity_matrix[i])
+            writer.writerow([f"{app_names_abb[basename]} ({count})"] + similarity_matrix[i])
     
     # Write overlap matrix (absolute counts)
     with open('overlap_matrix.csv', 'w', newline='') as csvfile:
@@ -80,7 +100,7 @@ def main():
         for i, folder in enumerate(folders):
             basename = os.path.basename(folder)
             count = folder_counts.get(folder, 0)
-            writer.writerow([f"{basename} ({count})"] + overlap_matrix[i])
+            writer.writerow([f"{app_names_abb[basename]} ({count})"] + overlap_matrix[i])
     
     print("Generated two matrices:")
     print("- similarity_matrix.csv (Jaccard similarity)")
