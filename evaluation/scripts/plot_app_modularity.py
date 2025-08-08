@@ -6,7 +6,7 @@ import numpy as np
 FONT_SIZE = 12
 LABEL_SIZE = 11
 TICK_SIZE = 11
-LEGEND_SIZE = 11
+LEGEND_SIZE = 10
 # TITLE_SIZE = 16
 
 # Set font to match ASPLOS paper style
@@ -94,7 +94,7 @@ for i, app in enumerate(applications):
     for j in range(compute_dsp[i]):
         ax.bar(x_positions[i], 1, bar_width, 
                bottom=current_height, color=color_compute, 
-               edgecolor='black', linewidth=1, hatch='//')
+               edgecolor='black', linewidth=1, hatch='\\\\')
         current_height += 1
 
     # compute_basic modules
@@ -115,7 +115,7 @@ for i, app in enumerate(applications):
     for j in range(data_transform[i]):
         ax.bar(x_positions[i], 1, bar_width, 
                bottom=current_height, color=color_data, 
-               edgecolor='black', linewidth=1, hatch='//')
+               edgecolor='black', linewidth=1, hatch='\\\\')
         current_height += 1
 
     # data_io_sensing modules
@@ -136,7 +136,7 @@ for i, app in enumerate(applications):
     for j in range(encode_crypto[i]):
         ax.bar(x_positions[i], 1, bar_width, 
                bottom=current_height, color=color_encoding, 
-               edgecolor='black', linewidth=1, hatch='//')
+               edgecolor='black', linewidth=1, hatch='\\\\')
         current_height += 1
     
     # network_infra modules
@@ -150,7 +150,7 @@ for i, app in enumerate(applications):
     for j in range(network_sec[i]):
         ax.bar(x_positions[i], 1, bar_width, 
                bottom=current_height, color=color_networking, 
-               edgecolor='black', linewidth=1, hatch='//')
+               edgecolor='black', linewidth=1, hatch='..')
         current_height += 1
 
     # ml_ai modules
@@ -199,27 +199,27 @@ ax.spines['right'].set_visible(False)
 # Create custom legend handles for better control
 from matplotlib.patches import Patch
 legend_elements = [
-    Patch(facecolor=color_compute,      edgecolor='black', hatch='',    label='Compute (LA)',    linewidth=1.0),
-    Patch(facecolor=color_compute,      edgecolor='black', hatch='//',  label='Compute (DSP)',   linewidth=1.0),
-    Patch(facecolor=color_compute,      edgecolor='black', hatch='..',  label='Compute (Basic)', linewidth=1.0),
-    Patch(facecolor=color_data,         edgecolor='black', hatch='',    label='Data (DB)',       linewidth=1.0),
-    Patch(facecolor=color_data,         edgecolor='black', hatch='//',  label='Data (Transform)',linewidth=1.0),
-    Patch(facecolor=color_data,         edgecolor='black', hatch='..',  label='Data (I/O)',      linewidth=1.0),
-    Patch(facecolor=color_encoding,     edgecolor='black', hatch='',    label='Compression', linewidth=1.0),
-    Patch(facecolor=color_encoding,     edgecolor='black', hatch='//',  label='Cryptography',    linewidth=1.0),
-    Patch(facecolor=color_networking,   edgecolor='black', hatch='',    label='Network (Com.)',linewidth=1.0),
-    Patch(facecolor=color_networking,   edgecolor='black', hatch='//',  label='Network (Sec.)',  linewidth=1.0),
-    Patch(facecolor=color_ml_matching,  edgecolor='black', hatch='',    label='ML/AI',           linewidth=1.0),
-    Patch(facecolor=color_misc,         edgecolor='black', hatch='',    label='Misc.',           linewidth=1.0)
+    Patch(facecolor=color_compute,      edgecolor='black', hatch='',        label='Compute (LA)',   linewidth=1.0),
+    Patch(facecolor=color_compute,      edgecolor='black', hatch='\\\\',    label='Compute (DSP)',  linewidth=1.0),
+    Patch(facecolor=color_compute,      edgecolor='black', hatch='..',      label='Compute (Basic)',linewidth=1.0),
+    Patch(facecolor=color_data,         edgecolor='black', hatch='',        label='Data (DB)',      linewidth=1.0),
+    Patch(facecolor=color_data,         edgecolor='black', hatch='\\\\',    label='Data (Transform)',linewidth=1.0),
+    Patch(facecolor=color_data,         edgecolor='black', hatch='..',      label='Data (I/O)',     linewidth=1.0),
+    Patch(facecolor=color_encoding,     edgecolor='black', hatch='',        label='Compression',    linewidth=1.0),
+    Patch(facecolor=color_encoding,     edgecolor='black', hatch='\\\\',    label='Cryptography',   linewidth=1.0),
+    Patch(facecolor=color_networking,   edgecolor='black', hatch='',        label='Network (Com.)', linewidth=1.0),
+    Patch(facecolor=color_networking,   edgecolor='black', hatch='\\\\',    label='Network (Sec.)', linewidth=1.0),
+    Patch(facecolor=color_ml_matching,  edgecolor='black', hatch='',        label='ML/AI',          linewidth=1.0),
+    Patch(facecolor=color_misc,         edgecolor='black', hatch='',        label='Misc.',          linewidth=1.0)
 ]
 
 # Position legend above the plot
-ax.legend(handles=legend_elements, loc='upper right', bbox_to_anchor=(0.94, 1.02),
-          ncol=6, frameon=False, columnspacing=1.5)
+ax.legend(handles=legend_elements, loc='upper right', bbox_to_anchor=(1.00, 1.06),
+          ncol=6, frameon=True, columnspacing=1.5)
 
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
-plt.margins(x=0.015, tight=True)
+plt.margins(x=0.015, y=0.0, tight=True)
 # plt.savefig("application_modularity_analysis.png", dpi=300, bbox_inches='tight')
 plt.savefig("../plots/application_modularity_analysis.pdf", bbox_inches='tight')
 plt.show()

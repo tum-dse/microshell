@@ -42,7 +42,7 @@ height = 2.8
 fig, ax = plt.subplots(figsize=(width, height))
 
 # Bar settings
-bar_width = 0.35
+bar_width = 0.32
 x_positions = np.arange(len(applications))
 
 # Common bar properties
@@ -62,7 +62,7 @@ bars1 = ax.bar(x_positions - bar_width/2, cpu_sync_values, bar_width,
 # IPC bars (with pattern)
 bars2 = ax.bar(x_positions + bar_width/2, ipc_values, bar_width,
                 yerr=ipc_errors, color=color2, hatch='\\\\',
-                label='Direct communication', **bar_props)
+                label='Direct comm.', **bar_props)
 
 # ===== SPEEDUP ANNOTATIONS =====
 for i, (cpu_val, ipc_val, cpu_err, ipc_err) in enumerate(zip(cpu_sync_values, ipc_values, cpu_sync_errors, ipc_errors)):
@@ -93,10 +93,10 @@ sns.despine(ax=ax)
 # ===== LEGEND =====
 ax.legend(loc='upper right', frameon=True, ncol=1,
           handlelength=2.0, handletextpad=0.5,
-          bbox_to_anchor=(1, 0.94))
+          bbox_to_anchor=(1.0, 1.06))
 
 # ===== ANNOTATIONS =====
-ax.text(0.5, 1.01, 'Higher is better ↑', transform=ax.transAxes,
+ax.text(0.24, 1.03, 'Higher is better ↑', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
         ha='center', va='top')
 
