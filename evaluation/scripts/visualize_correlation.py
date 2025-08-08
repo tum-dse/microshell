@@ -24,27 +24,29 @@ def plot_half_correlation_matrix(csv_path, csv_path_2, output_file='correlation_
     cmap.set_bad('white')  # Set NaN values to white
     
     # Create figure
-    plt.figure(figsize=(12, 10))
+    plt.figure(figsize=(8.9, 8))
     
     # Create heatmap with masked values
-    heatmap = plt.imshow(matrix_2, cmap=cmap, vmin=0, vmax=1)
+    heatmap = plt.imshow(matrix, cmap=cmap, vmin=0, vmax=1, aspect=1.0)
     
     # Add colorbar
     cbar = plt.colorbar(heatmap, fraction=0.046, pad=0.04)
-    cbar.set_label('Correlation Strength', rotation=270, labelpad=20)
+    cbar.ax.tick_params(labelsize=12)
+    cbar.set_label('Correlation Strength', rotation=270, labelpad=20, fontsize=16)
     
     # Add annotations only for non-NaN values
     for i in range(n):
         for j in range(n):
             if not np.isnan(matrix[i, j]):
-                text = plt.text(j, i, f'{matrix[i, j]:.0f}',
+                text = plt.text(j, i, f'{matrix[i, j]:.2f}',
                                ha="center", va="center", 
-                               color="white" if matrix_2[i, j] > 0.5 else "black")
+                               color="white" if matrix[i, j] > 0.5 else "black", 
+                               fontsize=10)
     
     # Customize plot
-    plt.title('Folder Correlation Matrix (Lower Triangle)')
-    plt.xticks(np.arange(n), folders, rotation=45, ha='right')
-    plt.yticks(np.arange(n), folders)
+    plt.title('Correlation Matrix', fontsize=16)
+    plt.xticks(np.arange(n), folders, rotation=45, ha='right', fontsize=12)
+    plt.yticks(np.arange(n), folders, rotation=45, fontsize=12)
     
     # Draw diagonal line
     plt.plot([-0.5, n-0.5], [-0.5, n-0.5], color='gray', linestyle='--')
@@ -59,7 +61,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Visualize lower triangle correlation matrix')
     parser.add_argument('input_csv', help='Path to similarity_matrix.csv')
     parser.add_argument('input_csv_2', help='Path to overlap_matrix.csv')
-    parser.add_argument('-o', '--output', help='Output filename', default='correlation_heatmap_half.png')
+    parser.add_argument('-o', '--output', help='Output filename', default='../plots/correlation_heatmap.pdf')
     args = parser.parse_args()
     
     plot_half_correlation_matrix(args.input_csv, args.input_csv_2, args.output)
