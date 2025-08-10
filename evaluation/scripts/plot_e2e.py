@@ -4,15 +4,15 @@ import numpy as np
 
 # ===== FONT AND STYLE SETTINGS =====
 FONT_SIZE = 10
-LABEL_SIZE = 11
+LABEL_SIZE = 10  
 TICK_SIZE = 10
 LEGEND_SIZE = 9
-ANNOTATION_SIZE = 10
+ANNOTATION_SIZE = 9  
 SPEEDUP_SIZE = 7
 
 # Set font to match ASPLOS paper style
-plt.rcParams['font.family'] = 'serif'
-plt.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif', 'Computer Modern Roman']
+#plt.rcParams['font.family'] = 'serif'
+#plt.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif', 'Computer Modern Roman']
 plt.rcParams['mathtext.fontset'] = 'cm'
 plt.rcParams['font.size'] = FONT_SIZE
 plt.rcParams['axes.labelsize'] = LABEL_SIZE
@@ -20,11 +20,14 @@ plt.rcParams['xtick.labelsize'] = TICK_SIZE
 plt.rcParams['ytick.labelsize'] = TICK_SIZE
 plt.rcParams['legend.fontsize'] = LEGEND_SIZE
 
+# Set seaborn style to match paste 1
+sns.set_style("ticks")
+
 # ===== COLOR SETUP =====
 palette = sns.color_palette("pastel")
 color1 = palette[0]  # Blue
 color2 = palette[1]  # Orange
-color3 = '#2E8B57'    # Sea Green
+color3 = palette[2]  # Green 
 size_colors = [color2, color1, color3]  # Order: 8KB=Orange, 256KB=Blue, 1MB=Green
 
 # ===== DATA =====
@@ -78,7 +81,7 @@ for size_idx, size in enumerate(data_sizes):
         baseline_val = data[app][size_idx * 3]
         ushell_mono_val = data[app][size_idx * 3 + 1]
         ushell_val = data[app][size_idx * 3 + 2]
-        
+
         baseline_err = error_data[app][size_idx * 3]
         ushell_mono_err = error_data[app][size_idx * 3 + 1]
         ushell_err = error_data[app][size_idx * 3 + 2]
@@ -98,23 +101,24 @@ for size_idx, size in enumerate(data_sizes):
             ushell_errors.append(ushell_err)
             x_ushell.append(x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width * 2)
 
-    # Common bar properties
+    # Common bar properties 
     bar_props = {
         'alpha': 1.0,
         'edgecolor': 'k',
-        'linewidth': 0.5,
+        'linewidth': 1, 
         'error_kw': {'ecolor': 'black', 'elinewidth': 1, 'capsize': 2}
     }
 
     # Plot bars with their respective patterns
     if baseline_values:
         ax.bar(x_baseline, baseline_values, bar_width,
-               yerr=baseline_errors, color=size_colors[size_idx], **bar_props)
+               yerr=baseline_errors, color=size_colors[size_idx], 
+                hatch='//', **bar_props)
 
     if ushell_mono_values:
         ax.bar(x_ushell_mono, ushell_mono_values, bar_width,
                yerr=ushell_mono_errors, color=size_colors[size_idx],
-               hatch='//', **bar_props)
+               hatch='\\\\', **bar_props)
 
     if ushell_values:
         ax.bar(x_ushell, ushell_values, bar_width,
@@ -127,7 +131,7 @@ for size_idx, size in enumerate(data_sizes):
         baseline_val = data[app][size_idx * 3]
         ushell_mono_val = data[app][size_idx * 3 + 1]
         ushell_val = data[app][size_idx * 3 + 2]
-        
+
         # Get error values for positioning
         ushell_mono_err = error_data[app][size_idx * 3 + 1]
         ushell_err = error_data[app][size_idx * 3 + 2]
@@ -136,7 +140,7 @@ for size_idx, size in enumerate(data_sizes):
         if baseline_val is not None and ushell_mono_val is not None:
             speedup = ushell_mono_val / baseline_val
             x_pos = x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width
-            y_pos = ushell_mono_val + ushell_mono_err + 3
+            y_pos = ushell_mono_val + ushell_mono_err + 4
 
             ax.text(x_pos, y_pos, f'{speedup:.2f}x', ha='center', va='bottom',
                    fontsize=SPEEDUP_SIZE, rotation=90, weight='bold')
@@ -145,26 +149,26 @@ for size_idx, size in enumerate(data_sizes):
         if baseline_val is not None and ushell_val is not None:
             speedup = ushell_val / baseline_val
             x_pos = x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width * 2
-            y_pos = ushell_val + ushell_err + 3
+            y_pos = ushell_val + ushell_err + 4
 
             ax.text(x_pos, y_pos, f'{speedup:.2f}x', ha='center', va='bottom',
                    fontsize=SPEEDUP_SIZE, rotation=90, weight='bold')
 
 # ===== AXIS FORMATTING =====
-ax.set_ylabel('Throughput [MiB/s]')  # Uses LABEL_SIZE from rcParams
+ax.set_ylabel('Throughput [MiB/s]')  
 ax.set_ylim(0, 275)
 ax.set_yticks([0, 100, 200])
 
 # X-axis
 group_centers = x_positions + (len(data_sizes) * bar_width * 3 - bar_width) / 2
 ax.set_xticks(group_centers)
-ax.set_xticklabels(display_names, ha='center')  # Uses TICK_SIZE from rcParams
+ax.set_xticklabels(display_names, ha='center')  
 
-# Grid
+# Grid 
 ax.grid(True, alpha=0.3, axis='y', color='gray')
 ax.set_axisbelow(True)
 
-# Remove top and right spines
+# Remove top and right spines 
 sns.despine(ax=ax)
 
 # ===== LEGEND =====
@@ -173,23 +177,24 @@ legend_elements = []
 
 # Data size colors
 for size_idx, (size, color) in enumerate(zip(data_sizes, size_colors)):
-    legend_elements.append(Patch(facecolor=color, alpha=1.0, label=size))
+    legend_elements.append(Patch(facecolor=color, edgecolor="k", alpha=1.0, label=size))  # Added edgecolor="k"
 
 # Platform patterns
-legend_elements.append(Patch(facecolor='gray', alpha=1.0, label='Coyote'))
-legend_elements.append(Patch(facecolor='gray', alpha=1.0, hatch='//', label='µShell_mono'))
-legend_elements.append(Patch(facecolor='gray', alpha=1.0, hatch='..', label='µShell'))
+legend_elements.append(Patch(facecolor='gray', edgecolor="k", alpha=1.0, hatch='//', label='Coyote'))  # Added edgecolor="k"
+legend_elements.append(Patch(facecolor='gray', edgecolor="k", alpha=1.0, hatch='\\\\', label='µShell_mono'))  # Added edgecolor="k"
+legend_elements.append(Patch(facecolor='gray', edgecolor="k", alpha=1.0, hatch='..', label='µShell'))  # Added edgecolor="k"
 
-ax.legend(handles=legend_elements, loc='upper right', frameon=True, 
-          ncol=2, bbox_to_anchor=(0.98, 1))  # Uses LEGEND_SIZE from rcParams
+# Updated legend
+ax.legend(handles=legend_elements, loc='upper right', frameon=True,
+          ncol=2, bbox_to_anchor=(1, 1))  
 
 # ===== ANNOTATION =====
-ax.text(0.5, 0.98, 'Higher is better ↑', transform=ax.transAxes,
-        color='navy', weight='bold', fontsize=ANNOTATION_SIZE, ha='center', va='top')
+fig.suptitle('Higher is better ↑', fontsize=ANNOTATION_SIZE, color='navy', 
+             weight='bold', x=0.5, y=0.85)
 
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
-plt.subplots_adjust(top=0.98)
+plt.subplots_adjust(bottom=0.1)  
 #plt.savefig("plot_e2e.png", dpi=300, bbox_inches='tight')
 plt.savefig("../plots/plot_e2e.pdf", bbox_inches='tight')
 plt.show()
