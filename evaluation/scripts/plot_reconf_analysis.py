@@ -69,7 +69,7 @@ bar_props = {
 bars1 = ax.bar(x_positions - 0.5*bar_width, coyote_values, bar_width,
                # yerr=vfpga1_errors, 
                color=color1, hatch='//',
-                label='Full Reconf. (Coyote)', **bar_props)
+                label='Full Reconfiguration', **bar_props)
 
 # PR bars (diagonal pattern)
 bars2 = ax.bar(x_positions + 0.5*bar_width, pr_values, bar_width,
