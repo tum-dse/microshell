@@ -3,12 +3,12 @@ import seaborn as sns
 import numpy as np
 
 # ===== FONT AND STYLE SETTINGS =====
-FONT_SIZE = 9
-LABEL_SIZE = 9
-TICK_SIZE = 9
-LEGEND_SIZE = 9
-ANNOTATION_SIZE = 9
-SPEEDUP_SIZE = 7
+FONT_SIZE = 10
+LABEL_SIZE = 10
+TICK_SIZE = 10
+LEGEND_SIZE = 10
+ANNOTATION_SIZE = 10
+SPEEDUP_SIZE = 8
 
 # Set font to match ASPLOS paper style
 # plt.rcParams['font.family'] = 'serif'
@@ -26,7 +26,7 @@ color1 = palette[0]  # Blue for CPU-sync
 color2 = palette[1]  # Orange for direct communication (IPC)
 
 # ===== DATA =====
-applications = ["Audio\nProcess.", "Digital\nSignature", "Secure\nStorage", "Signed\nCompres.", "Speech\nRecogn."]
+applications = ["Audio\nProcessing", "Digital\nSignature", "Secure\nStorage", "Signed\nCompression", "Speech\nRecognition"]
 
 # Throughput values (MB/s)
 cpu_sync_values = [85.9, 208.0, 139.9, 146.0, 29.2]
@@ -37,12 +37,12 @@ cpu_sync_errors = [3.2, 5.1, 4.2, 3.8, 1.2]
 ipc_errors = [4.5, 5.8, 3.9, 4.1, 2.1]
 
 # ===== PLOT SETUP =====
-width = 4.0
-height = 2.8
+width = 5.8
+height = 2.4
 fig, ax = plt.subplots(figsize=(width, height))
 
 # Bar settings
-bar_width = 0.32
+bar_width = 0.24
 x_positions = np.arange(len(applications))
 
 # Common bar properties
@@ -96,12 +96,12 @@ ax.legend(loc='upper right', frameon=True, ncol=1,
           bbox_to_anchor=(1.0, 1.06))
 
 # ===== ANNOTATIONS =====
-ax.text(0.24, 1.03, 'Higher is better ↑', transform=ax.transAxes,
+ax.text(0.50, 1.0, 'Higher is better ↑', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
         ha='center', va='top')
 
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
 #plt.savefig("plot_fpga_acceleration_effectiveness.png", dpi=300, bbox_inches='tight')
-plt.savefig("../plots/plot_fpga_acceleration_effectiveness.pdf", bbox_inches='tight')
+plt.savefig("../plots/plot_direct_comm_effectiveness.pdf", bbox_inches='tight')
 plt.show()
