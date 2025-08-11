@@ -20,16 +20,18 @@ plt.rcParams['legend.fontsize'] = LEGEND_SIZE
 
 # ===== DATA =====
 resources = ["0%", "25%", "50%", "75%", "100%"]
+reconf_raw = [58080, 58091, 58091, 58069, 58054] # us order
+reconf_avg = (sum(reconf_raw) / len(reconf_raw)) / 1000 # ms order
+pr_values = [reconf_avg, reconf_avg*(0.75), reconf_avg*(0.50), reconf_avg*(0.25), 0]
+coyote_values = [reconf_avg, reconf_avg, reconf_avg, reconf_avg, 0]
 
-df = pandas.read_csv("../data/sched_motive.csv")
-print(df)
-# print(data1.head())
-# print(data["app"][0])
-
-df_coyote = df[df['Policy'] == 'Coyote']
-df_pr = df[df['Policy'] == 'Partially reconfig']
-coyote_values = df_coyote['Reconfig overhead (ms)'].tolist()
-pr_values = df_pr['Reconfig overhead (ms)'].tolist()
+# df = pandas.read_csv("../data/sched_motive.csv")
+# print(df)
+# 
+# df_coyote = df[df['Policy'] == 'Coyote']
+# df_pr = df[df['Policy'] == 'Partially reconfig']
+# coyote_values = df_coyote['Reconfig overhead (ms)'].tolist()
+# pr_values = df_pr['Reconfig overhead (ms)'].tolist()
 
 # ===== COLOR SETUP =====
 palette = sns.color_palette("pastel")
@@ -78,8 +80,10 @@ bars2 = ax.bar(x_positions + 0.5*bar_width, pr_values, bar_width,
 # ===== AXIS FORMATTING =====
 ax.set_xlabel('Shared logic ratio')
 ax.set_ylabel('Reconfiguration overhead (ms)')
-ax.set_ylim(0, 130)  
-ax.set_yticks([0, 20, 40, 60, 80, 100])
+# ax.set_ylim(0, 130)  
+ax.set_ylim(0, 75)  
+# ax.set_yticks([0, 20, 40, 60, 80, 100])
+ax.set_yticks([0, 10, 20, 30, 40, 50, 60])
 
 # X-axis
 ax.set_xticks(x_positions)
@@ -95,10 +99,10 @@ sns.despine(ax=ax)
 # ===== LEGEND =====
 ax.legend(loc='upper right', frameon=True, ncol=1,
           handlelength=2.0, handletextpad=0.5,
-          bbox_to_anchor=(1, 1.02))
+          bbox_to_anchor=(1, 1.05))
 
 # ===== ANNOTATIONS =====
-ax.text(0.22, 0.95, 'Lower is better ↓', transform=ax.transAxes,
+ax.text(0.22, 0.98, 'Lower is better ↓', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
         ha='center', va='top')
 
