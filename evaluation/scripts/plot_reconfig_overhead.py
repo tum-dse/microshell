@@ -2,9 +2,11 @@
 
 import pandas as pd
 import numpy as np
+import matplotlib  # type: ignore
 import matplotlib.pyplot as plt
 import common
 import seaborn as sns
+import matplotlib.ticker as ticker
 
 # ===== FONT AND STYLE SETTINGS =====
 FONT_SIZE = 10
@@ -36,10 +38,10 @@ color4 = palette[3]  # Red for vFPGA=8
 vFPGA_count = ["1 vFPGA", "2 vFPGA", "3 vFPGA", "4 vFPGA"]
 
 # Percentage of available resources per vFPGA
-pr_time = [58000, 58000, 58000, 59000]
+pr_time = [58000, 58000, 58000, 58000]
 object_alloc = [3.6, 3.6*2, 3.6*3, 3.6*4]
-mem_values = [58, 58, 58, 58]
-buffer_alloc = [253.1, 253.1*2, 253.1*3, 253.1*4]
+mem_values = [2, 2*2, 2*3, 2*4]
+buffer_alloc = [253.1, 253.1, 253.1, 253.1]
 
 
 plt.rcParams.update({'font.size': 9.2})
@@ -50,9 +52,13 @@ height = 2.8
 # height = width / aspect
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True, figsize=(width, height))
 
+# Set the formatter for the y-axis to use scientific notation for values over 1000
+# ax1.yaxis.set_major_formatter(ticker.ScalarFormatter())
+# ax1.ticklabel_format(style='sci', axis='y', scilimits=(3, 4))
+
 ax1.set_ylim(55000, 60000)
-ax2.set_ylim(250, 1450)
-ax3.set_ylim(0, 80)
+ax2.set_ylim(200, 350)
+ax3.set_ylim(0, 25)
 
 # Hide the spines between plots
 ax1.spines.bottom.set_visible(False)
@@ -97,13 +103,13 @@ axs = [ax1, ax2, ax3]
 for ax in axs:
 
 
-    ax.bar(x_positions - 0.5*bar_width, mem_values, bar_width,
+    ax.bar(x_positions - 0.5*bar_width, buffer_alloc, bar_width,
                     color=color3, hatch='//',
                     label='buffer alloc', **bar_props)
 
     # vFPGA=2 bars (diagonal pattern)
     ax.bar(x_positions - 0.5*bar_width, pr_time, bar_width,
-                    bottom=np.array(mem_values),
+                    bottom=np.array(buffer_alloc),
                     color=color4, hatch='//',
                     label='partial reconfig', **bar_props)
 
@@ -134,10 +140,21 @@ ax.set_xticklabels(vFPGA_count, fontsize=9)
 ax2.set_ylabel("Time (us)")
 # ax2.yaxis.set_label_coords(-0.07, 0.7)
 ax2.yaxis.set_label_coords(-0.18, 0.7)
-ax1.legend(loc='upper right', frameon=True,
+
+
+p1 = matplotlib.patches.Patch(facecolor='white', hatch='//', edgecolor="k",
+                        label='Coyote')
+p2 = matplotlib.patches.Patch(facecolor='white', hatch='\\\\', edgecolor="k",
+                        label='uShell')
+
+handles, labels = ax1.get_legend_handles_labels()
+handles += [p1, p2]
+labels += ['Coyote', 'uShell']
+
+ax1.legend(handles=handles, labels=labels, loc='upper right', frameon=True,
            ncol=3, prop={'size': 8.0}, bbox_to_anchor=(1, 1.9))
 
-ax1.text(0.5, 3.55, 'Lower is better ↓', transform=ax.transAxes,
+ax1.text(0.5, 3.28, 'Lower is better ↓', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
         ha='center', va='top', zorder=10)
 plt.tight_layout()
