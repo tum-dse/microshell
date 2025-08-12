@@ -4,11 +4,11 @@ import numpy as np
 
 # ===== FONT AND STYLE SETTINGS =====
 FONT_SIZE = 10
-LABEL_SIZE = 10  
+LABEL_SIZE = 12
 TICK_SIZE = 10
-LEGEND_SIZE = 9
-ANNOTATION_SIZE = 9  
-SPEEDUP_SIZE = 7
+LEGEND_SIZE = 10
+ANNOTATION_SIZE = 12
+SPEEDUP_SIZE = 10
 
 # Set font to match ASPLOS paper style
 #plt.rcParams['font.family'] = 'serif'
@@ -20,15 +20,12 @@ plt.rcParams['xtick.labelsize'] = TICK_SIZE
 plt.rcParams['ytick.labelsize'] = TICK_SIZE
 plt.rcParams['legend.fontsize'] = LEGEND_SIZE
 
-# Set seaborn style to match paste 1
-sns.set_style("ticks")
-
 # ===== COLOR SETUP =====
 palette = sns.color_palette("pastel")
 color1 = palette[0]  # Blue
 color2 = palette[1]  # Orange
-color3 = palette[2]  # Green 
-size_colors = [color2, color1, color3]  # Order: 8KB=Orange, 256KB=Blue, 1MB=Green
+color3 = palette[2]  # Green
+size_colors = [color1, color2, color3]  # Order: 8KB=Orange, 256KB=Blue, 1MB=Green
 
 # ===== DATA =====
 applications = ["Audio Processing", "Digital Signature", "Secure Storage", "Signed Compression", "Speech Recognition"]
@@ -54,7 +51,7 @@ error_data = {
 }
 
 # ===== PLOT SETUP =====
-fig, ax = plt.subplots(figsize=(12, 3.5))
+fig, ax = plt.subplots(figsize=(16, 4))
 
 # Bar settings
 bar_width = 0.1
@@ -101,18 +98,18 @@ for size_idx, size in enumerate(data_sizes):
             ushell_errors.append(ushell_err)
             x_ushell.append(x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width * 2)
 
-    # Common bar properties 
+    # Common bar properties
     bar_props = {
         'alpha': 1.0,
         'edgecolor': 'k',
-        'linewidth': 1, 
+        'linewidth': 1,
         'error_kw': {'ecolor': 'black', 'elinewidth': 1, 'capsize': 2}
     }
 
     # Plot bars with their respective patterns
     if baseline_values:
         ax.bar(x_baseline, baseline_values, bar_width,
-               yerr=baseline_errors, color=size_colors[size_idx], 
+               yerr=baseline_errors, color=size_colors[size_idx],
                 hatch='//', **bar_props)
 
     if ushell_mono_values:
@@ -155,20 +152,20 @@ for size_idx, size in enumerate(data_sizes):
                    fontsize=SPEEDUP_SIZE, rotation=90, weight='bold')
 
 # ===== AXIS FORMATTING =====
-ax.set_ylabel('Throughput [MiB/s]')  
+ax.set_ylabel('Throughput [MiB/s]', fontsize=LABEL_SIZE)
 ax.set_ylim(0, 275)
-ax.set_yticks([0, 100, 200])
+ax.set_yticks([0, 50, 100, 150, 200, 250])
 
 # X-axis
 group_centers = x_positions + (len(data_sizes) * bar_width * 3 - bar_width) / 2
 ax.set_xticks(group_centers)
-ax.set_xticklabels(display_names, ha='center')  
+ax.set_xticklabels(display_names, ha='center', fontsize=LABEL_SIZE)
 
-# Grid 
+# Grid
 ax.grid(True, alpha=0.3, axis='y', color='gray')
 ax.set_axisbelow(True)
 
-# Remove top and right spines 
+# Remove top and right spines
 sns.despine(ax=ax)
 
 # ===== LEGEND =====
@@ -180,21 +177,21 @@ for size_idx, (size, color) in enumerate(zip(data_sizes, size_colors)):
     legend_elements.append(Patch(facecolor=color, edgecolor="k", alpha=1.0, label=size))  # Added edgecolor="k"
 
 # Platform patterns
-legend_elements.append(Patch(facecolor='gray', edgecolor="k", alpha=1.0, hatch='//', label='Coyote'))  # Added edgecolor="k"
-legend_elements.append(Patch(facecolor='gray', edgecolor="k", alpha=1.0, hatch='\\\\', label='µShell_mono'))  # Added edgecolor="k"
-legend_elements.append(Patch(facecolor='gray', edgecolor="k", alpha=1.0, hatch='..', label='µShell'))  # Added edgecolor="k"
+legend_elements.append(Patch(facecolor='white', edgecolor="k", alpha=1.0, hatch='//', label='Coyote'))  # Added edgecolor="k"
+legend_elements.append(Patch(facecolor='white', edgecolor="k", alpha=1.0, hatch='\\\\', label='µShell_mono'))  # Added edgecolor="k"
+legend_elements.append(Patch(facecolor='white', edgecolor="k", alpha=1.0, hatch='..', label='µShell'))  # Added edgecolor="k"
 
 # Updated legend
 ax.legend(handles=legend_elements, loc='upper right', frameon=True,
-          ncol=2, bbox_to_anchor=(1, 1))  
+          ncol=2, bbox_to_anchor=(1, 1.1))
 
 # ===== ANNOTATION =====
-fig.suptitle('Higher is better ↑', fontsize=ANNOTATION_SIZE, color='navy', 
-             weight='bold', x=0.5, y=0.85)
+fig.suptitle('Higher is better ↑', fontsize=ANNOTATION_SIZE, color='navy',
+             weight='bold', x=0.5, y=0.89)
 
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
-plt.subplots_adjust(bottom=0.1)  
-#plt.savefig("plot_e2e.png", dpi=300, bbox_inches='tight')
-plt.savefig("../plots/plot_e2e.pdf", bbox_inches='tight')
+plt.subplots_adjust(bottom=0.1)
+#plt.savefig("e2e.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/e2e.pdf", bbox_inches='tight')
 plt.show()

@@ -102,6 +102,6 @@ ax.text(0.50, 1.0, 'Higher is better ↑', transform=ax.transAxes,
 
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
-#plt.savefig("plot_fpga_acceleration_effectiveness.png", dpi=300, bbox_inches='tight')
-plt.savefig("../plots/plot_direct_comm_effectiveness.pdf", bbox_inches='tight')
+#plt.savefig("direct_comm_effectiveness.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/direct_comm_effectiveness.pdf", bbox_inches='tight')
 plt.show()
