@@ -5,14 +5,11 @@ import numpy as np
 # ===== FONT AND STYLE SETTINGS =====
 FONT_SIZE = 10
 LABEL_SIZE = 12
-TICK_SIZE = 10
-LEGEND_SIZE = 10
+TICK_SIZE = 12
+LEGEND_SIZE = 12
 ANNOTATION_SIZE = 12
 SPEEDUP_SIZE = 10
 
-# Set font to match ASPLOS paper style
-#plt.rcParams['font.family'] = 'serif'
-#plt.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif', 'Computer Modern Roman']
 plt.rcParams['mathtext.fontset'] = 'cm'
 plt.rcParams['font.size'] = FONT_SIZE
 plt.rcParams['axes.labelsize'] = LABEL_SIZE
@@ -139,7 +136,7 @@ for size_idx, size in enumerate(data_sizes):
             x_pos = x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width
             y_pos = ushell_mono_val + ushell_mono_err + 4
 
-            ax.text(x_pos, y_pos, f'{speedup:.2f}x', ha='center', va='bottom',
+            ax.text(x_pos + 0.01, y_pos, f'{speedup:.2f}x', ha='center', va='bottom',
                    fontsize=SPEEDUP_SIZE, rotation=90, weight='bold')
 
         # Speedup for µShell
@@ -148,18 +145,18 @@ for size_idx, size in enumerate(data_sizes):
             x_pos = x_positions[app_idx] + size_idx * (bar_width * 3) + bar_width * 2
             y_pos = ushell_val + ushell_err + 4
 
-            ax.text(x_pos, y_pos, f'{speedup:.2f}x', ha='center', va='bottom',
+            ax.text(x_pos + 0.01, y_pos, f'{speedup:.2f}x', ha='center', va='bottom',
                    fontsize=SPEEDUP_SIZE, rotation=90, weight='bold')
 
 # ===== AXIS FORMATTING =====
-ax.set_ylabel('Throughput [MiB/s]', fontsize=LABEL_SIZE)
+ax.set_ylabel('Throughput [MB/s]', fontsize=LABEL_SIZE)
 ax.set_ylim(0, 275)
 ax.set_yticks([0, 50, 100, 150, 200, 250])
 
 # X-axis
 group_centers = x_positions + (len(data_sizes) * bar_width * 3 - bar_width) / 2
 ax.set_xticks(group_centers)
-ax.set_xticklabels(display_names, ha='center', fontsize=LABEL_SIZE)
+ax.set_xticklabels(display_names, ha='center')
 
 # Grid
 ax.grid(True, alpha=0.3, axis='y', color='gray')
@@ -183,7 +180,7 @@ legend_elements.append(Patch(facecolor='white', edgecolor="k", alpha=1.0, hatch=
 
 # Updated legend
 ax.legend(handles=legend_elements, loc='upper right', frameon=True,
-          ncol=2, bbox_to_anchor=(1, 1.1))
+          ncol=2, bbox_to_anchor=(1, 1.08))          
 
 # ===== ANNOTATION =====
 fig.suptitle('Higher is better ↑', fontsize=ANNOTATION_SIZE, color='navy',

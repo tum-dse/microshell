@@ -31,7 +31,7 @@ resources = ["LUTs", "Registers", "BRAM", "URAM"]
 # Percentage of available resources per vFPGA
 vfpga1_values = [96.93, 96.83, 97.72, 100.0]
 vfpga2_values = [47.75, 47.69, 48.12, 50.0]
-vfpga4_values = [21.04, 21.38, 22.17, 25.0]
+vfpga4_values = [23.19, 23.13, 23.96, 25.0]
 vfpga8_values = [10.87, 10.82, 10.91, 12.5]
 
 # ===== PLOT SETUP =====

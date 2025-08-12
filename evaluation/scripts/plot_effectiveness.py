@@ -71,8 +71,8 @@ for i, (cpu_val, ipc_val, cpu_err, ipc_err) in enumerate(zip(cpu_sync_values, ip
     x_pos = x_positions[i] + bar_width/2
     y_pos = ipc_val + ipc_err + 3
     
-    ax.text(x_pos, y_pos, f'{speedup:.2f}x', ha='center', va='bottom',
-            fontsize=SPEEDUP_SIZE, weight='normal')
+    ax.text(x_pos + 0.01, y_pos + 1, f'{speedup:.1f}x', ha='center', va='bottom',
+            fontsize=SPEEDUP_SIZE, rotation=90, weight='bold')
 
 # ===== AXIS FORMATTING =====
 ax.set_ylabel('Throughput (MB/s)')
@@ -93,10 +93,10 @@ sns.despine(ax=ax)
 # ===== LEGEND =====
 ax.legend(loc='upper right', frameon=True, ncol=1,
           handlelength=2.0, handletextpad=0.5,
-          bbox_to_anchor=(1.0, 1.06))
+          bbox_to_anchor=(1.0, 1.15))
 
 # ===== ANNOTATIONS =====
-ax.text(0.50, 1.0, 'Higher is better ↑', transform=ax.transAxes,
+ax.text(0.50, 1.1, 'Higher is better ↑', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
         ha='center', va='top')
 
