@@ -22,9 +22,9 @@ plt.rcParams['legend.fontsize'] = LEGEND_SIZE
 # ===== COLOR SETUP (NOW FOR SHARING LEVELS) =====
 palette = sns.color_palette("pastel")
 color_noshare = palette[0]    # Blue for no-share
-color_share2 = palette[1]     # Green for shared by 2
-color_share3 = palette[3]     # Orange for shared by 3
-color_share4 = palette[2]     # Red for shared by 4
+color_share2 = palette[1]     # Orange for shared by 2
+color_share3 = palette[2]     # Green for shared by 3
+color_share4 = palette[3]     # Red for shared by 4
 
 # ===== DATA =====
 applications = ["ISPPIPELINE", "ISP_24BIT_DECOMPAND", "GAUSSIANDIFFERENCE", "DEFECT_DETECTION"]

@@ -46,7 +46,6 @@ hatch2 = "."
 hatch_list = [hatch1, hatch2]
 
 # ===== PLOT SETUP =====
-# width = 7  # \textwidth is 7 inch
 width = 4.0
 height = 2.8
 fig, ax = plt.subplots(figsize=(width, height))
@@ -77,11 +76,30 @@ bars2 = ax.bar(x_positions + 0.5*bar_width, pr_values, bar_width,
                color=color2, hatch='\\\\',
                 label='Partial Reconf. (PR)', **bar_props)
 
+# ===== SPEEDUP ANNOTATIONS =====
+# Add after plotting the bars and before AXIS FORMATTING
+for i, (coyote_val, pr_val) in enumerate(zip(coyote_values, pr_values)):
+    # Skip if either value is 0 to avoid division by zero
+    if pr_val > 0 and coyote_val > 0:
+        speedup = coyote_val / pr_val
+        x_pos = x_positions[i] + 0.5 * bar_width
+        y_pos = pr_val + 1.5  # Position above the bar
+        
+        # Format speedup value
+        if speedup == int(speedup):  # Check if it's a whole number
+            speedup_text = f'{int(speedup)}x'
+        else:
+            speedup_text = f'{speedup:.1f}x'
+        
+        ax.text(x_pos + 0.03, y_pos, speedup_text, ha='center', va='bottom',
+                fontsize=VALUE_SIZE, rotation=90, weight='bold')
+
 # ===== AXIS FORMATTING =====
-ax.set_xlabel('Shared logic ratio')
+#ax.set_xlabel('Shared logic ratio')
 ax.set_ylabel('Reconfiguration overhead (ms)')
+ax.yaxis.set_label_coords(-0.10, 0.48)
 # ax.set_ylim(0, 130)  
-ax.set_ylim(0, 75)  
+ax.set_ylim(0, 65)  
 # ax.set_yticks([0, 20, 40, 60, 80, 100])
 ax.set_yticks([0, 10, 20, 30, 40, 50, 60])
 
@@ -99,14 +117,14 @@ sns.despine(ax=ax)
 # ===== LEGEND =====
 ax.legend(loc='upper right', frameon=True, ncol=1,
           handlelength=2.0, handletextpad=0.5,
-          bbox_to_anchor=(1, 1.05))
+          bbox_to_anchor=(1, 1.175))
 
 # ===== ANNOTATIONS =====
-ax.text(0.22, 0.98, 'Lower is better ↓', transform=ax.transAxes,
+ax.text(0.1, 1.08, 'Lower is better ↓', transform=ax.transAxes,
         color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
         ha='center', va='top')
 
 plt.tight_layout()
-# fig.savefig("motive.png", bbox_inches="tight")
+# fig.savefig("reconf_analysis.png", bbox_inches="tight")
 plt.savefig("../plots/reconf_analysis.pdf", bbox_inches="tight")
 plt.show()

@@ -1,15 +1,9 @@
-import seaborn as sns
 import pandas
 import numpy as np
-import matplotlib  # type: ignore
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-from typing import Any, Dict, List, Union
-
-# matplotlib.rcParams["pdf.fonttype"] = 42
-# matplotlib.rcParams["ps.fonttype"] = 42
-# FORMATTER: Dict[str, matplotlib.ticker.Formatter] = {}
-COLUMN_ALIASES: Dict[str, str] = {}
+import seaborn as sns
 
 # ===== FONT AND STYLE SETTINGS =====
 FONT_SIZE = 13
@@ -25,9 +19,16 @@ plt.rcParams['xtick.labelsize'] = TICK_SIZE
 plt.rcParams['ytick.labelsize'] = TICK_SIZE
 plt.rcParams['legend.fontsize'] = LEGEND_SIZE
 
-# sns.set(font_scale=1.6)
-sns.set_style("ticks")
+# ===== COLOR SETUP =====
+palette = sns.color_palette("pastel")
+color1 = palette[0]  # Blue for Coyote
+color2 = palette[1]  # Orange for uShell
 
+# ===== HATCH PATTERNS =====
+hatch1 = "//"   # Coyote
+hatch2 = "\\\\"  # uShell
+
+# ===== DATA LOADING =====
 data1 = pandas.read_csv("../data/sched_latency.csv")
 data2 = pandas.read_csv("../data/sched_reconfig.csv")
 data3 = pandas.read_csv("../data/sched_resp_avg.csv")
@@ -85,14 +86,26 @@ color1 = palette[0]
 color2 = palette[1]
 color3 = palette[2]
 
-x_positions = np.arange(len([8, 12,16]))
+# Bar settings
+bar_width = 0.35  # Width for each individual bar
+x_values = [8, 12, 16]  # Number of tasks
+x_positions = np.arange(len(x_values))  # Position indices
 
-hatch1 = "//"
-hatch2 = "\\\\"
-hatch3 = ".."
+# Common bar properties for matplotlib bar()
+bar_props = {
+    'alpha': 1.0,
+    'edgecolor': 'k',
+    'linewidth': 1
+}
 
-hatch_list = [hatch1, hatch2]
-palette_console = [color1, color2]
+# ===== SUBPLOT DATA AND CONFIGURATION =====
+subplot_configs = [
+    (axs[0], data1, "Latency[ms]", "(a) Latency"),
+    (axs[1], data2, "Reconfig count", "(b) Reconfig. count"),
+    (axs[2], data3, "Latency[ms]", "(c) Avg. response time"),
+    (axs[3], data4, "Latency[ms]", "(d) Tail response time"),
+    (axs[4], data5, "Deadline misses", "(e) Missed deadlines")
+]
 
 width = 14  # \textwidth is 7 inch
 height = 3.5
@@ -244,32 +257,43 @@ for ax in axs:
     # Grid
     ax.grid(True, alpha=0.3, axis='y', color='gray')
     ax.set_axisbelow(True)
-
+    
     # Remove top and right spines
     sns.despine(ax=ax)
     annotate_bars(ax, data_frame[idx])
     idx += 1
 
 
-# handles, labels = axs[0].get_legend_handles_labels()
-# fig.legend(handles, labels, loc="upper right", fontsize=FONTSIZE, bbox_to_anchor=(1, 0.96), ncol=5)
+# ===== SHARED X-AXIS LABEL =====
+fig.supxlabel("Number of tasks", fontsize=LABEL_SIZE, y=-0.065)
 
-# legend
-p1 = matplotlib.patches.Patch(facecolor=palette[0], hatch=hatch_list[0], edgecolor="k",
-                        label='Coyote')
-p2 = matplotlib.patches.Patch(facecolor=palette[1], hatch=hatch_list[1], edgecolor="k",
-                        label='uShell')
+# ===== GLOBAL LEGEND =====
+# Use actual policy names from data
+actual_policies = []
+for ax, data, y_label, title in subplot_configs:
+    for policy in data['Policy'].unique():
+        if policy not in actual_policies:
+            actual_policies.append(policy)
+    break  # Just check first dataset
 
 # fig.legend(handles=[p1, p2, p3], loc="center left", bbox_to_anchor=(1.0, 0.5), frameon=False, ncol=1)
 fig.legend(handles=[p1, p2], loc="lower right",  bbox_to_anchor=(1, 0), frameon=True, ncol=5, fontsize=FONT_SIZE)
 
-# Add custom legend to the figure
-# fig.legend(handles=handles, loc="upper left", fontsize=FONTSIZE, bbox_to_anchor=(0.5, 1.05), ncol=5)
+fig.legend(handles=legend_elements, 
+          loc="lower right", 
+          bbox_to_anchor=(0.99, -0.1), 
+          frameon=True, 
+          ncol=2)     
 
-fig.subplots_adjust(hspace=0.5, bottom=0)  # Adjust these values as needed
+# ===== GLOBAL ANNOTATION =====
+# Position annotation in the bottom right area
+fig.text(0.76,-0.065, "Lower is better ↓", 
+         fontsize=ANNOTATION_SIZE, 
+         color="navy", 
+         weight="bold", 
+         ha='center', va='bottom')
 
-fig.tight_layout(pad=0.8)
-fig.savefig("sched.png", bbox_inches="tight")
-fig.savefig("sched.pdf", bbox_inches="tight")
-
-print("Output: sched.png, sched.pdf")
+# ===== SAVE AND DISPLAY =====
+#fig.savefig("sched.png", dpi=300, bbox_inches="tight")
+fig.savefig("../plots/sched.pdf", bbox_inches="tight")
+plt.show()
