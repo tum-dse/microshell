@@ -27,22 +27,22 @@ color_misc = 'white'            # White for Misc.
 
 # ===== APPLICATION NAMES =====
 applications = [
-    'Google\nBigQuery\n[38,39]',     # big data analytics 
-    'Google\nBigTable\n[38,40]',
-    'Stateful\nFirewall\n[65]',      # network functions
-    'Intrusion\nDetection\n[65]',   
-    'Audio\nDecoder\n[46,93]', 
-    'Swarm\nPerception\n[47,93]', 
-    'Speaker\nAuth.\n[18]',
-    'Kalman\nFilter\n[18]',
-    'Brain\nStimulat.\n[58]',
-    'Video\nSync.\n[58]',
-    'Context\nDetection\n[87,95]',
-    'Audio\nProcessing\n[115]',
-    'Digital\nSignature\n[90]',
-    'Secure\nStorage\n[85]',
-    'Signed\nCompress.\n[50]',
-    'Speech\nRecogn.\n[89]'
+    'Google\nBigQuery\n[33,34]',     # big data analytics 
+    'Google\nBigTable\n[33,35]',
+    'Stateful\nFirewall\n[59]',      # network functions
+    'Intrusion\nDetection\n[59]',   
+    'Audio\nDecoder\n[40,85]', 
+    'Swarm\nPerception\n[41,85]', 
+    'Speaker\nAuth.\n[14]',
+    'Kalman\nFilter\n[14]',
+    'Context\nDetection\n[79,87]',
+    'Brain\nStimulat.\n[51]',
+    'Video\nSync.\n[51]',
+    'Audio\nProcessing\n[105]',
+    'Digital\nSignature\n[82]',
+    'Secure\nStorage\n[77]',
+    'Signed\nCompress.\n[44]',
+    'Speech\nRecogn.\n[81]'
 ]
 
 # ===== MODULE DATA STRUCTURE =====
@@ -50,17 +50,17 @@ applications = [
 module_types = [
     # (counts, color, hatch, label)
     ([0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0], color_compute, '',     'Compute (LA)'),
-    ([0, 0, 0, 0, 4, 1, 1, 0, 1, 1, 0, 2, 0, 0, 0, 1], color_compute, '\\\\', 'Compute (DSP)'),
+    ([0, 0, 0, 0, 4, 1, 1, 0, 0, 1, 1, 2, 0, 0, 0, 1], color_compute, '\\\\', 'Compute (DSP)'),
     ([0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], color_compute, '..',   'Compute (Basic)'),
     ([2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], color_data,    '',     'Data (DB)'),
     ([1, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], color_data,    '\\\\', 'Data (Transform)'),
     ([2, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], color_data,    '..',   'Data (I/O)'),
-    ([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0], color_encoding, '',     'Compression'),
-    ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1, 0], color_encoding, '\\\\', 'Cryptography'),
+    ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0], color_encoding, '',     'Compression'),
+    ([0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 1, 0], color_encoding, '\\\\', 'Cryptography'),
     ([0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], color_networking, '',   'Network (Com.)'),
     ([0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], color_networking, '..', 'Network (Sec.)'),
     ([0, 0, 0, 0, 0, 2, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1], color_ml_matching, '',  'ML/AI'),
-    ([1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0], color_misc, '',         'Misc.')
+    ([1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0], color_misc, '',         'Misc.')
 ]
 
 # ===== PLOT SETUP =====
