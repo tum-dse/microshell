@@ -29,12 +29,12 @@ color2 = palette[1]  # Orange for direct communication (IPC)
 applications = ["Audio\nProcessing", "Digital\nSignature", "Secure\nStorage", "Signed\nCompression", "Speech\nRecognition"]
 
 # Throughput values (MB/s)
-cpu_sync_values = [85.9, 208.0, 139.9, 146.0, 29.2]
-ipc_values = [225.6, 239.2, 159.3, 154.1, 69.6]
+cpu_sync_values = [61.2, 215.1, 153.9, 149.3, 26.0]
+ipc_values = [225.8, 239.5, 159.8, 154.4, 69.7]
 
 # Error data (standard deviations)
-cpu_sync_errors = [3.2, 5.1, 4.2, 3.8, 1.2]
-ipc_errors = [4.5, 5.8, 3.9, 4.1, 2.1]
+cpu_sync_errors = [0.1, 1.4, 0.4, 0.2, 0.0]
+ipc_errors = [0.5, 1.2, 0.1, 0.0, 0.0]
 
 # ===== PLOT SETUP =====
 width = 5.8
@@ -70,7 +70,7 @@ for i, (cpu_val, ipc_val, cpu_err, ipc_err) in enumerate(zip(cpu_sync_values, ip
     speedup = ipc_val / cpu_val
     x_pos = x_positions[i] + bar_width/2
     y_pos = ipc_val + ipc_err + 3
-    
+
     ax.text(x_pos + 0.01, y_pos + 1, f'{speedup:.1f}x', ha='center', va='bottom',
             fontsize=SPEEDUP_SIZE, rotation=90, weight='bold')
 
@@ -97,7 +97,7 @@ ax.legend(loc='upper right', frameon=True, ncol=1,
 
 # ===== ANNOTATIONS =====
 ax.text(0.50, 1.1, 'Higher is better ↑', transform=ax.transAxes,
-        color='navy', weight='bold', fontsize=ANNOTATION_SIZE, 
+        color='navy', weight='bold', fontsize=ANNOTATION_SIZE,
         ha='center', va='top')
 
 # ===== SAVE AND DISPLAY =====

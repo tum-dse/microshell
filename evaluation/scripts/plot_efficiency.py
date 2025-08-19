@@ -27,42 +27,42 @@ color_share3 = palette[2]     # Green for shared by 3
 color_share4 = palette[3]     # Red for shared by 4
 
 # ===== DATA =====
-applications = ["ISPPIPELINE", "ISP_24BIT_DECOMPAND", "GAUSSIANDIFFERENCE", "DEFECT_DETECTION"]
+applications = ["ISPPIPELINE", "ISP_24BIT_DECOMPAND", "ALL_IN_ONE", "ISP_MULTISTREAM"]
 resources = ["LUTs", "Registers", "BRAM", "URAM"]
 
 # Total percentage of resources used by each app on U280
 app_totals = {
     "ISPPIPELINE": [1.45, 0.82, 2.38, 0.63],
     "ISP_24BIT_DECOMPAND": [4.83, 2.77, 43.97, 0.21],
-    "GAUSSIANDIFFERENCE": [0.87, 0.50, 0.74, 0],
-    "DEFECT_DETECTION": [1.98, 1.08, 0.92, 0]
+    "ALL_IN_ONE": [3.47, 1.67, 1.31, 0.21],
+    "ISP_MULTISTREAM": [5.87, 2.85, 11.76, 0]
 }
 
 # Breakdown of each app's total into sharing components
 app_breakdowns = {
     "ISPPIPELINE": [
-        [10.48, 79.87, 0, 9.65],     # LUTs
-        [11.41, 77.54, 0, 11.05],     # Registers
-        [0, 100, 0, 0],               # BRAM
-        [100, 0, 0, 0],               # URAM
+        [36.95, 0, 0.28, 62.77],         # LUTs
+        [39.37, 0, 0.47, 60.16],         # Registers
+        [33.33, 0, 0, 66.67],            # BRAM
+        [100, 0, 0, 0],                  # URAM
     ],
     "ISP_24BIT_DECOMPAND": [
-        [83.03, 12.61, 0.16, 4.20],  # LUTs
-        [83.84, 11.74, 0.08, 4.34],  # Registers
-        [98.65, 1.35, 0, 0],          # BRAM
-        [100, 0, 0, 0],               # URAM
+        [34.41, 38.47, 10.45, 16.67],    # LUTs
+        [32.85, 37.70, 13.48, 15.97],    # Registers
+        [94.47, 3.72, 0.46, 1.35],       # BRAM
+        [100, 0, 0, 0],                  # URAM
     ],
-    "GAUSSIANDIFFERENCE": [
-        [25.86, 64.34, 0.49, 9.31],  # LUTs
-        [24.02, 65.71, 0.52, 9.75],  # Registers
-        [33.33, 66.67, 0, 0],         # BRAM
-        [0, 0, 0, 0],                 # URAM (no usage)
+    "ALL_IN_ONE": [
+        [25.30, 39.47, 15.86, 19.37],    # LUTs
+        [27.85, 37.20, 16.34, 18.61],    # Registers
+        [50.95, 0, 15.09, 33.96],        # BRAM
+        [100, 0, 0, 0],                  # URAM 
     ],
-    "DEFECT_DETECTION": [
-        [71.55, 12.29, 0.42, 15.74], # LUTs
-        [70.31, 10.88, 0.49, 18.32], # Registers
-        [91.89, 8.11, 0, 0],          # BRAM
-        [0, 0, 0, 0],                 # URAM (no usage)
+    "ISP_MULTISTREAM": [
+        [62.94, 10.58, 9.71, 16.77],     # LUTs
+        [70.66, 6.44, 9.41, 13.49],      # Registers
+        [25.95, 13.92, 15.19, 44.94],    # BRAM
+        [0, 0, 0, 0],                    # URAM (no usage)
     ]
 }
 
@@ -170,7 +170,7 @@ ax.set_yticklabels(['0', '20', '40', '60', '80', '100'])
 
 # X-axis with application names (shortened for readability)
 ax.set_xticks(x_positions)
-app_labels = ["isp_pipe", "isp_decomp", "gaussidiff", "defct_detct"]
+app_labels = ["isp_pipe", "isp_decomp", "allinone", "isp_mltstrm"]
 ax.set_xticklabels(app_labels, ha='center', fontsize=LABEL_SIZE, rotation=0)
 
 # Grid

@@ -1,16 +1,17 @@
 import pandas
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import seaborn as sns
+from matplotlib.patches import Patch
 
 # ===== FONT AND STYLE SETTINGS =====
-FONT_SIZE = 13
-LABEL_SIZE = 11
+FONT_SIZE = 11
+LABEL_SIZE = 12
 TICK_SIZE = 12
-LEGEND_SIZE = 10
-VALUE_SIZE = 11
+LEGEND_SIZE = 12
+ANNOTATION_SIZE = 12
+PERCENTAGE_SIZE = 10
 
 plt.rcParams['mathtext.fontset'] = 'cm'
 plt.rcParams['font.size'] = FONT_SIZE
@@ -35,44 +36,43 @@ data3 = pandas.read_csv("../data/sched_resp_avg.csv")
 data4 = pandas.read_csv("../data/sched_resp_95.csv")
 data5 = pandas.read_csv("../data/sched_deadline.csv")
 
-
-def latency_percentage(data1):
-    # Calculate the latency percentages
-    latency_array = [
-        round(data1.loc[0, 'Latency[ms]'] / data1.loc[0, 'Latency[ms]'] * 100, 1),
-        round(data1.loc[1, 'Latency[ms]'] / data1.loc[1, 'Latency[ms]'] * 100, 1),
-        round(data1.loc[2, 'Latency[ms]'] / data1.loc[2, 'Latency[ms]'] * 100, 1),
-        round(data1.loc[3, 'Latency[ms]'] / data1.loc[0, 'Latency[ms]'] * 100, 1),
-        round(data1.loc[4, 'Latency[ms]'] / data1.loc[1, 'Latency[ms]'] * 100, 1),
-        round(data1.loc[5, 'Latency[ms]'] / data1.loc[2, 'Latency[ms]'] * 100, 1)
+# ===== PERCENTAGE CALCULATION FUNCTIONS =====
+def latency_percentage(data):
+    """Calculate latency percentages relative to Coyote baseline"""
+    return [
+        round(data.loc[0, 'Latency[ms]'] / data.loc[0, 'Latency[ms]'] * 100, 1),
+        round(data.loc[1, 'Latency[ms]'] / data.loc[1, 'Latency[ms]'] * 100, 1),
+        round(data.loc[2, 'Latency[ms]'] / data.loc[2, 'Latency[ms]'] * 100, 1),
+        round(data.loc[3, 'Latency[ms]'] / data.loc[0, 'Latency[ms]'] * 100, 1),
+        round(data.loc[4, 'Latency[ms]'] / data.loc[1, 'Latency[ms]'] * 100, 1),
+        round(data.loc[5, 'Latency[ms]'] / data.loc[2, 'Latency[ms]'] * 100, 1)
     ]
-    return latency_array
 
-def config_percentage(data1):
-    # Calculate the latency percentages
-    latency_array = [
-        round(data1.loc[0, 'Reconfig count'] / data1.loc[0, 'Reconfig count'] * 100, 1),
-        round(data1.loc[1, 'Reconfig count'] / data1.loc[1, 'Reconfig count'] * 100, 1),
-        round(data1.loc[2, 'Reconfig count'] / data1.loc[2, 'Reconfig count'] * 100, 1),
-        round(data1.loc[3, 'Reconfig count'] / data1.loc[0, 'Reconfig count'] * 100, 1),
-        round(data1.loc[4, 'Reconfig count'] / data1.loc[1, 'Reconfig count'] * 100, 1),
-        round(data1.loc[5, 'Reconfig count'] / data1.loc[2, 'Reconfig count'] * 100, 1)
+def config_percentage(data):
+    """Calculate reconfig count percentages relative to Coyote baseline"""
+    return [
+        round(data.loc[0, 'Reconfig count'] / data.loc[0, 'Reconfig count'] * 100, 1),
+        round(data.loc[1, 'Reconfig count'] / data.loc[1, 'Reconfig count'] * 100, 1),
+        round(data.loc[2, 'Reconfig count'] / data.loc[2, 'Reconfig count'] * 100, 1),
+        round(data.loc[3, 'Reconfig count'] / data.loc[0, 'Reconfig count'] * 100, 1),
+        round(data.loc[4, 'Reconfig count'] / data.loc[1, 'Reconfig count'] * 100, 1),
+        round(data.loc[5, 'Reconfig count'] / data.loc[2, 'Reconfig count'] * 100, 1)
     ]
-    return latency_array
 
-def deadline_percentage(data1):
-    # Calculate the latency percentages
-    latency_array = [
-        round(data1.loc[0, 'Deadline misses'] / data1.loc[0, 'Deadline misses'] * 100, 1),
-        round(data1.loc[1, 'Deadline misses'] / data1.loc[1, 'Deadline misses'] * 100, 1),
-        round(data1.loc[2, 'Deadline misses'] / data1.loc[2, 'Deadline misses'] * 100, 1),
-        round(data1.loc[3, 'Deadline misses'] / data1.loc[0, 'Deadline misses'] * 100, 1),
-        round(data1.loc[4, 'Deadline misses'] / data1.loc[1, 'Deadline misses'] * 100, 1),
-        round(data1.loc[5, 'Deadline misses'] / data1.loc[2, 'Deadline misses'] * 100, 1)
+def deadline_percentage(data):
+    """Calculate deadline miss percentages relative to Coyote baseline"""
+    return [
+        round(data.loc[0, 'Deadline misses'] / data.loc[0, 'Deadline misses'] * 100, 1),
+        round(data.loc[1, 'Deadline misses'] / data.loc[1, 'Deadline misses'] * 100, 1),
+        round(data.loc[2, 'Deadline misses'] / data.loc[2, 'Deadline misses'] * 100, 1),
+        round(data.loc[3, 'Deadline misses'] / data.loc[0, 'Deadline misses'] * 100, 1),
+        round(data.loc[4, 'Deadline misses'] / data.loc[1, 'Deadline misses'] * 100, 1),
+        round(data.loc[5, 'Deadline misses'] / data.loc[2, 'Deadline misses'] * 100, 1)
     ]
-    return latency_array
 
-data_frame = [
+# ===== DATA CONFIGURATION =====
+# Calculate percentages for all subplots
+percentage_data = [
     latency_percentage(data1),
     config_percentage(data2),
     latency_percentage(data3),
@@ -80,220 +80,169 @@ data_frame = [
     deadline_percentage(data5)
 ]
 
+# Subplot configurations
+subplot_configs = [
+    (data1, "Latency[ms]", "(a) Latency"),
+    (data2, "Reconfig count", "(b) Reconfig. count"),
+    (data3, "Latency[ms]", "(c) Avg. response time"),
+    (data4, "Latency[ms]", "(d) Tail response time"),
+    (data5, "Deadline misses", "(e) Missed deadlines")
+]
 
-palette = sns.color_palette("pastel")
-color1 = palette[0]
-color2 = palette[1]
-color3 = palette[2]
+# Y-axis limits for each subplot
+y_limits = {
+    "(a) Latency": (0, 2000),
+    "(b) Reconfig. count": (0, 40),
+    "(c) Avg. response time": (0, 900),
+    "(d) Tail response time": (0, 1800),
+    "(e) Missed deadlines": (0, 35)
+}
+
+# ===== PLOT SETUP =====
+width = 16  
+height = 4
+fig, axs = plt.subplots(nrows=1, ncols=5, sharex=True, figsize=(width, height), 
+                        constrained_layout=True)
 
 # Bar settings
-bar_width = 0.35  # Width for each individual bar
+bar_width = 0.35
 x_values = [8, 12, 16]  # Number of tasks
-x_positions = np.arange(len(x_values))  # Position indices
+x_positions = np.arange(len(x_values))
 
-# Common bar properties for matplotlib bar()
+# Common bar properties
 bar_props = {
     'alpha': 1.0,
     'edgecolor': 'k',
     'linewidth': 1
 }
 
-# ===== SUBPLOT DATA AND CONFIGURATION =====
-subplot_configs = [
-    (axs[0], data1, "Latency[ms]", "(a) Latency"),
-    (axs[1], data2, "Reconfig count", "(b) Reconfig. count"),
-    (axs[2], data3, "Latency[ms]", "(c) Avg. response time"),
-    (axs[3], data4, "Latency[ms]", "(d) Tail response time"),
-    (axs[4], data5, "Deadline misses", "(e) Missed deadlines")
-]
+# ===== PLOTTING BARS =====
+for subplot_idx, (ax, (data, y_label, title)) in enumerate(zip(axs, subplot_configs)):
+    # Get unique policies in this dataset
+    unique_policies = data['Policy'].unique()
+    
+    # Extract data for each policy
+    if len(unique_policies) >= 2:
+        policy1 = unique_policies[0]
+        policy2 = unique_policies[1]
+    else:
+        policy1 = 'Coyote'
+        policy2 = 'uShell'
+    
+    # Get data for each policy
+    policy1_data = data[data['Policy'] == policy1]
+    policy2_data = data[data['Policy'] == policy2]
+    
+    # Collect values for each number of tasks
+    policy1_values = []
+    policy2_values = []
+    
+    for tasks in x_values:
+        # Get value for policy1
+        val1 = policy1_data[policy1_data['Number of tasks'] == tasks][y_label].values
+        policy1_values.append(val1[0] if len(val1) > 0 else 0)
+        
+        # Get value for policy2
+        val2 = policy2_data[policy2_data['Number of tasks'] == tasks][y_label].values
+        policy2_values.append(val2[0] if len(val2) > 0 else 0)
+    
+    # Plot bars
+    bars1 = ax.bar(x_positions - bar_width/2, policy1_values, bar_width,
+                    color=color1, hatch=hatch1, label=policy1, **bar_props)
+    
+    bars2 = ax.bar(x_positions + bar_width/2, policy2_values, bar_width,
+                    color=color2, hatch=hatch2, label=policy2, **bar_props)
 
-width = 14  # \textwidth is 7 inch
-height = 3.5
+# ===== PERCENTAGE ANNOTATIONS =====
+for subplot_idx, ax in enumerate(axs):
+    percentages = percentage_data[subplot_idx]
+    bar_idx = 0
+    
+    # Annotate policy1 bars
+    for bar in ax.containers[0]:
+        if bar.get_height() > 0:
+            ax.text(bar.get_x() + bar.get_width()/2 + 0.03,
+                   bar.get_height() + (ax.get_ylim()[1] - ax.get_ylim()[0]) * 0.01,
+                   f'{percentages[bar_idx]:.0f}%',
+                   ha='center', va='bottom',
+                   fontsize=PERCENTAGE_SIZE,
+                   rotation=90,
+                   weight='bold')
+        bar_idx += 1
+    
+    # Annotate policy2 bars
+    for bar in ax.containers[1]:
+        if bar.get_height() > 0:
+            ax.text(bar.get_x() + bar.get_width()/2 + 0.03,
+                   bar.get_height() + (ax.get_ylim()[1] - ax.get_ylim()[0]) * 0.01,
+                   f'{percentages[bar_idx]:.0f}%',
+                   ha='center', va='bottom',
+                   fontsize=PERCENTAGE_SIZE,
+                   rotation=90,
+                   weight='bold')
+        bar_idx += 1
 
-bar_width = 0.18
-
-# fig, axs = plt.subplots(nrows=2, ncols=3, sharex=True)
-fig, axs = plt.subplots(nrows=1, ncols=5, sharex=True)
-fig.set_size_inches(width, height)
-fig.suptitle(
-    "Lower is better ↓", fontsize=FONT_SIZE, color="navy", weight="bold", x=0.73, y=0.08
-)
-
-g1 = sns.barplot(
-    ax=axs[0],
-    data=data1,
-    x="Number of tasks",
-    y="Latency[ms]",
-    hue="Policy",
-    errorbar=None,
-    palette=palette_console,
-    edgecolor="k",
-    linewidth=1.0,
-    width=0.8,
-    capsize=2,
-    alpha=1.0,
-    # 'error_kw': {'ecolor': 'black', 'elinewidth': 1, 'capsize': 2}
-)
-
-# apply hatch
-for idx, bar in enumerate(axs[0].containers[0]):
-    bar.set_hatch(hatch_list[0])
-for idx, bar in enumerate(axs[0].containers[1]):
-    bar.set_hatch(hatch_list[1])
-
-axs[0].set_title("(a)", weight="bold")
-
-g2 = sns.barplot(
-    ax=axs[1],
-    data=data2,
-    x="Number of tasks",
-    y="Reconfig count",
-    hue="Policy",
-    errorbar=None,
-    palette=palette_console,
-    edgecolor="k",
-    linewidth=1,
-    width=0.8,
-    # alpha=0.6,
-)
-axs[1].set_title("(b)", weight="bold")
-for idx, bar in enumerate(axs[1].containers[0]):
-    bar.set_hatch(hatch_list[0])
-for idx, bar in enumerate(axs[1].containers[1]):
-    bar.set_hatch(hatch_list[1])
-g3 = sns.barplot(
-    ax=axs[2],
-    data=data3,
-    x="Number of tasks",
-    y="Latency[ms]",
-    hue="Policy",
-    errorbar=None,
-    palette=palette_console,
-    edgecolor="k",
-    linewidth=1,
-    width=0.8,
-    # alpha=0.6,
-)
-
-axs[2].set_title("(c)", weight="bold")
-for idx, bar in enumerate(axs[2].containers[0]):
-    bar.set_hatch(hatch_list[0])
-for idx, bar in enumerate(axs[2].containers[1]):
-    bar.set_hatch(hatch_list[1])
-
-g4 = sns.barplot(
-    ax=axs[3],
-    data=data4,
-    x="Number of tasks",
-    y="Latency[ms]",
-    hue="Policy",
-    errorbar=None,
-    palette=palette_console,
-    edgecolor="k",
-    linewidth=1,
-    width=0.8,
-    # alpha=0.6,
-)
-
-axs[3].set_title("(d)", weight="bold")
-for idx, bar in enumerate(axs[3].containers[0]):
-    bar.set_hatch(hatch_list[0])
-for idx, bar in enumerate(axs[3].containers[1]):
-    bar.set_hatch(hatch_list[1])
-
-g5 = sns.barplot(
-    ax=axs[4],
-    data=data5,
-    x="Number of tasks",
-    y="Deadline misses",
-    hue="Policy",
-    errorbar=None,
-    palette=palette_console,
-    edgecolor="k",
-    linewidth=1,
-    width=0.8,
-    # alpha=0.6,
-)
-
-axs[4].set_title("(e)", weight="bold")
-for idx, bar in enumerate(axs[4].containers[0]):
-    bar.set_hatch(hatch_list[0])
-for idx, bar in enumerate(axs[4].containers[1]):
-    bar.set_hatch(hatch_list[1])
-
-for ax in axs[:]: 
+# ===== AXIS FORMATTING =====
+for ax, (data, y_label, title) in zip(axs, subplot_configs):
+    # Set title and labels
+    ax.set_title(title, weight="bold", fontsize=FONT_SIZE)
+    ax.set_ylabel(y_label)
+    
+    # Set x-axis
+    ax.set_xticks(x_positions)
+    ax.set_xticklabels(x_values)
     ax.set_xlabel('')
     
-# Set the x-axis label only for the bottom subplot (last one)
-# axs[4].set_xlabel("Number of tasks", fontsize=FONTSIZE)
-
-fig.supxlabel("Number of tasks")
-
-# Function to calculate and display the percentage on each bar
-def annotate_bars(ax, data_array):
-    idx = 0  # Index to access latency_array
-    for container in ax.containers:
-        for bar in container:
-            # Calculate the relative percentage here (you can replace it with your own calculation)
-            value = data_array[idx]
-            idx += 1
-            if height > 0:  # Check if the bar has non-zero height
-                ax.text(
-                    bar.get_x() + bar.get_width() / 2 + 0.1,  # X position (middle of the bar)
-                    bar.get_height(),  # Y position (top of the bar)
-                    f'{value:.0f}%',  # Display the percentage with one decimal point
-                    ha='center',  # Align horizontally in the center
-                    va='bottom',  # Position the text above the bar
-                    fontsize=VALUE_SIZE,
-                    color='black'  # Text color
-                )
-
-
-# Remove legends from individual subplots and add it once globally
-idx = 0
-for ax in axs:
-    ax.get_legend().set_visible(False)
-
+    # Set y-axis limits
+    if title in y_limits:
+        ax.set_ylim(y_limits[title])
+    
     # Grid
     ax.grid(True, alpha=0.3, axis='y', color='gray')
     ax.set_axisbelow(True)
     
     # Remove top and right spines
-    sns.despine(ax=ax)
-    annotate_bars(ax, data_frame[idx])
-    idx += 1
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
 
-
-# ===== SHARED X-AXIS LABEL =====
+# X-axis shared label
 fig.supxlabel("Number of tasks", fontsize=LABEL_SIZE, y=-0.065)
 
-# ===== GLOBAL LEGEND =====
-# Use actual policy names from data
+# ===== LEGEND =====
+# Get actual policy names from first dataset
 actual_policies = []
-for ax, data, y_label, title in subplot_configs:
-    for policy in data['Policy'].unique():
-        if policy not in actual_policies:
-            actual_policies.append(policy)
-    break  # Just check first dataset
+for policy in subplot_configs[0][0]['Policy'].unique():
+    if policy not in actual_policies:
+        actual_policies.append(policy)
 
-# fig.legend(handles=[p1, p2, p3], loc="center left", bbox_to_anchor=(1.0, 0.5), frameon=False, ncol=1)
-fig.legend(handles=[p1, p2], loc="lower right",  bbox_to_anchor=(1, 0), frameon=True, ncol=5, fontsize=FONT_SIZE)
+# Create legend elements
+legend_elements = []
 
+# First policy (Coyote)
+if len(actual_policies) > 0:
+    legend_elements.append(Patch(facecolor=color1, edgecolor="k", alpha=1.0, 
+                                 hatch=hatch1, label=actual_policies[0]))
+
+# Second policy (uShell)
+if len(actual_policies) > 1:
+    legend_elements.append(Patch(facecolor=color2, edgecolor="k", alpha=1.0, 
+                                 hatch=hatch2, label='µShell'))  
+
+# Position legend
 fig.legend(handles=legend_elements, 
           loc="lower right", 
-          bbox_to_anchor=(0.99, -0.1), 
+          bbox_to_anchor=(1, -0.1), 
           frameon=True, 
-          ncol=2)     
+          ncol=2)
 
-# ===== GLOBAL ANNOTATION =====
-# Position annotation in the bottom right area
-fig.text(0.76,-0.065, "Lower is better ↓", 
+# ===== ANNOTATION =====
+fig.text(0.78, -0.065, "Lower is better ↓", 
          fontsize=ANNOTATION_SIZE, 
          color="navy", 
          weight="bold", 
          ha='center', va='bottom')
 
 # ===== SAVE AND DISPLAY =====
-#fig.savefig("sched.png", dpi=300, bbox_inches="tight")
-fig.savefig("../plots/sched.pdf", bbox_inches="tight")
+#plt.savefig("sched.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/sched.pdf", bbox_inches='tight')
 plt.show()
