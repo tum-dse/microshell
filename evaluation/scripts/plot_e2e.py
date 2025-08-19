@@ -31,20 +31,20 @@ data_sizes = ["8KB", "256KB", "1MB"]
 
 # Format: [baseline, µShell_mono, µShell] for each data size
 data = {
-    "Audio Processing": [108.1, 104.5, 105.6, 227.9, 226.4, 219.7, 225.6, 226.3, 221.4],
-    "Digital Signature": [89.1, 89.0, 87.7, 232.4, 233.4, 228.2, 239.2, 239.1, 233.5],
-    "Secure Storage": [148.3, 147.4, 144.1, 160.5, 159.6, 155.3, 159.3, 158.8, 154.1],
-    "Signed Compression": [72.2, 73.8, 69.4, 149.8, 150.4, 144.1, 154.1, 154.3, 150.8],
-    "Speech Recognition": [75.4, 80.3, 73.1, 69.7, 69.9, 68.2, 69.6, 69.6, 68.3]
+    "Audio Processing": [97.9, 98.5, 95.0, 224.9, 226.0, 219.0, 225.8, 224.8, 218.8],
+    "Digital Signature": [88.4, 87.3, 84.8, 233.1, 233.9, 229.4, 239.5, 238.3, 232.3],
+    "Secure Storage": [147.3, 146.8, 141.0, 159.6, 158.5, 150.5, 159.8, 160.7, 155.7],
+    "Signed Compression": [73.5, 74.5, 72.3, 150.1, 149.2, 143.7, 154.4, 153.6, 150.6],
+    "Speech Recognition": [82.0, 81.2, 77.4, 69.9, 70.6, 67.8, 69.6, 70.2, 67.4]
 }
 
 # Error data (standard deviations)
 error_data = {
-    "Audio Processing": [2.5, 2.1, 2.3, 4.5, 4.2, 3.8, 3.9, 4.1, 3.7],
-    "Digital Signature": [1.8, 1.9, 1.7, 3.2, 3.5, 2.9, 3.8, 3.7, 3.4],
-    "Secure Storage": [2.9, 2.8, 2.5, 2.7, 2.6, 2.4, 2.8, 2.7, 2.5],
-    "Signed Compression": [1.5, 1.6, 1.4, 2.4, 2.5, 2.2, 2.6, 2.6, 2.4],
-    "Speech Recognition": [1.3, 1.5, 1.2, 1.1, 1.1, 1.0, 1.2, 1.2, 1.1]
+    "Audio Processing": [10.2, 10.0, 10.0, 3.4, 2.0, 2.0, 0.5, 0.5, 0.5],
+    "Digital Signature": [1.2, 1.2, 1.2, 0.2, 0.2, 0.2, 1.2, 0.2, 0.2],
+    "Secure Storage": [0.5, 0.2, 0.2, 0.0, 0.6, 0.6, 0.1, 0.1, 0.1],
+    "Signed Compression": [0.1, 0.1, 0.1, 0.5, 0.4, 0.4, 0.0, 0.0, 0.0],
+    "Speech Recognition": [0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 
 # ===== PLOT SETUP =====
@@ -156,7 +156,7 @@ ax.set_yticks([0, 50, 100, 150, 200, 250])
 # X-axis
 group_centers = x_positions + (len(data_sizes) * bar_width * 3 - bar_width) / 2
 ax.set_xticks(group_centers)
-ax.set_xticklabels(display_names, ha='center')
+ax.set_xticklabels(display_names, ha='center', fontsize=LABEL_SIZE)
 
 # Grid
 ax.grid(True, alpha=0.3, axis='y', color='gray')
@@ -180,7 +180,7 @@ legend_elements.append(Patch(facecolor='white', edgecolor="k", alpha=1.0, hatch=
 
 # Updated legend
 ax.legend(handles=legend_elements, loc='upper right', frameon=True,
-          ncol=2, bbox_to_anchor=(1, 1.08))          
+          ncol=2, bbox_to_anchor=(1, 1.08))
 
 # ===== ANNOTATION =====
 fig.suptitle('Higher is better ↑', fontsize=ANNOTATION_SIZE, color='navy',
