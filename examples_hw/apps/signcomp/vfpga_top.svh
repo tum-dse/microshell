@@ -22,7 +22,7 @@ rle_top inst_rle (
 );
 
 // RSA 
-r_top inst_rsa (
+rsa_top inst_rsa (
     .axis_sink      (axis_rle_out_int),
     .axis_src       (axis_host_src_int),
     .aclk           (aclk),

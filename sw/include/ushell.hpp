@@ -690,14 +690,14 @@ void Dataflow::configure_io_switches() {
         }
         
         // First node
-        dfg::configure_node_io_switch(nodes[0], dfg::IODevs::Inter_2_TO_DTU_1);
+        dfg::configure_node_io_switch(nodes[0], dfg::IODevs::Inter_2_TO_CEU_1);
         
         // Last node
         dfg::configure_node_io_switch(nodes[nodes.size()-1], dfg::IODevs::Inter_2_TO_HOST_1);
         
         // Middle nodes
         for (size_t i = 1; i < nodes.size() - 1; i++) {
-            dfg::configure_node_io_switch(nodes[i], dfg::IODevs::Inter_3_TO_DTU_2);
+            dfg::configure_node_io_switch(nodes[i], dfg::IODevs::Inter_3_TO_CEU_2);
         }
     } else if (nodes.size() == 1) {
         // Single node
@@ -849,7 +849,7 @@ void Dataflow::execute(size_t current_size) {
         
         dfg::Capability* last_node_cap = node_capabilities[nodes.back()->get_id()];
         if (last_node_cap) {
-            while(nodes.back()->check_completed(last_node_cap, dfg::CoyoteOper::LOCAL_WRITE) != 1) {
+            while(nodes.back()->check_completed(last_node_cap, dfg::CoyoteOper::LOCAL_TRANSFER) != 1) {
                 timeout_counter++;
                 if (dfg->is_stalled(dfg_root_capability) || timeout_counter > max_timeout) {
                     if (timeout_counter > max_timeout) {

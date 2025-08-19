@@ -15,18 +15,15 @@ set_property -dict [list \
     CONFIG.HAS_TLAST {1} \
 ] [get_ips dwidth_converter_64_512]
 
-# Create FFT IP with memory-efficient settings
+# Create FFT IP
 create_ip -name xfft -vendor xilinx.com -library ip -version 9.1 -module_name xfft_0
 set_property -dict [list \
     CONFIG.transform_length {32} \
     CONFIG.data_format {floating_point} \
-    CONFIG.implementation_options {radix_2_burst_io} \
+    CONFIG.implementation_options {automatically_select} \
     CONFIG.input_width {32} \
     CONFIG.output_ordering {natural_order} \
     CONFIG.aresetn {true} \
-    CONFIG.aclken {false} \
-    CONFIG.ovflo {false} \
-    CONFIG.xk_index {false} \
 ] [get_ips xfft_0]
 
 # Generate all IP targets

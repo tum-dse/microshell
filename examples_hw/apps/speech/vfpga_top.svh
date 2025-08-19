@@ -206,41 +206,6 @@ dwidth_converter_32_512 inst_dwidth_send (
     .m_axis_tid(axis_src_int.tid)
 );
 
-// Enhanced ILA for debugging delay fix
-ila_0 inst_ila (
-    .clk(aclk),
-    
-    // FFT Input Stream
-    .probe0(axis_host_recv_tdata[31:0]),           // 32-bit: FFT input real part
-    .probe1(axis_host_recv_tvalid),                // 1-bit:  FFT input valid
-    .probe2(axis_host_recv_tready),                // 1-bit:  FFT input ready
-    .probe3(axis_host_recv_tlast),                 // 1-bit:  Original host TLAST
-    
-    // Host TLAST Capture Logic (with delay)
-    .probe4({6'b0, host_tlast_captured, host_stream_complete}), // 8-bit: Host TLAST status
-    .probe5(host_tlast_immediate),                 // 1-bit:  Immediate host TLAST capture
-    .probe6(host_tlast_captured),                  // 1-bit:  Delayed host TLAST capture
-    .probe7({3'b0, tlast_delay_counter}),          // 8-bit:  Delay counter
-    
-    // FFT Output Stream  
-    .probe8({7'b0, fft_packet_complete}),          // 8-bit:  FFT packet complete
-    .probe9(axis_host_send_tvalid),                // 1-bit:  FFT output valid
-    .probe10(axis_host_send_tready),               // 1-bit:  FFT output ready
-    .probe11(axis_host_send_tlast),                // 1-bit:  FFT output TLAST
-    
-    // SVM Interface (AND gate result)
-    .probe12(svm_tdata),                           // 32-bit: Data to SVM
-    .probe13(svm_tvalid),                          // 1-bit:  SVM input valid
-    .probe14(svm_tready),                          // 1-bit:  SVM input ready
-    .probe15(final_packet_tlast),                  // 1-bit:  AND gate TLAST result
-    
-    // SVM Output
-    .probe16(svm_out_tdata),                       // 32-bit: SVM result
-    .probe17(svm_out_tvalid),                      // 1-bit:  SVM output valid
-    .probe18(svm_out_tready),                      // 1-bit:  SVM output ready
-    .probe19(svm_out_tlast)                        // 1-bit:  SVM output TLAST
-);
-
 // Tie-off unused interfaces
 always_comb axi_ctrl.tie_off_s();
 always_comb notify.tie_off_m();

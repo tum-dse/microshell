@@ -242,7 +242,7 @@ int main(int argc, char *argv[]) {
         
         auto benchmark_thr = [&]() {
             for (int i = 0; i < n_reps_lat; i++) {
-                speech_dataflow.execute(input_buffer_size);
+                speech_dataflow.execute();
             }
         };
 

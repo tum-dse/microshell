@@ -5,7 +5,7 @@ import lynxTypes::*;
  * Modular RSA
  * 
  */
-module r_top (
+module rsa_top (
     AXI4SR.s                                axis_sink,
     AXI4SR.m                                axis_src,
 
