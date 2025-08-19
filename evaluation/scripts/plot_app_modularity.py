@@ -29,20 +29,20 @@ color_misc = 'white'            # White for Misc.
 applications = [
     'Google\nBigQuery\n[33,34]',     # big data analytics 
     'Google\nBigTable\n[33,35]',
-    'Stateful\nFirewall\n[59]',      # network functions
-    'Intrusion\nDetection\n[59]',   
-    'Audio\nDecoder\n[40,85]', 
-    'Swarm\nPerception\n[41,85]', 
+    'Stateful\nFirewall\n[60]',      # network functions
+    'Intrusion\nDetection\n[60]',   
+    'Audio\nDecoder\n[40,86]', 
+    'Swarm\nPerception\n[41,86]', 
     'Speaker\nAuth.\n[14]',
     'Kalman\nFilter\n[14]',
-    'Context\nDetection\n[79,87]',
+    'Context\nDetection\n[80,88]',
     'Brain\nStimulat.\n[51]',
     'Video\nSync.\n[51]',
-    'Audio\nProcessing\n[105]',
-    'Digital\nSignature\n[82]',
-    'Secure\nStorage\n[77]',
+    'Audio\nProcessing\n[106]',
+    'Digital\nSignature\n[83]',
+    'Secure\nStorage\n[78]',
     'Signed\nCompress.\n[44]',
-    'Speech\nRecogn.\n[81]'
+    'Speech\nRecogn.\n[82]'
 ]
 
 # ===== MODULE DATA STRUCTURE =====
