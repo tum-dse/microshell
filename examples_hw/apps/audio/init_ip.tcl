@@ -18,7 +18,7 @@ set_property -dict [list \
 # Create FFT IP
 create_ip -name xfft -vendor xilinx.com -library ip -version 9.1 -module_name xfft_0
 set_property -dict [list \
-    CONFIG.transform_length {32} \
+    CONFIG.transform_length {16384} \
     CONFIG.data_format {floating_point} \
     CONFIG.implementation_options {automatically_select} \
     CONFIG.input_width {32} \
