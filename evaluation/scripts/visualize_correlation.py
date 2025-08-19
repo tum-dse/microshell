@@ -45,8 +45,8 @@ def plot_half_correlation_matrix(csv_path, csv_path_2, output_file='correlation_
     
     # Customize plot
     plt.title('Correlation Matrix (Lower Triangle)', fontsize=16)
-    plt.xticks(np.arange(n), folders, rotation=45, ha='right', fontsize=13)
-    plt.yticks(np.arange(n), folders, rotation=45, fontsize=13)
+    plt.xticks(np.arange(n), folders, rotation=45, ha='right', fontsize=14)
+    plt.yticks(np.arange(n), folders, rotation=45, fontsize=14)
     
     # Draw diagonal line
     plt.plot([-0.5, n-0.5], [-0.5, n-0.5], color='gray', linestyle='--')

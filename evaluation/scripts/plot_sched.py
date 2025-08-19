@@ -6,8 +6,8 @@ import seaborn as sns
 from matplotlib.patches import Patch
 
 # ===== FONT AND STYLE SETTINGS =====
-FONT_SIZE = 11
-LABEL_SIZE = 12
+FONT_SIZE = 14
+LABEL_SIZE = 14
 TICK_SIZE = 12
 LEGEND_SIZE = 12
 ANNOTATION_SIZE = 12
@@ -206,7 +206,7 @@ for ax, (data, y_label, title) in zip(axs, subplot_configs):
     ax.spines['right'].set_visible(False)
 
 # X-axis shared label
-fig.supxlabel("Number of tasks", fontsize=LABEL_SIZE, y=-0.065)
+fig.supxlabel("Number of instances", fontsize=LABEL_SIZE, y=-0.065)
 
 # ===== LEGEND =====
 # Get actual policy names from first dataset
@@ -243,6 +243,6 @@ fig.text(0.78, -0.065, "Lower is better ↓",
          ha='center', va='bottom')
 
 # ===== SAVE AND DISPLAY =====
-#plt.savefig("sched.png", dpi=300, bbox_inches='tight')
+plt.savefig("sched.png", dpi=300, bbox_inches='tight')
 plt.savefig("../plots/sched.pdf", bbox_inches='tight')
 plt.show()
