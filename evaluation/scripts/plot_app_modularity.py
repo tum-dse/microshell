@@ -5,7 +5,7 @@ from matplotlib.patches import Patch
 
 # ===== FONT AND STYLE SETTINGS =====
 FONT_SIZE = 12
-LABEL_SIZE = 11
+LABEL_SIZE = 12
 TICK_SIZE = 11
 LEGEND_SIZE = 10
 
@@ -132,4 +132,5 @@ plt.margins(x=0.015, y=0.0, tight=True)
 
 # Save figure
 plt.savefig("../plots/application_modularity_analysis.pdf", bbox_inches='tight')
-plt.show()
+plt.savefig("application_modularity_analysis.png", dpi=300, bbox_inches='tight')
+# plt.show()

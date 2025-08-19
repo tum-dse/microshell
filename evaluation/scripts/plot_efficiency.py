@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib.ticker import FuncFormatter
 
 # ===== FONT AND STYLE SETTINGS =====
-FONT_SIZE = 10
+FONT_SIZE = 12
 LABEL_SIZE = 10
 TICK_SIZE = 10
 LEGEND_SIZE = 9
@@ -214,4 +214,5 @@ legend = ax.legend(handles=all_handles, loc='center',
 plt.tight_layout()
 plt.margins(x=0.02, tight=True)
 plt.savefig("../plots/resource_efficiency.pdf", bbox_inches='tight')
-plt.show()
+plt.savefig("resource_efficiency.png", bbox_inches='tight')
+# plt.show()
