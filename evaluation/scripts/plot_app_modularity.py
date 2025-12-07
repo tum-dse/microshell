@@ -27,22 +27,22 @@ color_misc = 'white'            # White for Misc.
 
 # ===== APPLICATION NAMES =====
 applications = [
-    'Google\nBigQuery\n[33,34]',     # big data analytics 
-    'Google\nBigTable\n[33,35]',
-    'Stateful\nFirewall\n[60]',      # network functions
-    'Intrusion\nDetection\n[60]',   
-    'Audio\nDecoder\n[40,86]', 
-    'Swarm\nPerception\n[41,86]', 
-    'Speaker\nAuth.\n[14]',
-    'Kalman\nFilter\n[14]',
-    'Context\nDetection\n[80,88]',
-    'Brain\nStimulat.\n[51]',
-    'Video\nSync.\n[51]',
-    'Audio\nProcessing\n[106]',
-    'Digital\nSignature\n[83]',
-    'Secure\nStorage\n[78]',
-    'Signed\nCompress.\n[44]',
-    'Speech\nRecogn.\n[82]'
+    'Google\nBigQuery\n[40,41]',     # big data analytics 
+    'Google\nBigTable\n[40,42]',
+    'Stateful\nFirewall\n[69]',      # network functions
+    'Intrusion\nDetection\n[69]',   
+    'Audio\nDecoder\n[47,98]', 
+    'Swarm\nPerception\n[48,98]', 
+    'Speaker\nAuth.\n[18]',
+    'Kalman\nFilter\n[18]',
+    'Context\nDetection\n[91,100]',
+    'Brain\nStimulat.\n[59]',
+    'Video\nSync.\n[59]',
+    'Audio\nProcessing\n[119]',
+    'Digital\nSignature\n[95]',
+    'Secure\nStorage\n[89]',
+    'Signed\nCompress.\n[52]',
+    'Speech\nRecogn.\n[94]'
 ]
 
 # ===== MODULE DATA STRUCTURE =====
