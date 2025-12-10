@@ -31,18 +31,18 @@ applications = [
     'Google\nBigTable\n[40,42]',
     'Stateful\nFirewall\n[69]',      # network functions
     'Intrusion\nDetection\n[69]',   
-    'Audio\nDecoder\n[47,98]', 
-    'Swarm\nPerception\n[48,98]', 
+    'Audio\nDecoder\n[47,99]', 
+    'Swarm\nPerception\n[48,99]', 
     'Speaker\nAuth.\n[18]',
     'Kalman\nFilter\n[18]',
-    'Context\nDetection\n[91,100]',
+    'Context\nDetection\n[92,101]',
     'Brain\nStimulat.\n[59]',
     'Video\nSync.\n[59]',
-    'Audio\nProcessing\n[119]',
-    'Digital\nSignature\n[95]',
-    'Secure\nStorage\n[89]',
+    'Audio\nProcessing\n[121]',
+    'Digital\nSignature\n[96]',
+    'Secure\nStorage\n[90]',
     'Signed\nCompress.\n[52]',
-    'Speech\nRecogn.\n[94]'
+    'Speech\nRecogn.\n[95]'
 ]
 
 # ===== MODULE DATA STRUCTURE =====
