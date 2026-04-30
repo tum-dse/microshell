@@ -128,11 +128,11 @@ run_scc() {
 }
 
 # Run complexity measurements
-run_scc "$baseline_BASE/examples_sw/apps/audio" "Audio Compression"
-run_scc "$baseline_BASE/examples_sw/apps/digi_sign" "Digital Signature"
-run_scc "$baseline_BASE/examples_sw/apps/secure" "Secure Storage"
-run_scc "$baseline_BASE/examples_sw/apps/signcomp" "Signed Compression"
-run_scc "$baseline_BASE/examples_sw/apps/speech" "Speech Recognition"
+run_scc "$baseline_BASE/examples_sw/apps/audio_processing" "Audio Processing"
+run_scc "$baseline_BASE/examples_sw/apps/digital_signature" "Digital Signature"
+run_scc "$baseline_BASE/examples_sw/apps/secure_storage" "Secure Storage"
+run_scc "$baseline_BASE/examples_sw/apps/signed_compression" "Signed Compression"
+run_scc "$baseline_BASE/examples_sw/apps/speech_recognition" "Speech Recognition"
 
 echo "==============================================================="
 echo "Complexity measurement complete!"

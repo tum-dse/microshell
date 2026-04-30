@@ -1,16 +1,23 @@
+# µShell: A Microkernel-based FPGA Shell Architecture
 
-# $\mu$Shell: A Microkernel-based FPGA Shell Architecture
+µShell is a hardware/OS co-design for modular accelerator deployment. Inspired
+by the microkernel principle, individual hardware modules (FFT, RSA, AES, …)
+are deployed into separate vFPGAs and dynamically chained together by a
+host-side dataflow graph (DFG) API to compose end-to-end accelerators.
 
-## Overview
+This repo contains the µShell shell, runtime, driver, example modules, and the
+end-to-end applications used in the paper. The accompanying baseline (the same
+applications written against an unmodified Coyote shell) lives at
+[TUM-DSE/microShell, branch `baseline`](https://github.com/TUM-DSE/microShell/tree/baseline).
 
-$\mu$Shell is a hardware-OS co-design for modular accelerator deployment and execution. Inspired by the microkernel principle, $\mu$Shell enables dynamic accelerator composition, deploying individual hardware modules into distinct vFPGAs and dynamically chaining them together to compose the entire accelerator.
+---
 
-## Main Results
+## Hero results
 
 <div align="center">
   <img src="evaluation/plots/e2e.png" width="95%"/>
   <br/>
-  <em>Compiler tradeoff (Fig. 9): qTPU exposes a flexible Pareto frontier; QAC produces a single fixed solution.</em>
+  <em>End-to-end throughput across the five composed applications, baseline vs. µShell.</em>
 </div>
 
 <br/>
@@ -18,7 +25,7 @@ $\mu$Shell is a hardware-OS co-design for modular accelerator deployment and exe
 <div align="center">
   <img src="evaluation/plots/sched.png" width="95%"/>
   <br/>
-  <em>Hardware validation (Fig. 11): (a) IBM Marrakesh, (b) noise-model sim to 150q, (c) Pareto frontier at 80q.</em>
+  <em>Scheduler comparison: latency, response time, deadline misses, reconfiguration cost across two policies.</em>
 </div>
 
 <br/>
@@ -26,270 +33,163 @@ $\mu$Shell is a hardware-OS co-design for modular accelerator deployment and exe
 <div align="center">
   <img src="evaluation/plots/reconfig_overhead.png" width="50%"/>
   <br/>
-  <em>Hybrid ML (Fig. 14): compilation time and code size — batch execution vs. qTPU.</em>
+  <em>Partial reconfiguration latency breakdown for vFPGA module swaps.</em>
 </div>
 
-<!-- <br/>
+---
 
-<div align="center">
-  <img src="figures/error_mitigation.png" width="60%"/>
-  <br/>
-  <em>Error mitigation (Fig. 15): qTPU is 3,500x faster and generates 3,700x less code than Mitiq.</em>
-</div> -->
+## Hardware & software requirements
 
-## For OSDI evaluation testers
+| Component | Used in the paper                                              |
+|-----------|----------------------------------------------------------------|
+| CPU       | 2× AMD EPYC 7413                                               |
+| FPGA      | 2× Xilinx Alveo U280 (one per host, for RDMA experiments)      |
+| Network   | 100 GbE (FPGA-attached)                                        |
+| OS        | NixOS 23.11 / Linux 6.9                                        |
+| Tools     | Vivado 2022.x via `xilinx-shell`, Nix, Python ≥ 3.11           |
 
-Due to the special hardware requirments, we provide ssh access to our evaluation machines. Please contact the paper author through hotcrp to obtain ssh keys. The machines will have the correct hardware and also software installed to run the experiments. If you run into problems you can contact us through hotcrp for further questions.
+Two-server workflow: **Amy** runs Vivado bitstream generation, **Clara** runs
+FPGA tests. See [`evaluation/scripts/README.md`](evaluation/scripts/README.md).
 
-# Reproduce paper results
+---
 
-The first step is to get the source code for $\mu$Shell
-```
-git clone git@github.com:TUM-DSE/microShell.git microShell
-cd microShell
-```
-
-## Specs
-
-### Software
-- Operating system: Linux 6.9.0-rc7 NixOS 23.11
-- [Nix](https://nixos.org/download.html): For reproducibility we use the nix package manager to download all build dependencies. We use `xilinx-shell` and `vfpio.nix` to provide a consistant runtime environment. 
-
-- Python 3.11 or newer for the script that reproduces the evaluation
-
-
-### Hardware
-- AMD EPYC 7413 CPU x2
-- Xilinx Alveo U280 FPGA x2
-- 100GB/s network interface
-- Host machine (Amy) is the main server while a second machine (Clara) is used for acting as the client during RDMA experiments.
-
-
-## Getting Started Instructions
-
-Here are the instructions to run a "Hello world"-like example, which is perf_local. The software is located in the following Github repo: https://github.com/TUM-DSE/microShell.
-
-### Building FPGA kernel driver
-
-
-To build the driver, run the following command in the project root folder
+## Repository layout
 
 ```
-nix-shell vfpio.nix
-cd driver
-make -C $(nix-build -E '(import <nixpkgs> {}).linuxPackages_6_8.kernel.dev' --no-out-link)/lib/modules/*/build M=$(pwd)
+microShell/
+├── examples_hw/apps/         # HW pipelines (audio_processing, digital_signature, ...)
+│   └── modules/              #   single-module bring-ups (fft, rsa, sha256, ...)
+├── examples_sw/apps/         # Host programs, mirrors examples_hw
+│   ├── *_monolithic/         #   single-binary versions for the µShell baseline
+│   └── modules/              #   per-module test programs
+├── sw/{include,src}/         # µShell runtime: DFG, Pipeline, Buffer, ushell::*
+├── driver/                   # Linux kernel driver (Coyote-derived)
+├── bitstreams/               # Pre-built .bit / .ltx (loaded by program_fpga.sh)
+├── evaluation/{scripts,data,plots}
+├── program_fpga.sh           # Load bitstream + driver + hugepages
+└── shell.nix                 # Reproducible build environment
 ```
 
-You can also use the pre-compiled FPGA driver provided with this repo. 
+---
 
-### Obtaining FPGA bitstream
+## Quick start (perf_local)
 
-FPGA bitstreams are used to program the FPGA with specified applications. Compiling a bistream for our FPGA takes a long time (3-4 hours). To save time, we provided pre-compiled bitstrems in `bitstreams` folder. 
+`perf_local` is the smallest end-to-end test: a host-side ping/loop across two
+vFPGAs, no application logic.
 
-Please do not change the position and the name of the bitstream folder.
+On Clara, with a pre-built `cyt_top.bit` already in `bitstreams/`:
 
+```bash
+# 1. Enter the build environment
+nix-shell shell.nix
 
-### Compiling perf_local software
-
-Run the following command to build the `io_app` software binary for running the perf_local host application with the $\mu$Shell shell using FPGA memory.
-
-```
-# You don't have to run the following nix-shell command if you are already in a nix-shell
-nix-shell vfpio.nix
-# in the project repo root 
-mkdir build_io_app_sw && cd build_io_app_sw
-cmake ../sw/ -DTARGET_DIR=examples/io_app
-make
-```
-
-
-Set up hugepages for host application.
-
-```
+# 2. Load driver, program FPGA, set hugepages
+sudo bash ./program_fpga.sh cyt_top
 sudo sysctl -w vm.nr_hugepages=1024
-```
 
-### Running test example
-
-Due to the long time requried for compiling FPGA bitstreams (3-4 hours), we suggest using our provided bitstream for evaluation.
-
-
-Then run the experiments
-```
-# in the project repo root
-python3 reproduce.py -r -e simple 
-```
-
-This command will run the perf_local host application 10 times and calculate the average throughput.
-
-
-
-## Detailed Instructions
-
-### Compilation
-
-#### Software
-
-In the project repo, run the following command to build all host applications
-
-```
-nix-shell vfpio.nix
-# in the project repo root 
-bash compile_sw.sh
-```
-
-Or to compile specific example, identify the application you want to build from `sw/examples/`, e.g. `io_app`, then run the following commands 
-```
-nix-shell vfpio.nix
-# in the project repo root 
-mkdir build_io_app_sw && cd build_io_app_sw
-cmake ../sw/ -DTARGET_DIR=examples/io_app
+# 3. Build and run the host program
+cd examples_sw && mkdir build_perf_local && cd build_perf_local
+cmake ../ -DEXAMPLE=perf_local
 make
+cd bin && ./test
 ```
 
-### Hardware
+If you don't have a pre-built bitstream, build one first (Amy):
 
-Identify the hardware examples in `hw/hdl/operators/examples/`, e.g. `md5`, then run the following commands
-
-```
+```bash
 xilinx-shell
-mkdir build_md5_io_hw && cd build_md5_io_hw
-cmake ../hw/ -DFDEV_NAME=u280 -DEXAMPLE=md5
-make shell && make compile
+cd examples_hw && mkdir build_perf_local && cd build_perf_local
+cmake ../ -DEXAMPLE=perf_local_2 -DFDEV_NAME=u280
+make project && make bitgen          # ~3-4 hours
 ```
 
-This will take 3-4 hours to complete. To save time, you can use our pre-compiled bitstreams. 
+---
 
+## Building from source
 
-### Running experiments
+### Driver
 
-
-#### 6.1 Performance
-
-Run the following command to set the number of huge pages in the kernel. Otherwise the host application will be killed.
-
-```
-sudo sysctl -w vm.nr_hugepages=1024
+```bash
+nix-shell -p gcc14 gnumake
+cd driver
+make KERNELDIR=$(nix-build -E '(import <nixpkgs> {}).linuxPackages_6_8.kernel.dev' --no-out-link)/lib/modules/*/build M=$(pwd)
 ```
 
-Use the `reproduce.py` file to run the experiments. 
+### Hardware bitstream
 
-```
-python3 reproduce.py -r -e Exp_6_1_host_list 
-python3 reproduce.py -r -e Exp_6_1_coyote_list 
-python3 reproduce.py -r -e Exp_6_1_vfpio_list 
-python3 reproduce.py -r -e Exp_6_1_host_rdma_list 
-python3 reproduce.py -r -e Exp_6_1_coyote_rdma_list 
-python3 reproduce.py -r -e Exp_6_1_vfpio_rdma_list 
-```
-These will generate several csv files with recorded data. Run the following to create the figure for 6.1.
-
-```
-python3 plot_e2e.py
-```
-#### 6.2 Scheduling Improvements
-
-Run the following command
-
-```
-nix-shell vfpio.nix
-# in the project repo root 
-bash ./measure_complexity.sh
+```bash
+xilinx-shell
+cd examples_hw && mkdir build_<example> && cd build_<example>
+cmake ../ -DEXAMPLE=<name> -DFDEV_NAME=u280
+make project
+make bitgen     # 3-4 h on U280
 ```
 
+Available `EXAMPLE` targets: see [examples_hw/CMakeLists.txt](examples_hw/CMakeLists.txt).
+Composed apps: `audio_processing`, `digital_signature`, `secure_storage`,
+`signed_compression`, `speech_recognition` (each with a `_monolithic` variant).
+Single modules: `aes_ctr`, `fft`, `quantize`, `rle`, `rsa`, `sha256`, `svm`.
 
-#### 6.3 Application Deployment Overheads
+### Host software
 
-The data for the vFPIO throughput in Table 5 is taken from the previous experiments. Run the following command to generate the reconfiguration time data:
-```
-python3 reproduce.py -r -e Exp_6_3_host_list 
-python3 reproduce.py -r -e Exp_6_3_hbm_list 
-python3 reproduce.py -r -e Exp_6_3_vfpio_list
-```
-
-
-#### 6.4 Programmability
-
-Run the following command to obtain data for Figure 6 and 7. 
-```
-python3 reproduce.py -r -e Exp_6_4_1_cycles_list 
-python3 reproduce.py -r -e Exp_6_4_1_cntx_list 
-python3 reproduce.py -r -e Exp_6_4_2_host_list 
-python3 reproduce.py -r -e Exp_6_4_2_fpga_list 
+```bash
+cd examples_sw && mkdir build_<example> && cd build_<example>
+cmake ../ -DEXAMPLE=<name>
+make
+./bin/test                    # default size
+./bin/test -s 1048576         # 1 MB transfer
 ```
 
+Available SW `EXAMPLE` targets: see [examples_sw/CMakeLists.txt](examples_sw/CMakeLists.txt).
 
-#### 6.5 Resource Overheads
+---
 
-Compile two repositories with Coyote and vFPIO.
+## Reproducing the paper
 
-For Coyote
+Each evaluation section has a dedicated script (or pair of scripts) that
+produces a plot under `evaluation/plots/`. The full step-by-step instructions
+— including the Amy/Clara split — live in
+[`evaluation/scripts/README.md`](evaluation/scripts/README.md). Summary:
+
+| Section                           | Scripts                                                              | Plot output                              |
+|-----------------------------------|----------------------------------------------------------------------|------------------------------------------|
+| End-to-End Performance Overhead   | `compile_hw_{ushell,baseline}.sh`, `compile_sw_{ushell,baseline}.sh` → `plot_e2e.py` | `plots/e2e.{png,pdf}`                    |
+| Programmability                   | `measure_complexity_{ushell,baseline}.sh` → `plot_app_modularity.py` | `plots/application_modularity_analysis.{pdf,png}` |
+| Scalability                       | `compile_scalability.sh`, `extract_util.tcl` → `plot_scalability.py` | `plots/plot_scalability_analysis.{pdf,png}` |
+| FPGA Acceleration Effectiveness   | `compile_effectiveness_hw.sh`, `compile_effectiveness_sw.sh` → `plot_effectiveness.py` | `plots/direct_comm_effectiveness.pdf`    |
+| Scheduling Improvements           | `examples_sw/apps/scheduler` → `plot_sched.py`, `plot_reconf_analysis.py`, `plot_reconfig_overhead.py` | `plots/sched.{png,pdf}`, `plots/reconfig_overhead.{png,pdf}`, `plots/reconf_analysis.pdf` |
+| Resource efficiency (supp.)       | `plot_efficiency.py`                                                 | `plots/resource_efficiency.pdf`          |
+
+Each plot script is invoked from `evaluation/scripts/` and writes to
+`evaluation/plots/`. Most read either CSVs in `evaluation/data/` or hardcoded
+arrays from the paper run; the per-script README documents which.
+
+Pre-built bitstreams under `bitstreams/` let you skip the 3-4 h Vivado runs
+and go straight to the SW + plot steps.
+
+---
+
+## Troubleshooting
+
+- **Driver won't load** — `sudo rmmod coyote_drv && sudo insmod driver/coyote_drv.ko`.
+- **FPGA programming fails** — verify `bitstreams/cyt_top.bit` exists before running `program_fpga.sh`. Check `sudo dmesg | tail -50`.
+- **Hugepage shortage** — `cat /proc/sys/vm/nr_hugepages` should be ≥ 1024.
+- **Test process hangs** — `sudo pkill -9 test`, then re-program the FPGA.
+
+---
+
+## License
+
+BSD 3-Clause — see [LICENSE.md](LICENSE.md). Coyote derivative; original
+Coyote copyright retained per file.
+
+## Citation
+
+```bibtex
+@inproceedings{ushell,
+  title  = {{µShell}: A Microkernel-based FPGA Shell Architecture},
+  author = {TBD},
+  year   = {TBD},
+  note   = {Citation pending publication.}
+}
 ```
-# requires xilinx-shell
-git checkout coyote-comp
-mkdir build_io_coyote_hw && cd build_io_coyote_hw
-cmake ../hw/ -DFDEV_NAME=u280 -DEXAMPLE=io_switch_ndp
-make && make compile
-```
-
-For vFPIO
-
-```
-# requires xilinx-shell
-git checkout vFPIO
-mkdir build_io_vfpio_hw && cd build_io_vfpio_hw
-cmake ../hw/ -DFDEV_NAME=u280 -DEXAMPLE=io_switch_ndp
-make && make compile
-```
-To extract the two resource utilization files, run the following scripts
-
-```
-bash ./extract_csv.sh
-```
-
-This will generate two files: `util_coyote.csv` and `util_vfpio.csv`. Do not change the filenames, and run the next command to extract resource utilization of each component:
-
-```
-# in project root dir (vFPIO/)
-python3 reproduce -e Exp_6_5_resource_util
-```
-
-## Artifact Claims
-
-- **All figures and tables in evaluation section** (Fig. 11–13, Table 5-6) can be reproduced using the provided commands. Some results will not be exactly the same as the ones in the paper.
-
-
-## Potential issues
-
-### Driver issue
-Something wrong may happen when loading or unloading the driver. In that case, the easiest solution is to reboot. 
-
-
-### No files in home directory after reboot
-Sometimes after reboot, there will only be system folders and no user files. Keep rebooting and it will get fixed eventually. 
-
-
-### Terminal cursor disappear after reproduce.py had an issue
-
-This will happen when the script does not exit normally. Type `reset` to solve the issue.
-
-
-<!-- ### Require IP 'll_compress_2'
- -->
-
-
-
-<!--  
-```
-bash ./extract_csv.sh
-```
-```
-open_project build_io_hw/lynx/lynx.xpr
-open_run impl_1
-report_utilization -name util_1 -spreadsheet_file util_coyote_io.xlsx
-report_utilization -hierarchical  -file util_vfpio_test.csv
-ssconvert util_vfpio.xlsx util_vfpio.csv
-```
-cmake ../hw/ -DFDEV_NAME=u50 -DEXAMPLE=caribou -DN_REGIONS=2 -DN_CONFIG=10 -DUCLK_F=250 -DACLK_F=250 -DCOMP_CORES=24
-
--->

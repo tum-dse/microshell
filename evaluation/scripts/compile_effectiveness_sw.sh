@@ -32,7 +32,7 @@ usage() {
     echo "Usage: $0 <example_name> <bitstream_path> <baseline_base_dir> [test_size] [options]"
     echo ""
     echo "Arguments:"
-    echo "  example_name      - Name of the example (e.g., fft, aes_ctr, rsa, etc.)"
+    echo "  example_name      - Module name (fft, aes_ctr, rsa, sha256, quantize, rle, svm)"
     echo "  bitstream_path    - Path to the bitstream file (.bit)"
     echo "  baseline_base_dir - Path to baseline base directory"
     echo "  test_size         - Optional: Test size parameter (default: $DEFAULT_TEST_SIZE)"
@@ -53,7 +53,7 @@ usage() {
     echo "  $0 fft /home/user/fft.bit /path/to/baseline 1048576"
     echo ""
     echo "  # With multiple test sizes and options:"
-    echo "  $0 sha ./sha.bit /path/to/baseline 32768,65536,131072 --csv sha_sweep.csv --verbose"
+    echo "  $0 sha256 ./sha256.bit /path/to/baseline 32768,65536,131072 --csv sha256_sweep.csv --verbose"
     echo ""
     exit 1
 }
@@ -499,7 +499,7 @@ fi
 #
 # From another directory:
 # ./compile_effectiveness_sw.sh rsa /path/to/bitstream.bit /path/to/baseline
-# ./compile_effectiveness_sw.sh sha /home/user/bitstreams/sha.bit /scratch/user/baseline 32768
+# ./compile_effectiveness_sw.sh sha256 /home/user/bitstreams/sha256.bit /scratch/user/baseline 32768
 #
 # With options:
 # ./compile_effectiveness_sw.sh fft ./fft.bit /path/to/baseline 32768,65536 --csv fft_sweep.csv --verbose

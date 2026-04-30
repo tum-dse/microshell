@@ -26,7 +26,7 @@ if ! command -v tmux &> /dev/null; then
 fi
 
 # Specify the hardware examples to build
-examples=("aes_ctr" "rsa" "fft" "svm" "sha" "quant" "rle")
+examples=("aes_ctr" "rsa" "fft" "svm" "sha256" "quantize" "rle")
 
 echo "Starting parallel builds for hardware examples in $BASE_DIR"
 echo "=========================================================="
