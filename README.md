@@ -1,6 +1,4 @@
-# µShell — Baseline (stock Coyote shell)
-
-## Overview
+# µShell — baseline (stock Coyote shell)
 
 This is the **baseline** branch of the µShell artifact: the same five
 end-to-end applications (audio processing, digital signature, secure storage,
@@ -11,26 +9,15 @@ comparison point used in the µShell paper.
 The µShell side of the comparison — the microkernel-style shell with the DFG
 runtime, the modular vFPGA composition, and the evaluation pipeline — lives at
 [TUM-DSE/microShell, branch `master`](https://github.com/TUM-DSE/microShell).
+The full reproduction flow (which calls into this repo for the baseline data
+points) is documented in
+[`REPRODUCE.md` on the master branch](https://github.com/TUM-DSE/microShell/blob/master/REPRODUCE.md).
 
 This repo is intentionally minimal: it ships only what's needed to build and
-run the baseline applications. Evaluation scripts, plots, and aggregated data
-live in the µShell repo.
+run the baseline applications. Evaluation scripts, plot generation, and
+aggregated data live in the µShell repo.
 
-# Reproduce baseline numbers
-
-```bash
-git clone -b baseline git@github.com:TUM-DSE/microShell.git microShell-baseline
-cd microShell-baseline
-```
-
-## Specs
-
-### Software
-
-- Operating system: Linux 6.9.0-rc7 / NixOS 23.11
-- [Nix](https://nixos.org/download.html): all build dependencies are pinned via
-  `shell.nix` (host-side build/run) and `xilinx-shell` (Vivado toolchain)
-- Vivado 2022.x for bitstream generation
+## Prerequisites
 
 ### Hardware
 
@@ -38,13 +25,27 @@ cd microShell-baseline
 - Xilinx Alveo U280 FPGA × 2
 - 100 GbE FPGA-attached NIC
 - Bitstream generation (Vivado) and FPGA tests can run on the same host or be
-  split across a build host and an FPGA host to keep Vivado off the test path.
+  split across a build host and an FPGA host.
 
-## Getting Started Instructions
+### Software
 
-A "Hello World"-equivalent run using `perf_local`.
+- Linux 6.9.0-rc7 / NixOS 23.11
+- [Nix](https://nixos.org/download.html) — `shell.nix` (host build/run),
+  `xilinx-shell` (Vivado toolchain)
+- Vivado 2022.x
 
-### Building the FPGA driver
+## Getting started
+
+A "hello world"-equivalent run using `perf_local`.
+
+### 1. Clone the repository
+
+```bash
+git clone -b baseline git@github.com:TUM-DSE/microShell.git microShell-baseline
+cd microShell-baseline
+```
+
+### 2. Build the FPGA driver
 
 ```bash
 nix-shell -p gcc14 gnumake
@@ -55,16 +56,7 @@ make KERNELDIR=$(nix-build -E '(import <nixpkgs> {}).linuxPackages_6_8.kernel.de
 A pre-compiled driver is also shipped with this repo if you want to skip the
 build.
 
-### Obtaining an FPGA bitstream
-
-Vivado bitstream generation takes 3–4 hours per design. Pre-built bitstreams
-for every `EXAMPLE` target live under [`bitstreams/`](bitstreams/), one folder
-per target — see [Pre-built bitstreams](#pre-built-bitstreams-fallback) below.
-
-Do not change the path or filename of `bitstreams/cyt_top.bit`;
-`program_fpga.sh` looks for it there.
-
-### Compiling perf_local software
+### 3. Compile perf_local
 
 ```bash
 nix-shell shell.nix
@@ -73,46 +65,43 @@ cmake ../ -DEXAMPLE=perf_local
 make
 ```
 
-Set up hugepages for the host application:
+### 4. Program the FPGA and run the test
+
+`perf_local` is shipped as a pre-built bitstream under
+[`bitstreams/perf_local/`](bitstreams/perf_local/). Stage it and program:
 
 ```bash
-sudo sysctl -w vm.nr_hugepages=1024
-```
-
-### Running the test
-
-```bash
-# from the repo root, with bitstreams/cyt_top.bit in place
+cp bitstreams/perf_local/cyt_top.bit bitstreams/cyt_top.bit
 sudo bash ./program_fpga.sh cyt_top
+sudo sysctl -w vm.nr_hugepages=1024
+
 cd examples_sw/build_perf_local/bin
 ./test
 ```
 
-# Detailed Instructions
+## Building from source
 
-## Compilation
-
-### Hardware
+### Hardware bitstreams
 
 ```bash
 xilinx-shell
 cd examples_hw && mkdir build_<example> && cd build_<example>
 cmake ../ -DEXAMPLE=<name> -DFDEV_NAME=u280
 make project
-make bitgen     # 3-4 h on U280
+make bitgen     # 3–4 h on U280
 ```
 
-Available `EXAMPLE` targets — see [examples_hw/CMakeLists.txt](examples_hw/CMakeLists.txt):
+`EXAMPLE` targets — see [examples_hw/CMakeLists.txt](examples_hw/CMakeLists.txt):
 
 - Composed apps: `audio_processing`, `digital_signature`, `secure_storage`, `signed_compression`, `speech_recognition`
 - Single modules: `aes_ctr`, `fft`, `quantize`, `rle`, `rsa`, `sha256`, `svm`
-- Scalability: `1vfpga`, `2vfpga`, `4vfpga`, `8vfpga`
+- Scalability sweep: `1vfpga`, `2vfpga`, `4vfpga`, `8vfpga`
 - Other: `perf_local`, `perf_fpga`, `static`
 
-The baseline does **not** include the `_monolithic` variants; those only exist
+This branch does **not** include the `_monolithic` variants; those exist only
 on the µShell side as the single-binary point of comparison.
 
-### Software
+### Host software
 
 ```bash
 nix-shell shell.nix
@@ -125,7 +114,7 @@ make
 
 Available SW `EXAMPLE` targets: see [examples_sw/CMakeLists.txt](examples_sw/CMakeLists.txt).
 
-## Pre-built bitstreams (fallback)
+## Pre-built bitstreams
 
 If a Vivado run fails or you want to skip the 3–4 h bitgen step, the
 [`bitstreams/`](bitstreams/) directory holds known-good bitstreams from the
@@ -144,8 +133,7 @@ bitstreams/
 └── static/
 ```
 
-Copy the matching pair into the load path that `program_fpga.sh` expects, then
-program the FPGA:
+To program one:
 
 ```bash
 cp bitstreams/<example>/cyt_top.bit bitstreams/cyt_top.bit
@@ -158,16 +146,11 @@ sudo bash ./program_fpga.sh cyt_top
 The evaluation pipeline (compile scripts, CSV aggregation, plot generation)
 lives in the µShell repo under
 [`evaluation/scripts/`](https://github.com/TUM-DSE/microShell/tree/master/evaluation/scripts).
-Those scripts take the path to **this** repo as an argument when measuring the
-baseline (e.g. `bash compile_hw_baseline.sh /path/to/microShell-baseline`).
-Refer to `evaluation/scripts/README.md` on the µShell side for the full flow.
-
-## Potential Issues
-
-- **Driver won't load** — `sudo rmmod coyote_drv && sudo insmod driver/coyote_drv.ko`. If that fails, reboot and retry.
-- **FPGA programming fails** — verify `bitstreams/cyt_top.bit` exists before running `program_fpga.sh`. Check `sudo dmesg | tail -50` for PCIe / programming errors.
-- **Hugepage shortage** — `cat /proc/sys/vm/nr_hugepages` should be ≥ 1024.
-- **Test process hangs** — `sudo pkill -9 test`, then re-program the FPGA before retrying.
+Those scripts take the path to **this** repo as an argument when measuring
+the baseline data points (e.g.
+`bash compile_hw_baseline.sh /path/to/microShell-baseline`). See
+[REPRODUCE.md](https://github.com/TUM-DSE/microShell/blob/master/REPRODUCE.md)
+on the master branch for the end-to-end flow.
 
 ## Repository layout
 
@@ -185,6 +168,13 @@ microShell (baseline)/
 ├── program_fpga.sh           # Load bitstream + driver + hugepages
 └── shell.nix                 # Reproducible build environment
 ```
+
+## Troubleshooting
+
+- **Driver won't load** — `sudo rmmod coyote_drv && sudo insmod driver/coyote_drv.ko`. If that fails, reboot and retry.
+- **FPGA programming fails** — verify `bitstreams/cyt_top.bit` exists before running `program_fpga.sh`. Check `sudo dmesg | tail -50` for PCIe / programming errors.
+- **Hugepage shortage** — `cat /proc/sys/vm/nr_hugepages` should be ≥ 1024.
+- **Test process hangs** — `sudo pkill -9 test`, then re-program the FPGA before retrying.
 
 ## License
 
