@@ -1,225 +1,204 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="img/cyt_logo_dark.png" width = 220>
-  <source media="(prefers-color-scheme: light)" srcset="img/cyt_logo_light.png" width = 220>
-  <img src="img/cyt_logo_light.png" width = 220>
-</picture>
+# µShell — Baseline (stock Coyote shell)
 
-[![Build benchmarks](https://github.com/fpgasystems/Coyote/actions/workflows/build_static.yml/badge.svg?branch=master)](https://github.com/fpgasystems/Coyote/actions/workflows/build_static.yml)
-[![Documentation Status](https://github.com/fpgasystems/Coyote/actions/workflows/build_docs.yml/badge.svg?branch=master)](https://fpgasystems.github.io/Coyote/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+## Overview
 
-# _OS for FPGAs_
+This is the **baseline** branch of the µShell artifact: the same five
+end-to-end applications (audio processing, digital signature, secure storage,
+signed compression, speech recognition) ported to run on an unmodified
+[Coyote](https://github.com/fpgasystems/Coyote) FPGA shell. It is the
+comparison point used in the µShell paper.
 
-**Coyote** is a framework that offers operating system abstractions and a variety of shared networking (*RDMA*, *TCP/IP*), memory (*DRAM*, *HBM*)
-and accelerator (*GPU*) services for modern heterogeneous platforms with FPGAs, targeting data centers and cloud environments.
+The µShell side of the comparison — the microkernel-style shell with the DFG
+runtime, the modular vFPGA composition, and the evaluation pipeline — lives at
+[TUM-DSE/microShell, branch `master`](https://github.com/TUM-DSE/microShell).
 
-Some of **Coyote's** features:
- * Multiple isolated virtualized vFPGA regions (with individual VMs)
- * Nested dynamic reconfiguration (independently reconfigurable layers: *Static*, *Service* and *Application*)
- * RTL and HLS user logic support
- * Unified host and FPGA memory with striping across virtualized DRAM/HBM channels
- * TCP/IP service
- * RDMA RoCEv2 service (compliant with Mellanox NICs)
- * GPU service
- * Runtime scheduler for different host user processes
- * Multithreading support
+This repo is intentionally minimal: it ships only what's needed to build and
+run the baseline applications. Evaluation scripts, plots, and aggregated data
+live in the µShell repo.
 
- <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="img/cyt_ov_dark.png" width = 620>
-  <source media="(prefers-color-scheme: light)" srcset="img/cyt_ov_light.png" width = 620>
-  <img src="img/cyt_ov_light.png" width = 620>
-</picture>
+# Reproduce baseline numbers
 
-## [For more detailed information, check out the documentation](https://fpgasystems.github.io/Coyote/)
+```bash
+git clone -b baseline git@github.com:TUM-DSE/microShell.git microShell-baseline
+cd microShell-baseline
+```
 
-## Prerequisites
+## Specs
 
-Full `Vivado/Vitis` suite is needed to build the hardware side of things. Hardware server will be enough for deployment only scenarios. Coyote runs with `Vivado 2022.1`. Previous versions can be used at one's own peril.  
+### Software
 
-We are currently only actively supporting the AMD `Alveo u55c` accelerator card. Our codebase offers some legacy-support for the following platforms: `vcu118`, `Alveo u50`, `Alveo u200`, `Alveo u250` and `Alveo u280`, but we are not actively working with these cards anymore. Coyote is currently being developed on the HACC cluster at ETH Zurich. For more information and possible external access check out the following link: https://systems.ethz.ch/research/data-processing-on-modern-hardware/hacc.html
+- Operating system: Linux 6.9.0-rc7 / NixOS 23.11
+- [Nix](https://nixos.org/download.html): all build dependencies are pinned via
+  `shell.nix` (host-side build/run) and `xilinx-shell` (Vivado toolchain)
+- Vivado 2022.x for bitstream generation
 
+### Hardware
 
-`CMake` is used for project creation. Additionally `Jinja2` template engine for Python is used for some of the code generation. The API is writen in `C++`, 17 should suffice (for now).
+- AMD EPYC 7413 CPU × 2
+- Xilinx Alveo U280 FPGA × 2
+- 100 GbE FPGA-attached NIC
+- Bitstream generation (Vivado) and FPGA tests can run on the same host or be
+  split across a build host and an FPGA host to keep Vivado off the test path.
 
-If networking services are used, to generate the design you will need a valid [UltraScale+ Integrated 100G Ethernet Subsystem](https://www.xilinx.com/products/intellectual-property/cmac_usplus.html) license set up in `Vivado`/`Vitis`.
+## Getting Started Instructions
 
-To run the virtual machines on top of individual *vFPGAs* the following packages are needed: `qemu-kvm`, `build-essential` and `kmod`.
+A "Hello World"-equivalent run using `perf_local`.
 
-## Quick Start
+### Building the FPGA driver
 
-Initialize the repo and all submodules:
+```bash
+nix-shell -p gcc14 gnumake
+cd driver
+make KERNELDIR=$(nix-build -E '(import <nixpkgs> {}).linuxPackages_6_8.kernel.dev' --no-out-link)/lib/modules/*/build M=$(pwd)
+```
 
-~~~~
-$ git clone --recurse-submodules https://github.com/fpgasystems/Coyote
-~~~~
+A pre-compiled driver is also shipped with this repo if you want to skip the
+build.
 
-### Build `HW`
+### Obtaining an FPGA bitstream
 
-To build an example hardware project (generate a *shell* image):
+Vivado bitstream generation takes 3–4 hours per design. Pre-built bitstreams
+for every `EXAMPLE` target live under [`bitstreams/`](bitstreams/), one folder
+per target — see [Pre-built bitstreams](#pre-built-bitstreams-fallback) below.
 
-~~~~
-$ mkdir build_hw && cd build_hw
-$ cmake <path_to_cmake_config> -DFDEV_NAME=<target_device>  -DEXAMPLE=<target_example>
-~~~~
+Do not change the path or filename of `bitstreams/cyt_top.bit`;
+`program_fpga.sh` looks for it there.
 
-It's a good practice to generate the hardware-build in a subfolder of the `examples_hw`, since this already contains the cmake that needs to be referenced. In this case, the procedure would look like this: 
+### Compiling perf_local software
 
-~~~~
-$ mkdir examples_hw/build_hw && cd examples_hw/build_hw 
-$ cmake ../ -DFDEV_NAME=<target_device>  -DEXAMPLE=<target_example>
-~~~~
+```bash
+nix-shell shell.nix
+cd examples_sw && mkdir build_perf_local && cd build_perf_local
+cmake ../ -DEXAMPLE=perf_local
+make
+```
 
-Already implemented target-examples are specified in `examples_hw/CMakeLists.txt` and allow to build a variety of interesting design constellations, i.e. `rdma_perf` will create a RDMA-capable Coyote-NIC. 
+Set up hugepages for the host application:
 
-Generate all projects and compile all bitstreams:
+```bash
+sudo sysctl -w vm.nr_hugepages=1024
+```
 
-~~~~
-$ make project 
-$ make bitgen
-~~~~
+### Running the test
 
-Since at least the initial building process takes quite some time and will normally be executed on a remote server, it makes sense to use the `nohup`-command in Linux to avoid termination of the building process if the connection to the server might be lost at some point. In this case, the build would be triggered with: 
+```bash
+# from the repo root, with bitstreams/cyt_top.bit in place
+sudo bash ./program_fpga.sh cyt_top
+cd examples_sw/build_perf_local/bin
+./test
+```
 
-~~~~
-$ nohup make bitgen &> bitgen.log &
-~~~~
+# Detailed Instructions
 
-With this, the building process will run in the background, and the terminal output will be streamed to the `bitgen.log` file. Therefore, the command 
+## Compilation
 
-~~~~
-$ tail -f bitgen.log
-~~~~
+### Hardware
 
-allows to check the current progress of the build-process. 
+```bash
+xilinx-shell
+cd examples_hw && mkdir build_<example> && cd build_<example>
+cmake ../ -DEXAMPLE=<name> -DFDEV_NAME=u280
+make project
+make bitgen     # 3-4 h on U280
+```
 
-The bitstreams will be generated under `bitstreams` directory. 
-This initial bitstream can be loaded via JTAG.
-Further custom shell bitstreams can all be loaded dynamically. 
+Available `EXAMPLE` targets — see [examples_hw/CMakeLists.txt](examples_hw/CMakeLists.txt):
 
-Netlist with the *official* static layer image is already provided under `hw/checkpoints`. We suggest you build your shells on top of this image.
-This default image is built with `-DEXAMPLE=static`.
+- Composed apps: `audio_processing`, `digital_signature`, `secure_storage`, `signed_compression`, `speech_recognition`
+- Single modules: `aes_ctr`, `fft`, `quantize`, `rle`, `rsa`, `sha256`, `svm`
+- Scalability: `1vfpga`, `2vfpga`, `4vfpga`, `8vfpga`
+- Other: `perf_local`, `perf_fpga`, `static`
 
-### Build `SW`
+The baseline does **not** include the `_monolithic` variants; those only exist
+on the µShell side as the single-binary point of comparison.
 
-Provided software applications (as well as any other) can be built with the following commands:
+### Software
 
-~~~~
-$ mkdir build_sw && cd build_sw
-$ cmake <path_to_cmake_config>
-$ make
-~~~~
+```bash
+nix-shell shell.nix
+cd examples_sw && mkdir build_<example> && cd build_<example>
+cmake ../ -DEXAMPLE=<name>
+make
+./bin/test                    # default size
+./bin/test -s 1048576         # 1 MB transfer
+```
 
-Similar to building the HW, it makes sense to build within the `examples_sw` directory for direct access to the provided `CMakeLists.txt`: 
+Available SW `EXAMPLE` targets: see [examples_sw/CMakeLists.txt](examples_sw/CMakeLists.txt).
 
-~~~~
-$ mkdir examples_sw/build_sw && cd examples_sw/build_sw 
-$ cmake ../ -DEXAMPLE=<target_example> -DVERBOSITY=<ON or OFF>
-$ make
-~~~~
+## Pre-built bitstreams (fallback)
 
-The software-stack can be built in verbosity-mode, which will generate extensive printouts during execution. This is controlled via the `VERBOSITY` toggle in the cmake-call. Per default, verbosity is turned off.  
+If a Vivado run fails or you want to skip the 3–4 h bitgen step, the
+[`bitstreams/`](bitstreams/) directory holds known-good bitstreams from the
+paper run, organised one folder per `EXAMPLE` target:
 
-### Build `Driver`
+```
+bitstreams/
+├── audio_processing/{cyt_top.bit, cyt_top.ltx}
+├── digital_signature/...
+├── secure_storage/...
+├── signed_compression/...
+├── speech_recognition/...
+├── aes_ctr/  fft/  quantize/  rle/  rsa/  sha256/  svm/
+├── 1vfpga/  2vfpga/  4vfpga/  8vfpga/
+├── perf_local/  perf_fpga/
+└── static/
+```
 
-After the bitstream is loaded, the driver can be inserted once for the initial static image.
+Copy the matching pair into the load path that `program_fpga.sh` expects, then
+program the FPGA:
 
-~~~~
-$ cd driver && make
-$ insmod coyote_drv.ko <any_additional_args>
-~~~~
+```bash
+cp bitstreams/<example>/cyt_top.bit bitstreams/cyt_top.bit
+cp bitstreams/<example>/cyt_top.ltx bitstreams/cyt_top.ltx   # if present
+sudo bash ./program_fpga.sh cyt_top
+```
 
-### Provided examples
-Coyote already comes with a number of pre-configured example applications that can be used to test the shell-capabilities and systems performance or start own developments around networking or memory offloading. 
-These existing example apps are currently available (documentation can be found in the respective ./examples_sw/\<example> directories): kmeans, multithreading, perf_fpga, perf_local, rdma_service, reconfigure_shell, streaming_service, tcp_iperf.
-There is always a pair of directories in ./examples_hw and ./examples_sw that belong together.
-The hardware side contains vFPGA code which the software side interacts with through the Coyote-provided functions.
+## Running experiments
 
-## Coyote v2 Hardware-Debugging
-Coyote can be debugged on the hardware-level using the AMD ILA / ChipScope-cores. This requires interaction with the Vivado GUI, so that it's important to know how to access the different project files, include ILA-cores and trigger a rebuild of the bitstream: 
+The evaluation pipeline (compile scripts, CSV aggregation, plot generation)
+lives in the µShell repo under
+[`evaluation/scripts/`](https://github.com/TUM-DSE/microShell/tree/master/evaluation/scripts).
+Those scripts take the path to **this** repo as an argument when measuring the
+baseline (e.g. `bash compile_hw_baseline.sh /path/to/microShell-baseline`).
+Refer to `evaluation/scripts/README.md` on the µShell side for the full flow.
 
-#### Opening the project file
-Open the Vivado GUI and click `Open Project`. The required file is located within the previously generated hardware-build directory, at `.../<Name of HW-build folder>/test_shell/test.xpr` and should now be selected for opening the shell-project. 
+## Potential Issues
 
-###### Creating a new ILA
-The `Sources` tab in the GUI can now be used to navigate to any file that is part of the shell - i.e. the networking stacks. There, a new ILA can be placed by including the module-template in the source code: 
-~~~~
-ila_<name> inst_ila_<name> (
-  .clk(nclk); 
-  .probe0(<Signal #1>), 
-  .probe1(<Signal #2>), 
-  ...
-); 
-~~~~
-It makes sense to annotate (in comments) the bidwidth of each signal, since this information is required for the instantiation of the ILA-IP. 
-In the next step, select the tab `IP Catalog` from the section `PROJECT MANAGER` on the left side of the GUI, search for `ILA` and select the first found item ("ILA (Integrated Logic Analyzer)"). Then, you enter the "Component Name" that was previously used for the instantiation of the module in hardware ("ila_<name>"), select the right number of probes and the desired sample data depth. Afterwards, assign the right bitwidth to all probes in the different tabs of the interface. Finally, you can start a `Out of context per IP`-run by clicking `Generate` in the next interface. Once this run is done, you have to restart the bitstream generation, which involves synthesis and implementation. To make sure that the changes with the new IP-cores for the added ILAs are incorporated into this bitstream, one first needs to delete all design-checkpoints (`*.dcp`) from the folders `.../<Name of the HW-build folder>/checkpoints/shell` and `.../<Name of the HW-build folder>/checkpoints/config_0`. After that, the generation can be restarted with 
-~~~~
-$ make bitgen
-~~~~
-in the original build-directory as described before. Once it's finished, the new ILA should be accessible for testing: 
+- **Driver won't load** — `sudo rmmod coyote_drv && sudo insmod driver/coyote_drv.ko`. If that fails, reboot and retry.
+- **FPGA programming fails** — verify `bitstreams/cyt_top.bit` exists before running `program_fpga.sh`. Check `sudo dmesg | tail -50` for PCIe / programming errors.
+- **Hugepage shortage** — `cat /proc/sys/vm/nr_hugepages` should be ≥ 1024.
+- **Test process hangs** — `sudo pkill -9 test`, then re-program the FPGA before retrying.
 
-###### Using an ILA for debugging
-In the project-interface of the GUI click on `Open Hardware Manager` and select "Open target" in the top-dialogue. If you're logged into a machine with a locally attached FPGA, select `Auto Connect`, otherwise chose `Open New Target` to connect to a remote machine with FPGA via the network. Once the connection is established, you'll be able to select the specific ILA from the `Hardware` tab on the left side of the hardware manager. This opens a waveform-display, where the capturing-settings and the trigger-setup can be selected. This allows to create a data capturing customized to the desired experiment or debugging purpose. 
+## Repository layout
 
-#### Recompilations after changes to the hardware
-Since the Coyote-buildflow heavily relies on the usage of design-checkpoints, every change of the hardware design should be followed by deleting the key checkpoints in `.../<Name of the HW-build folder>/checkpoints/shell` and `.../<Name of the HW-build folder>/checkpoints/config_0` before triggering a rebuild with 
-~~~~
-$ make bitgen
-~~~~
-in the original build-directory as described before.
-
-## Deploying on the ETHZ HACC-cluster 
-The ETHZ HACC is a premiere cluster for research in systems, architecture and applications (https://github.com/fpgasystems/hacc/tree/main). Its hardware equipment provides the ideal environment to run Coyote-based experiments, since users can book up to 10 servers with U55C-accelerator cards connected via a fully switched 100G-network. User accounts for this platform can be obtained following the explanation on the previously cited homepage. 
-
-The interaction with the HACC-cluster can be simplified by using the sgutil-run time commands. They also allow to easily program the accelerator with a Coyote-bitstreamd and insert the driver. For this purpose, the script `program_coyote.sh` has been generated. Under the assumption that the hardware-project has been created in `examples_hw/build` and the driver is already compiled in `driver`, the workflow should look like this: 
-
-~~~
-$ bash program_coyote.sh examples_hw/build/bitstreams/cyt_top.bit driver/coyote_drv.ko
-~~~
-
-Obviously, the paths to `cyt_top.bit` and `coyote_drv.ko` need to be adapted if a different build-structure has been chosen before. 
-A successful completion of this process can be checked via a call to 
-
-~~~
-$ dmesg
-~~~
-
-If the driver insertion went through, the last printed message should be `probe returning 0`. Furthermore, the dmesg-printout should contain a line `set network ip XXXXXXXX, mac YYYYYYYYYYYY`, which displays IP and MAC of the Coyote-NIC if networking has been enabled in the system configuration. 
-
-## Publication
-
-#### If you use Coyote, cite us :
-
-```bibtex
-@inproceedings{coyote,
-    author = {Dario Korolija and Timothy Roscoe and Gustavo Alonso},
-    title = {Do {OS} abstractions make sense on FPGAs?},
-    booktitle = {14th {USENIX} Symposium on Operating Systems Design and Implementation ({OSDI} 20)},
-    year = {2020},
-    pages = {991--1010},
-    url = {https://www.usenix.org/conference/osdi20/presentation/roscoe},
-    publisher = {{USENIX} Association}
-}
+```
+microShell (baseline)/
+├── examples_hw/apps/         # HW pipelines (audio_processing, digital_signature, ...)
+│   └── modules/              #   single-module bring-ups (fft, rsa, sha256, ...)
+├── examples_sw/apps/         # Host programs, mirrors examples_hw
+│   └── modules/              #   per-module test programs
+├── sw/{include,src}/         # Coyote runtime (cThread, sgEntry, CoyoteOper, ...)
+├── driver/                   # Linux kernel driver
+├── hw/                       # Coyote shell HDL
+├── bitstreams/               # Pre-built .bit / .ltx, one folder per EXAMPLE target
+├── evaluation/               # Synced from the µShell repo by an external bot — do not edit by hand
+├── program_fpga.sh           # Load bitstream + driver + hugepages
+└── shell.nix                 # Reproducible build environment
 ```
 
 ## License
 
-Copyright (c) 2023 FPGA @ Systems Group, ETH Zurich
+MIT — see [LICENSE.md](LICENSE.md). Portions derived from
+[Coyote](https://github.com/fpgasystems/Coyote) under BSD-3-Clause; original
+copyright headers retained per file.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## Citation
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
+```bibtex
+@inproceedings{ushell,
+  title  = {{µShell}: A Microkernel-based FPGA Shell Architecture},
+  author = {TBD},
+  year   = {TBD},
+  note   = {Citation pending publication.}
+}
+```
