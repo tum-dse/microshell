@@ -26,7 +26,7 @@ if ! command -v tmux &> /dev/null; then
 fi
 
 # Specify the hardware examples to build
-examples=("audio" "digi_sign" "secure" "signcomp" "speech")
+examples=("audio_processing" "digital_signature" "secure_storage" "signed_compression" "speech_recognition")
 
 echo "Starting parallel builds for hardware examples in $BASE_DIR"
 echo "=========================================================="
@@ -84,8 +84,8 @@ echo "All build sessions started successfully!"
 echo ""
 echo "To monitor the builds:"
 echo "  tmux list-sessions                    # List all sessions"
-echo "  tmux attach -t build_<example>_hw    # Attach to a specific build"
-echo "  tmux attach -t build_audio_hw        # Example: attach to audio build"
+echo "  tmux attach -t build_<example>_hw                  # Attach to a specific build"
+echo "  tmux attach -t build_audio_processing_hw           # Example: attach to audio build"
 echo ""
 echo "Active build sessions:"
 for name in "${examples[@]}"; do

@@ -1,504 +1,201 @@
-# Evaluation
+# Evaluation Scripts
 
-This document provides instructions for running various evaluation tests including performance overhead analysis, scalability analysis, and programmability measurements. Both automated scripts and manual procedures are documented.
+Automation for the µShell vs. baseline experiments. Each script wraps the
+manual `cmake -DEXAMPLE=… && make` flow that the top-level README documents.
 
-## Important Note on Server Usage
+## Server split
 
-Due to potential server crashes during hardware testing on Clara, the workflow is split:
-- **Amy Server**: Used for hardware compilation (bitstream generation)
-- **Clara Server**: Used for hardware testing and software execution
+Bitstream generation runs on **Amy** (compile-only). Hardware tests run on
+**Clara** (Vivado-programmed FPGA + driver). Bitstreams are produced on Amy
+and copied to Clara before running any `compile_sw_*.sh` script.
+
+## Application names
+
+The composed pipelines and their single-binary "monolithic" counterparts:
+
+| Composed (DFG)          | Monolithic                       | Modules used         |
+|-------------------------|----------------------------------|----------------------|
+| `audio_processing`      | `audio_processing_monolithic`    | fft + quantize + rle |
+| `digital_signature`     | `digital_signature_monolithic`   | sha256 + rsa         |
+| `secure_storage`        | `secure_storage_monolithic`      | rle + aes_ctr        |
+| `signed_compression`    | `signed_compression_monolithic`  | rle + rsa            |
+| `speech_recognition`    | `speech_recognition_monolithic`  | fft + svm            |
+
+Single-module bring-ups: `aes_ctr`, `fft`, `quantize`, `rle`, `rsa`, `sha256`, `svm`.
+
+The baseline repo only ships the composed apps (no `_monolithic`).
 
 ## End-to-End Performance Overhead
 
-This analysis compares the performance overhead between baseline and µShell implementations.
+### Step 1 — bitstreams (Amy)
 
-### µShell and µShell_mono
-
-#### Step 1: Generate Bitstreams for µShell and µShell_mono
-
-##### Automated Method
 ```bash
 cd evaluation/scripts
-bash ./compile_hw_ushell.sh /path/to/ushell
+bash ./compile_hw_ushell.sh   /path/to/microShell   # composed + monolithic
+bash ./compile_hw_baseline.sh /path/to/baseline     # composed only
 ```
 
-This creates parallel tmux sessions for all examples including mono versions. Monitor progress with:
-```bash
-tmux list-sessions
-tmux attach -t build_audio_hw        # Regular version
-tmux attach -t build_audio_mono_hw   # Mono version
-```
+Each example builds in its own tmux session: `tmux attach -t build_<example>_hw`.
+Bitstream lands at `<base>/examples_hw/<example>/bitstreams/cyt_top.bit`.
 
-##### Manual Method (Run on Amy Server)
-For individual compilation or debugging:
+Per-example manual build:
 
 ```bash
-# Navigate to µShell hardware directory
-cd /path/to/ushell/examples_hw/
-
-# For regular version
-mkdir digi_sign_ushell && cd digi_sign_ushell
+cd /path/to/microShell/examples_hw && mkdir audio_processing && cd audio_processing
 xilinx-shell
-cmake ../ -DEXAMPLE=digi_sign_ushell -DFDEV_NAME=u280
-make project
-make bitgen
-
-# For mono version
-mkdir digi_sign_mono && cd digi_sign_mono
-xilinx-shell
-cmake ../ -DEXAMPLE=digi_sign_mono -DFDEV_NAME=u280
-make project
-make bitgen
-
-# Note the bitstream location for later use:
-# Regular: /path/to/ushell/examples_hw/digi_sign_ushell/bitstreams/cyt_top.bit
-# Mono: /path/to/ushell/examples_hw/digi_sign_mono/bitstreams/cyt_top.bit
+cmake ../ -DEXAMPLE=audio_processing -DFDEV_NAME=u280
+make project && make bitgen
 ```
 
-Transfer bitstream files to Clara server after generation (applicable to both generation methods).
-
-#### Step 2: Run Tests to get Evaluation Data
-
-##### Automated Method
-From the evaluation/scripts directory, the scripts now require the bitstream path:
+### Step 2 — run on Clara
 
 ```bash
-# Test regular µShell examples with bitstream path (default 1MB)
-./compile_sw_ushell.sh audio /path/to/ushell/examples_hw/audio/bitstreams/cyt_top.bit /path/to/ushell
-./compile_sw_ushell.sh digi_sign /path/to/ushell/examples_hw/digi_sign/bitstreams/cyt_top.bit /path/to/ushell
-./compile_sw_ushell.sh secure /path/to/ushell/examples_hw/secure/bitstreams/cyt_top.bit /path/to/ushell
+# Per-app: copies bitstream, programs FPGA, builds SW, runs ./test, parses metrics
+./compile_sw_ushell.sh   audio_processing /path/to/audio_processing/cyt_top.bit /path/to/microShell
+./compile_sw_baseline.sh audio_processing /path/to/audio_processing/cyt_top.bit /path/to/baseline
 
-# Test mono versions with their bitstream paths
-./compile_sw_ushell.sh audio_mono /path/to/ushell/examples_hw/audio_mono/bitstreams/cyt_top.bit /path/to/ushell
-./compile_sw_ushell.sh digi_sign_mono /path/to/ushell/examples_hw/digi_sign_mono/bitstreams/cyt_top.bit /path/to/ushell
-
-# Test with custom size
-./compile_sw_ushell.sh audio /path/to/ushell/examples_hw/audio/bitstreams/cyt_top.bit /path/to/ushell 65536
-
-# Test with custom bitstream from different location
-./compile_sw_ushell.sh audio /home/user/custom_bitstreams/audio_v2.bit /path/to/ushell 1048576
+# Optional 4th arg = transfer size in bytes (default 1048576)
+./compile_sw_ushell.sh   audio_processing <bit> /path/to/microShell 65536
 ```
 
-Results are saved to: `evaluation/data/e2e_ushell_results.csv`
+CSV outputs:
+- `evaluation/data/e2e_ushell_results.csv`
+- `evaluation/data/e2e_baseline_results.csv`
 
-##### Manual Method (Run on Clara Server)
+Columns: `example_name, data_size_bytes, throughput_MBps, latency_ns, timestamp`.
 
-1. **Setup Environment**:
-```bash
-cd /scratch/anubhav/vFPIO/
-nix-shell vfpio.nix
-sudo sysctl -w vm.nr_hugepages=1024
-
-# Load driver
-cd /path/to/ushell/driver/
-sudo rmmod coyote_drv 2>/dev/null || true
-sudo insmod coyote_drv.ko
-
-# Copy bitstream to standard location (if not already there)
-mkdir -p /path/to/ushell/bitstreams
-cp /path/to/your/bitstream.bit /path/to/ushell/bitstreams/cyt_top.bit
-cp /path/to/your/bitstream.ltx /path/to/ushell/bitstreams/cyt_top.ltx  # if available
-
-# Program FPGA
-cd /path/to/ushell
-bash ./program_fpga.sh cyt_top
-```
-
-2. **Build and Run Software**:
-```bash
-cd /path/to/ushell/examples_sw/
-mkdir digi_sign_ushell && cd digi_sign_ushell
-cmake ../ -DEXAMPLE=digi_sign_ushell
-make
-cd bin
-
-# Run tests with different sizes
-./test              # Default parameters
-./test -s 65536     # 64KB
-./test -s 1048576   # 1MB
-./test -s 4194304   # 4MB
-```
-
-3. **Reuse Existing Builds** (for quick testing):
-```bash
-# Navigate directly to existing build
-cd /path/to/ushell/examples_sw/digi_sign_ushell/bin
-
-# Run multiple tests without rebuilding
-./test -s 1024      # 1KB
-./test -s 16384     # 16KB
-./test -s 65536     # 64KB
-./test -s 1048576   # 1MB
-```
-
-### Baseline
-
-#### Step 1: Generate Bitstreams for Baseline
-
-##### Automated Method
-```bash
-cd evaluation/scripts
-bash ./compile_hw_baseline.sh /path/to/baseline
-```
-
-##### Manual Method (Run on Amy Server)
-```bash
-cd /path/to/baseline/examples_hw/
-mkdir digi_sign_base && cd digi_sign_base
-xilinx-shell
-cmake ../ -DEXAMPLE=digi_sign_base -DFDEV_NAME=u280
-make project
-make bitgen
-
-# Note the bitstream location for later use:
-# /path/to/baseline/examples_hw/digi_sign_base/bitstreams/cyt_top.bit
-```
-
-#### Step 2: Run Tests to get Evaluation Data
-
-##### Automated Method
-The scripts now require the bitstream path:
+### Plot
 
 ```bash
-# Test baseline examples with bitstream path (default 1MB)
-./compile_sw_baseline.sh audio /path/to/baseline/examples_hw/audio/bitstreams/cyt_top.bit /path/to/baseline
-./compile_sw_baseline.sh digi_sign /path/to/baseline/examples_hw/digi_sign/bitstreams/cyt_top.bit /path/to/baseline
-
-# Test with custom size
-./compile_sw_baseline.sh audio /path/to/baseline/examples_hw/audio/bitstreams/cyt_top.bit /path/to/baseline 65536
-
-# Test with custom bitstream location
-./compile_sw_baseline.sh secure /scratch/builds/secure_optimized.bit /path/to/baseline 1048576
+cd evaluation/scripts && python3 plot_e2e.py
+# → evaluation/plots/e2e.{png,pdf}
 ```
 
-Results are saved to: `evaluation/data/e2e_baseline_results.csv`
-
-##### Manual Method (Run on Clara Server)
-Follow the same environment setup as µShell, then:
-
-```bash
-# Copy bitstream to standard location
-mkdir -p /path/to/baseline/bitstreams
-cp /path/to/your/bitstream.bit /path/to/baseline/bitstreams/cyt_top.bit
-cp /path/to/your/bitstream.ltx /path/to/baseline/bitstreams/cyt_top.ltx  # if available
-
-# Program FPGA and run tests
-cd /path/to/baseline
-bash ./program_fpga.sh cyt_top
-
-cd /path/to/baseline/examples_sw/
-mkdir digi_sign_base && cd digi_sign_base
-cmake ../ -DEXAMPLE=digi_sign_base
-make
-cd bin
-
-# Run tests
-./test -s 65536     # 64KB test
-./test -s 1048576   # 1MB test
-```
-
-### Analysis
-
-The CSV files contain:
-- `example_name`: Application name
-- `data_size_bytes`: Test data size
-- `throughput_MBps`: Throughput in MB/s
-- `latency_ns`: Latency in nanoseconds
-- `timestamp`: Test execution time
-
-Compare the results between baseline and µShell to calculate the performance overhead.
-
-### Manual Testing Best Practices
-
-1. **Performance Sweep**: Test multiple data sizes for comprehensive analysis:
-```bash
-for size in 1024 4096 16384 65536 262144 1048576 4194304; do
-    echo "Testing size: $size bytes"
-    ./test -s $size
-    sleep 2  # Brief pause between tests
-done
-```
-
-2. **Multiple Runs**: For statistical significance:
-```bash
-# Run same test multiple times
-for i in {1..5}; do
-    echo "Run $i"
-    ./test -s 1048576
-done
-```
-
-3. **Quick Verification**: After FPGA programming:
-```bash
-# Small test to verify functionality
-./test -s 1024
-```
-
-### Script Usage Examples
-
-With the updated scripts, you can now test bitstreams from any location:
-
-```bash
-# Standard bitstream location
-./compile_sw_ushell.sh audio examples_hw/audio/bitstreams/cyt_top.bit /path/to/ushell
-
-# Custom bitstream location
-./compile_sw_baseline.sh digi_sign /home/user/my_bitstreams/digi_sign_v2.bit /path/to/baseline
-
-# Absolute paths
-./compile_sw_ushell.sh secure /scratch/builds/secure_2024.bit /scratch/user/ushell 65536
-
-# Testing different versions
-./compile_sw_baseline.sh audio /tmp/audio_debug.bit /path/to/baseline 1048576
-./compile_sw_baseline.sh audio /tmp/audio_optimized.bit /path/to/baseline 1048576
-```
+> Note: `plot_e2e.py` currently uses hardcoded numbers from the paper run.
+> Wiring it to consume the CSVs above is a known TODO.
 
 ## Programmability
 
-To measure code complexity and programmability metrics:
-
-### Baseline Complexity Measurement
-
 ```bash
-cd evaluation/scripts
 bash ./measure_complexity_baseline.sh /path/to/baseline
+bash ./measure_complexity_ushell.sh   /path/to/microShell
+python3 plot_app_modularity.py
+# → evaluation/plots/application_modularity_analysis.{pdf,png}
 ```
 
-### µShell Complexity Measurement
+The scripts use `scc` (auto-installs if missing) to count LOC across each app.
+The ushell script reports both the composed and `_monolithic` variants.
+
+## Scalability
+
+Bitstreams for vFPGA-count sweeps (`1vfpga`, `2vfpga`, `4vfpga`, `8vfpga`)
+live in the **baseline** repo (the µShell shell side):
 
 ```bash
-cd evaluation/scripts
-bash ./measure_complexity_ushell.sh /path/to/ushell
-```
-
-### Manual Analysis
-
-To manually examine code differences:
-```bash
-# Compare API usage
-diff -r /path/to/baseline/sw/include /path/to/ushell/sw/include
-
-# Count lines of code manually
-find /path/to/baseline/examples_sw/apps -name "*.cpp" -o -name "*.h" | xargs wc -l
-find /path/to/ushell/examples_sw/apps -name "*.cpp" -o -name "*.h" | xargs wc -l
-```
-
-## Scalability Analysis
-
-### Step 1: Generate Bitstreams
-
-```bash
-cd evaluation/scripts
 bash ./compile_scalability.sh /path/to/baseline
 ```
 
-### Step 2: Access Vivado via RDP
-
-After all bitstreams have been generated:
-
-1. Access the server via RDP (Remote Desktop Protocol)
-2. Open a terminal
-3. Run the following commands:
+Open each implementation checkpoint in Vivado on the build host and report
+utilization:
 
 ```bash
 xilinx-shell
-vivado open_checkpoint ${proj_name}/checkpoints/shell_routed.dcp
+vivado -mode tcl
+> open_checkpoint /path/to/baseline/examples_hw/<n>vfpga/checkpoints/shell_routed.dcp
+> source extract_util.tcl       # writes per-hierarchy CSV
 ```
 
-#### Example
+Resource per vFPGA:
+
+```
+per_vfpga = (U280_total - (inst_shell - inst_user_wrapper)) / num_vFPGAs
+```
+
+U280 reference: 1,303,680 LUTs · 2,607,360 FFs · 2,016 BRAM (36Kb) · 960 URAM · 9,024 DSP.
 
 ```bash
-vivado open_checkpoint examples_hw/1vfpga/checkpoints/shell_routed.dcp
+python3 plot_scalability.py
+# → evaluation/plots/plot_scalability_analysis.{pdf,png}
 ```
 
-### Step 3: Generate Utilization Reports
+## FPGA Acceleration Effectiveness
 
-After opening the checkpoint in Vivado:
+Compares CPU-orchestrated component chaining (sum of single-module latencies)
+against direct on-FPGA chaining (composed apps from §End-to-End).
 
-1. Navigate to the **Reports** tab in the Vivado GUI
-2. Generate the utilization report by:
-   - Go to **Reports → Report Utilization**
-   - Or use the Tcl command: `report_utilization -file utilization_report.txt`
+### Step 1 — module bitstreams (baseline)
 
-### Step 4: Calculate Resource Usage per vFPGA
-
-The utilization report will show resource usage for different hierarchical modules. Look for:
-- `inst_shell` - The shell infrastructure resource usage
-- `inst_user_wrapper` - The user logic wrapper resource usage
-- Total available resources for the U280 FPGA
-
-#### Resource Calculation Formulas
-
-To calculate the theoretical resource allocation per vFPGA:
-
-```
-Theoretical per-vFPGA resource = (U280_available - (inst_shell - inst_user_wrapper)) / num_vFPGAs
-```
-
-Where:
-- `U280_available` = Total available resources on the Xilinx Alveo U280 (e.g., LUTs, FFs, BRAM, DSP)
-- `inst_shell` = Resources used by the shell infrastructure
-- `inst_user_wrapper` = Resources used by the user logic wrapper
-- `num_vFPGAs` = Number of virtual FPGAs in the design
-
-#### U280 Resource Specifications
-
-For reference, the Xilinx Alveo U280 contains:
-- LUTs: 1,303,680
-- Flip-Flops: 2,607,360
-- Block RAM: 2,016 (36Kb blocks)
-- Ultra RAM: 960
-- DSP Slices: 9,024
-
-## FPGA Acceleration Effectiveness Analysis
-
-This analysis compares the performance of CPU-synchronized execution (individual components) versus direct FPGA communication (baseline).
-
-### Step 1: Generate Bitstreams for Individual Components
-
-##### Automated Method
 ```bash
-cd evaluation/scripts
 bash ./compile_effectiveness_hw.sh /path/to/baseline
+# Builds: aes_ctr, rsa, fft, svm, sha256, quantize, rle
 ```
 
-##### Manual Method (Run on Amy Server)
-Build individual components:
-```bash
-cd /path/to/baseline/examples_hw/
-
-# Example for FFT component
-mkdir fft && cd fft
-xilinx-shell
-cmake ../ -DEXAMPLE=fft -DFDEV_NAME=u280
-make project
-make bitgen
-
-# Repeat for: aes_ctr, rsa, quant, rle, sha, svm
-```
-
-### Step 2: Generate Bitstreams for Baseline
-
-Build the application pipelines (skip if already done in previous sections):
+### Step 2 — measure each module on Clara
 
 ```bash
-bash ./compile_hw_baseline.sh /path/to/baseline
-```
-
-### Step 3: Run Performance Tests
-
-#### 3.1 Test Individual Components (CPU-sync)
-
-##### Automated Method
-Now with consistent usage - all scripts require the bitstream path and base directory:
-
-```bash
-# Test individual components at 1MB (default)
-./compile_effectiveness_sw.sh fft /path/to/baseline/examples_hw/fft/bitstreams/cyt_top.bit /path/to/baseline
-./compile_effectiveness_sw.sh quant /path/to/baseline/examples_hw/quant/bitstreams/cyt_top.bit /path/to/baseline
-./compile_effectiveness_sw.sh rle /path/to/baseline/examples_hw/rle/bitstreams/cyt_top.bit /path/to/baseline
+./compile_effectiveness_sw.sh fft     /path/to/baseline/examples_hw/fft/bitstreams/cyt_top.bit     /path/to/baseline
+./compile_effectiveness_sw.sh quantize /path/to/baseline/examples_hw/quantize/bitstreams/cyt_top.bit /path/to/baseline
+./compile_effectiveness_sw.sh rle     /path/to/baseline/examples_hw/rle/bitstreams/cyt_top.bit     /path/to/baseline
 ./compile_effectiveness_sw.sh aes_ctr /path/to/baseline/examples_hw/aes_ctr/bitstreams/cyt_top.bit /path/to/baseline
-./compile_effectiveness_sw.sh rsa /path/to/baseline/examples_hw/rsa/bitstreams/cyt_top.bit /path/to/baseline
-./compile_effectiveness_sw.sh sha /path/to/baseline/examples_hw/sha/bitstreams/cyt_top.bit /path/to/baseline
-./compile_effectiveness_sw.sh svm /path/to/baseline/examples_hw/svm/bitstreams/cyt_top.bit /path/to/baseline
-
-# Test with specific sizes
-./compile_effectiveness_sw.sh fft /path/to/baseline/examples_hw/fft/bitstreams/cyt_top.bit /path/to/baseline 1048576
-
-# Test with multiple sizes and options
-./compile_effectiveness_sw.sh fft /path/to/baseline/examples_hw/fft/bitstreams/cyt_top.bit /path/to/baseline 32768,65536,131072 --csv fft_sweep.csv --verbose
+./compile_effectiveness_sw.sh rsa     /path/to/baseline/examples_hw/rsa/bitstreams/cyt_top.bit     /path/to/baseline
+./compile_effectiveness_sw.sh sha256  /path/to/baseline/examples_hw/sha256/bitstreams/cyt_top.bit  /path/to/baseline
+./compile_effectiveness_sw.sh svm     /path/to/baseline/examples_hw/svm/bitstreams/cyt_top.bit     /path/to/baseline
 ```
 
-##### Manual Method (Run on Clara Server)
-After environment setup:
+CSV: `evaluation/data/effectiveness_results.csv` (override with `--csv`).
+
+CPU-sync latency = sum of component latencies; IPC latency comes from the
+composed `e2e_baseline_results.csv` row for the same app. Mapping:
+
+| App                  | Components              |
+|----------------------|-------------------------|
+| Audio Processing     | fft + quantize + rle    |
+| Digital Signature    | sha256 + rsa            |
+| Secure Storage       | rle + aes_ctr           |
+| Signed Compression   | rle + rsa               |
+| Speech Recognition   | fft + svm               |
+
 ```bash
-cd /path/to/baseline/examples_sw/
-mkdir fft && cd fft
-cmake ../ -DEXAMPLE=fft
-make
-cd bin
-./test -s 1048576  # Test at 1MB
+python3 plot_effectiveness.py
+# → evaluation/plots/direct_comm_effectiveness.pdf
 ```
 
-#### 3.2 Test Baseline Applications (IPC/Direct Communication)
+## Scheduling Improvements
 
-Test the integrated applications following the same procedures as in the End-to-End Performance section.
+Data lives in `evaluation/data/sched_*.csv` (collected via the scheduler app
+under `examples_sw/apps/scheduler`).
 
-### Step 4: Compare Results
-
-- **CPU-sync values**: Calculated from individual component latencies
-- **IPC values**: Direct throughput measurements from integrated applications
-
-### Step 5: Calculate CPU-sync Throughput
-
-CPU-sync throughput is calculated by summing the latencies of individual components:
-
-| Application | Components | Calculation |
-|-------------|------------|-------------|
-| Audio Processing   | FFT + Quant + RLE | Total_latency = latency_fft + latency_quant + latency_rle |
-| Digital Signature  | SHA + RSA     | Total_latency = latency_sha + latency_rsa |
-| Secure Storage     | RLE + AES-CTR | Total_latency = latency_rle + latency_aes |
-| Signed Compression | RLE + RSA     | Total_latency = latency_rle + latency_rsa |
-| Speech Recognition | FFT + SVM     | Total_latency = latency_fft + latency_svm |
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Driver conflicts**:
 ```bash
-sudo rmmod coyote_drv
-sudo insmod coyote_drv.ko
+python3 plot_sched.py
+# → evaluation/plots/sched.{png,pdf}
+# Reads: sched_latency.csv, sched_reconfig.csv, sched_resp_avg.csv,
+#        sched_resp_95.csv, sched_deadline.csv
 ```
 
-2. **FPGA programming verification**:
+`plot_reconf_analysis.py` and `plot_reconfig_overhead.py` produce supporting
+figures (sched motivation, reconfiguration cost breakdown).
+
+## Vitis Vision component analysis (supplementary)
+
 ```bash
-ls -la /path/to/bitstreams/cyt_top.*
-```
-
-3. **Hugepages check**:
-```bash
-cat /proc/sys/vm/nr_hugepages
-```
-
-4. **Test executable not found**:
-```bash
-# Verify build completed
-ls -la bin/
-# Rebuild if necessary
-make clean && make
-```
-
-## File Locations Reference
-
-- **Hardware compilation scripts**: `Coyote/examples_hw/CMakeLists.txt`
-- **Hardware application code**: `Coyote/examples_hw/apps/`
-- **Software compilation scripts**: `Coyote/examples_sw/CMakeLists.txt`
-- **Host application code**: `Coyote/examples_sw/apps/`
-- **Baseline APIs**: `Coyote/sw/include/` and `Coyote/sw/src/`
-- **µShell APIs**: `microShell/sw/include/` and `microShell/sw/src/`
-
-
-## For analyzing Vitis Vision Library components
-
-This evaluation consists of three steps. The `process_cv_files.py` goes through all the files and generate component reuse raw statics, `file_functions.txt`.
-The `analyze_functions.py` process the `file_functions.txt` and generate data for plotting `top_10_functions` and `similarity_matrix.csv` and `overlap_matrix.csv`. 
-The `visualize_correlation.py` generates the correlation matrix.
-
-```
-python3 process_cv_files.py vision/L3/examples/ 
-python3 analyze_functions.py 
+python3 process_cv_files.py vision/L3/examples/      # → file_functions.txt
+python3 analyze_functions.py                          # → similarity_matrix.csv, overlap_matrix.csv
 python3 visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o visualization.pdf
 ```
 
+## Troubleshooting
 
-
-## 6.3 Scheduling improvement
-
-The script `plot_sched.py` will generate the plot for all five metrics for two scheduling algorithms. Currently it expects the data to be in the same folder as the script. 
-
+```bash
+sudo rmmod coyote_drv && sudo insmod /path/to/microShell/driver/coyote_drv.ko
+cat /proc/sys/vm/nr_hugepages           # should be ≥ 1024
+ls /path/to/microShell/bitstreams/      # cyt_top.bit must exist before program_fpga.sh
+sudo dmesg | tail -50                   # driver / FPGA programming errors
 ```
-python3 plot_sched.py
-```
 
+## File reference
 
+- HW CMake entry points: `examples_hw/CMakeLists.txt` (both repos).
+- SW CMake entry points: `examples_sw/CMakeLists.txt` (both repos).
+- App sources: `examples_{hw,sw}/apps/`.
+- DFG runtime (µShell only): `microShell/sw/{include,src}/`.
+- Baseline runtime: `baseline/microShell/sw/{include,src}/`.

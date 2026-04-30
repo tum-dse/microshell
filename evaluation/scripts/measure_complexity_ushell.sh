@@ -127,12 +127,19 @@ run_scc() {
     echo
 }
 
-# Run complexity measurements
-run_scc "$ushell_BASE/examples_sw/apps/audio" "Audio Compression"
-run_scc "$ushell_BASE/examples_sw/apps/digi_sign" "Digital Signature"
-run_scc "$ushell_BASE/examples_sw/apps/secure" "Secure Storage"
-run_scc "$ushell_BASE/examples_sw/apps/signcomp" "Signed Compression"
-run_scc "$ushell_BASE/examples_sw/apps/speech" "Speech Recognition"
+# Run complexity measurements (composed dataflow apps).
+run_scc "$ushell_BASE/examples_sw/apps/audio_processing" "Audio Processing"
+run_scc "$ushell_BASE/examples_sw/apps/digital_signature" "Digital Signature"
+run_scc "$ushell_BASE/examples_sw/apps/secure_storage" "Secure Storage"
+run_scc "$ushell_BASE/examples_sw/apps/signed_compression" "Signed Compression"
+run_scc "$ushell_BASE/examples_sw/apps/speech_recognition" "Speech Recognition"
+
+# Monolithic-pipeline variants (single binary, no DFG) for comparison.
+run_scc "$ushell_BASE/examples_sw/apps/audio_processing_monolithic" "Audio Processing (mono)"
+run_scc "$ushell_BASE/examples_sw/apps/digital_signature_monolithic" "Digital Signature (mono)"
+run_scc "$ushell_BASE/examples_sw/apps/secure_storage_monolithic" "Secure Storage (mono)"
+run_scc "$ushell_BASE/examples_sw/apps/signed_compression_monolithic" "Signed Compression (mono)"
+run_scc "$ushell_BASE/examples_sw/apps/speech_recognition_monolithic" "Speech Recognition (mono)"
 
 echo "==============================================================="
 echo "Complexity measurement complete!"

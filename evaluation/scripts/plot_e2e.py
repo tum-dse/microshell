@@ -3,8 +3,8 @@ import seaborn as sns
 import numpy as np
 
 # ===== FONT AND STYLE SETTINGS =====
-FONT_SIZE = 10
-LABEL_SIZE = 12
+FONT_SIZE = 14
+LABEL_SIZE = 14
 TICK_SIZE = 12
 LEGEND_SIZE = 12
 ANNOTATION_SIZE = 12

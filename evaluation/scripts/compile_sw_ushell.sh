@@ -18,20 +18,21 @@ usage() {
     echo "Usage: $0 <example_name> <bitstream_path> <ushell_base_dir> [test_size]"
     echo ""
     echo "Arguments:"
-    echo "  example_name      - Name of the example (e.g., digi_sign, audio, secure, etc.)"
+    echo "  example_name      - Name of the example (audio_processing, digital_signature, secure_storage,"
+    echo "                       signed_compression, speech_recognition, or *_monolithic variants)"
     echo "  bitstream_path    - Path to the bitstream file (.bit)"
     echo "  ushell_base_dir   - Path to ushell base directory"
     echo "  test_size         - Optional: Test size parameter (default: $DEFAULT_TEST_SIZE)"
     echo ""
     echo "Examples:"
     echo "  # From ushell base directory:"
-    echo "  $0 audio examples_hw/audio/bitstreams/cyt_top.bit /path/to/ushell 65536"
+    echo "  $0 audio_processing examples_hw/audio_processing/bitstreams/cyt_top.bit /path/to/ushell 65536"
     echo ""
     echo "  # From another directory:"
-    echo "  $0 digi_sign /home/user/my_bitstream.bit /path/to/ushell"
+    echo "  $0 digital_signature /home/user/my_bitstream.bit /path/to/ushell"
     echo ""
     echo "  # With absolute path:"
-    echo "  $0 secure /scratch/user/bitstreams/secure.bit /scratch/user/ushell 1048576"
+    echo "  $0 secure_storage /scratch/user/bitstreams/secure_storage.bit /scratch/user/ushell 1048576"
     echo ""
     exit 1
 }
@@ -313,9 +314,9 @@ echo "=================================================="
 
 # Usage examples:
 # From ushell base directory:
-# ./hw_test.sh audio examples_hw/audio/bitstreams/cyt_top.bit . 65536
-# ./hw_test.sh digi_sign ./my_bitstream.bit . 1048576
+# ./compile_sw_ushell.sh audio_processing examples_hw/audio_processing/bitstreams/cyt_top.bit . 65536
+# ./compile_sw_ushell.sh digital_signature ./my_bitstream.bit . 1048576
 #
 # From another directory:
-# ./hw_test.sh secure /path/to/bitstream.bit /path/to/ushell
-# ./hw_test.sh signcomp /home/user/bitstreams/signcomp.bit /scratch/user/ushell 32768
+# ./compile_sw_ushell.sh secure_storage /path/to/bitstream.bit /path/to/ushell
+# ./compile_sw_ushell.sh signed_compression /home/user/bitstreams/signed_compression.bit /scratch/user/ushell 32768
