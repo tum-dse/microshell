@@ -243,6 +243,6 @@ fig.text(0.78, -0.065, "Lower is better ↓",
          ha='center', va='bottom')
 
 # ===== SAVE AND DISPLAY =====
-plt.savefig("sched.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/sched.png", dpi=300, bbox_inches='tight')
 plt.savefig("../plots/sched.pdf", bbox_inches='tight')
 plt.show()
