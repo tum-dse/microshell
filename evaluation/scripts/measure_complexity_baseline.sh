@@ -1,138 +1,93 @@
 #!/bin/bash
+# Measure host-application complexity (LOC, comments, cyclomatic complexity)
+# for the baseline composed apps using `scc`. Appends rows to
+# evaluation/data/complexity_baseline_results.csv.
+set -e
 
-# Check for arguments
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <baseline_base_dir>"
-    echo ""
-    echo "Arguments:"
     echo "  baseline_base_dir - Path to baseline base directory"
-    echo ""
-    echo "Example:"
-    echo "  $0 /path/to/baseline"
-    echo "  $0 ../.."  # If running from evaluation/scripts/"
-    echo ""
+    echo "  Example: $0 /path/to/baseline"
     exit 1
 fi
 
-# Get baseline base directory
-baseline_BASE="$1"
+baseline_BASE=$(realpath "$1" 2>/dev/null) || { echo "Error: Invalid path: $1"; exit 1; }
 
-# Convert to absolute path
-baseline_BASE=$(realpath "$baseline_BASE" 2>/dev/null)
-if [ $? -ne 0 ]; then
-    echo "Error: Invalid path: $1"
-    exit 1
-fi
-
-# Validate baseline base directory
 if [ ! -d "$baseline_BASE/examples_sw/apps" ]; then
-    echo "Error: Invalid baseline base directory: $baseline_BASE"
-    echo "Directory examples_sw/apps not found"
+    echo "Error: $baseline_BASE/examples_sw/apps not found"
     exit 1
 fi
 
-# Function to check if a command exists
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
-}
-
-# Function to detect OS and install scc
-install_scc() {
-    echo "scc not found. Installing..."
-    
-    # Detect OS and package manager
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        # Linux
-        if command_exists apt-get; then
-            # Debian/Ubuntu
-            echo "Installing scc using snap..."
-            sudo snap install scc
-        elif command_exists yum; then
-            # RHEL/CentOS/Fedora
-            echo "Installing scc from GitHub releases..."
-            curl -L https://github.com/boyter/scc/releases/latest/download/scc-linux-x86_64 -o /tmp/scc
-            chmod +x /tmp/scc
-            sudo mv /tmp/scc /usr/local/bin/
-        elif command_exists pacman; then
-            # Arch Linux
-            echo "Installing scc using yay (AUR)..."
-            yay -S scc-bin
-        else
-            echo "Installing scc from GitHub releases (generic Linux)..."
-            curl -L https://github.com/boyter/scc/releases/latest/download/scc-linux-x86_64 -o /tmp/scc
-            chmod +x /tmp/scc
-            sudo mv /tmp/scc /usr/local/bin/
-        fi
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS
-        if command_exists brew; then
-            echo "Installing scc using Homebrew..."
-            brew install scc
-        else
-            echo "Homebrew not found. Installing scc from GitHub releases..."
-            curl -L https://github.com/boyter/scc/releases/latest/download/scc-macos-x86_64 -o /tmp/scc
-            chmod +x /tmp/scc
-            sudo mv /tmp/scc /usr/local/bin/
-        fi
-    elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]] || [[ "$OSTYPE" == "win32" ]]; then
-        # Windows
-        if command_exists choco; then
-            echo "Installing scc using Chocolatey..."
-            choco install scc
-        elif command_exists scoop; then
-            echo "Installing scc using Scoop..."
-            scoop install scc
-        else
-            echo "Please install scc manually from: https://github.com/boyter/scc/releases"
-            echo "Or install Chocolatey/Scoop first"
-            exit 1
-        fi
-    else
-        echo "Unsupported OS. Please install scc manually from: https://github.com/boyter/scc/releases"
-        exit 1
-    fi
-}
-
-# Check if scc is installed
-if ! command_exists scc; then
-    install_scc
-    
-    # Verify installation
-    if ! command_exists scc; then
-        echo "Error: scc installation failed. Please install manually from: https://github.com/boyter/scc/releases"
-        exit 1
-    fi
-    echo "scc installed successfully!"
+if ! command -v scc >/dev/null 2>&1; then
+    echo "Error: 'scc' not found in PATH."
+    echo "  Install with: nix-shell -p scc"
+    echo "  or download a release from https://github.com/boyter/scc/releases"
+    echo "  then re-run this script."
+    exit 1
 fi
 
-# Host code
-echo "Baseline Host application Complexity Measurement"
-echo "baseline base directory: $baseline_BASE"
-echo "==============================================================="
+if ! command -v jq >/dev/null 2>&1; then
+    echo "Error: 'jq' not found in PATH (needed to parse scc JSON)."
+    echo "  Install with: nix-shell -p jq"
+    exit 1
+fi
 
-# Function to run scc with error handling
+CSV_FILE="$baseline_BASE/evaluation/data/complexity_baseline_results.csv"
+mkdir -p "$(dirname "$CSV_FILE")"
+if [ ! -f "$CSV_FILE" ]; then
+    echo "app_name,variant,files,lines,blanks,comments,code,complexity,timestamp" > "$CSV_FILE"
+fi
+
 run_scc() {
-    local path=$1
-    local app_name=$2
-    
-    echo "----------------------------------------"
-    echo "$app_name"
-    echo "----------------------------------------"
-    
-    if [ -d "$path" ]; then
-        scc "$path"
-    else
-        echo "Warning: Directory '$path' not found. Skipping..."
+    local app_name=$1
+    local app_dir="$baseline_BASE/examples_sw/apps/$app_name"
+
+    if [ ! -d "$app_dir" ]; then
+        echo "Warning: $app_dir not found — skipping"
+        return
     fi
-    echo
+
+    local json
+    json=$(scc --format json "$app_dir") || {
+        echo "Warning: scc failed for $app_name"
+        return
+    }
+
+    # Sum across languages so we get whole-app totals (scc returns one
+    # element per language; in practice these dirs are C++ only, but the
+    # sum keeps the script robust if a header gets renamed to .h etc).
+    # Sum metrics across all languages reported by scc (one element per language).
+    local row
+    row=$(echo "$json" | jq -r '
+        reduce .[] as $l ({files:0,lines:0,blanks:0,comments:0,code:0,cx:0};
+            .files+=($l.Count // 0)
+            | .lines+=($l.Lines // 0)
+            | .blanks+=($l.Blank // 0)
+            | .comments+=($l.Comment // 0)
+            | .code+=($l.Code // 0)
+            | .cx+=($l.Complexity // 0))
+        | "\(.files),\(.lines),\(.blanks),\(.comments),\(.code),\(.cx)"')
+
+    local ts
+    ts=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "$app_name,composed,$row,$ts" >> "$CSV_FILE"
+
+    printf '  %-22s files=%-2s lines=%-4s code=%-4s cx=%s\n' \
+        "$app_name" \
+        "$(echo "$row" | cut -d, -f1)" \
+        "$(echo "$row" | cut -d, -f2)" \
+        "$(echo "$row" | cut -d, -f5)" \
+        "$(echo "$row" | cut -d, -f6)"
 }
 
-# Run complexity measurements
-run_scc "$baseline_BASE/examples_sw/apps/audio_processing" "Audio Processing"
-run_scc "$baseline_BASE/examples_sw/apps/digital_signature" "Digital Signature"
-run_scc "$baseline_BASE/examples_sw/apps/secure_storage" "Secure Storage"
-run_scc "$baseline_BASE/examples_sw/apps/signed_compression" "Signed Compression"
-run_scc "$baseline_BASE/examples_sw/apps/speech_recognition" "Speech Recognition"
+echo "Baseline host-app complexity"
+echo "  base : $baseline_BASE"
+echo "  csv  : $CSV_FILE"
+echo "----"
 
-echo "==============================================================="
-echo "Complexity measurement complete!"
+for app in audio_processing digital_signature secure_storage signed_compression speech_recognition; do
+    run_scc "$app"
+done
+
+echo "----"
+echo "Done. Rows appended to $CSV_FILE"
