@@ -1,5 +1,7 @@
 # µShell: A Microkernel-based FPGA Shell Architecture
 
+## Overview
+
 µShell is a hardware/OS co-design for modular accelerator deployment. Inspired
 by the microkernel principle, individual hardware modules (FFT, RSA, AES, …)
 are deployed into separate vFPGAs and dynamically chained together by a
@@ -10,9 +12,7 @@ end-to-end applications used in the paper. The accompanying baseline (the same
 applications written against an unmodified Coyote shell) lives at
 [TUM-DSE/microShell, branch `baseline`](https://github.com/TUM-DSE/microShell/tree/baseline).
 
----
-
-## Hero results
+## Main Results
 
 <div align="center">
   <img src="evaluation/plots/e2e.png" width="95%"/>
@@ -36,78 +36,36 @@ applications written against an unmodified Coyote shell) lives at
   <em>Partial reconfiguration latency breakdown for vFPGA module swaps.</em>
 </div>
 
----
-
-## Hardware & software requirements
-
-| Component | Used in the paper                                              |
-|-----------|----------------------------------------------------------------|
-| CPU       | 2× AMD EPYC 7413                                               |
-| FPGA      | 2× Xilinx Alveo U280 (one per host, for RDMA experiments)      |
-| Network   | 100 GbE (FPGA-attached)                                        |
-| OS        | NixOS 23.11 / Linux 6.9                                        |
-| Tools     | Vivado 2022.x via `xilinx-shell`, Nix, Python ≥ 3.11           |
-
-Two-server workflow: **Amy** runs Vivado bitstream generation, **Clara** runs
-FPGA tests. See [`evaluation/scripts/README.md`](evaluation/scripts/README.md).
-
----
-
-## Repository layout
-
-```
-microShell/
-├── examples_hw/apps/         # HW pipelines (audio_processing, digital_signature, ...)
-│   └── modules/              #   single-module bring-ups (fft, rsa, sha256, ...)
-├── examples_sw/apps/         # Host programs, mirrors examples_hw
-│   ├── *_monolithic/         #   single-binary versions for the µShell baseline
-│   └── modules/              #   per-module test programs
-├── sw/{include,src}/         # µShell runtime: DFG, Pipeline, Buffer, ushell::*
-├── driver/                   # Linux kernel driver (Coyote-derived)
-├── bitstreams/               # Pre-built .bit / .ltx (loaded by program_fpga.sh)
-├── evaluation/{scripts,data,plots}
-├── program_fpga.sh           # Load bitstream + driver + hugepages
-└── shell.nix                 # Reproducible build environment
-```
-
----
-
-## Quick start (perf_local)
-
-`perf_local` is the smallest end-to-end test: a host-side ping/loop across two
-vFPGAs, no application logic.
-
-On Clara, with a pre-built `cyt_top.bit` already in `bitstreams/`:
+# Reproduce paper results
 
 ```bash
-# 1. Enter the build environment
-nix-shell shell.nix
-
-# 2. Load driver, program FPGA, set hugepages
-sudo bash ./program_fpga.sh cyt_top
-sudo sysctl -w vm.nr_hugepages=1024
-
-# 3. Build and run the host program
-cd examples_sw && mkdir build_perf_local && cd build_perf_local
-cmake ../ -DEXAMPLE=perf_local
-make
-cd bin && ./test
+git clone git@github.com:TUM-DSE/microShell.git microShell
+cd microShell
 ```
 
-If you don't have a pre-built bitstream, build one first (Amy):
+## Specs
 
-```bash
-xilinx-shell
-cd examples_hw && mkdir build_perf_local && cd build_perf_local
-cmake ../ -DEXAMPLE=perf_local_2 -DFDEV_NAME=u280
-make project && make bitgen          # ~3-4 hours
-```
+### Software
 
----
+- Operating system: Linux 6.9.0-rc7 / NixOS 23.11
+- [Nix](https://nixos.org/download.html): all build dependencies are pinned via
+  `shell.nix` (host-side build/run) and `xilinx-shell` (Vivado toolchain)
+- Python ≥ 3.11 for the plot scripts under `evaluation/scripts/`
 
-## Building from source
+### Hardware
 
-### Driver
+- AMD EPYC 7413 CPU × 2
+- Xilinx Alveo U280 FPGA × 2
+- 100 GbE FPGA-attached NIC
+- Bitstream generation (Vivado) and FPGA tests can run on the same host or be
+  split across a build host and an FPGA host to keep Vivado off the test path.
+
+## Getting Started Instructions
+
+A "Hello World"-equivalent run using `perf_local` — the smallest end-to-end
+test, a host loop across two vFPGAs.
+
+### Building the FPGA driver
 
 ```bash
 nix-shell -p gcc14 gnumake
@@ -115,7 +73,49 @@ cd driver
 make KERNELDIR=$(nix-build -E '(import <nixpkgs> {}).linuxPackages_6_8.kernel.dev' --no-out-link)/lib/modules/*/build M=$(pwd)
 ```
 
-### Hardware bitstream
+A pre-compiled driver is also shipped with this repo if you want to skip the
+build.
+
+### Obtaining an FPGA bitstream
+
+Vivado bitstream generation takes 3–4 hours per design. Pre-built bitstreams
+for every `EXAMPLE` target live under [`bitstreams/`](bitstreams/), one folder
+per target — see [Pre-built bitstreams](#pre-built-bitstreams-fallback) below.
+
+Do not change the path or filename of `bitstreams/cyt_top.bit`;
+`program_fpga.sh` looks for it there.
+
+### Compiling perf_local software
+
+```bash
+nix-shell shell.nix
+cd examples_sw && mkdir build_perf_local && cd build_perf_local
+cmake ../ -DEXAMPLE=perf_local
+make
+```
+
+Set up hugepages for the host application:
+
+```bash
+sudo sysctl -w vm.nr_hugepages=1024
+```
+
+### Running the test
+
+```bash
+# from the repo root, with bitstreams/cyt_top.bit in place
+sudo bash ./program_fpga.sh cyt_top
+cd examples_sw/build_perf_local/bin
+./test
+```
+
+This runs the perf_local host application and reports average throughput.
+
+# Detailed Instructions
+
+## Compilation
+
+### Hardware
 
 ```bash
 xilinx-shell
@@ -130,9 +130,10 @@ Composed apps: `audio_processing`, `digital_signature`, `secure_storage`,
 `signed_compression`, `speech_recognition` (each with a `_monolithic` variant).
 Single modules: `aes_ctr`, `fft`, `quantize`, `rle`, `rsa`, `sha256`, `svm`.
 
-### Host software
+### Software
 
 ```bash
+nix-shell shell.nix
 cd examples_sw && mkdir build_<example> && cd build_<example>
 cmake ../ -DEXAMPLE=<name>
 make
@@ -142,46 +143,133 @@ make
 
 Available SW `EXAMPLE` targets: see [examples_sw/CMakeLists.txt](examples_sw/CMakeLists.txt).
 
----
+## Pre-built bitstreams (fallback)
 
-## Reproducing the paper
+If a Vivado run fails or you want to skip the 3–4 h bitgen step, the
+[`bitstreams/`](bitstreams/) directory holds known-good bitstreams from the
+paper run, organised one folder per `EXAMPLE` target:
+
+```
+bitstreams/
+├── audio_processing/{cyt_top.bit, cyt_top.ltx}
+├── audio_processing_monolithic/...
+├── digital_signature/...
+├── ...
+├── perf_local/...
+├── aes_ctr/  fft/  quantize/  rle/  rsa/  sha256/  svm/
+└── static/
+```
+
+Copy the matching pair into the load path that `program_fpga.sh` expects, then
+program the FPGA:
+
+```bash
+cp bitstreams/<example>/cyt_top.bit bitstreams/cyt_top.bit
+cp bitstreams/<example>/cyt_top.ltx bitstreams/cyt_top.ltx   # if present
+sudo bash ./program_fpga.sh cyt_top
+```
+
+The `compile_sw_*.sh` scripts under [`evaluation/scripts/`](evaluation/scripts/)
+already take an explicit bitstream path as their second argument, so you can
+point them straight at `bitstreams/<example>/cyt_top.bit` without copying.
+
+## Running experiments
 
 Each evaluation section has a dedicated script (or pair of scripts) that
 produces a plot under `evaluation/plots/`. The full step-by-step instructions
-— including the Amy/Clara split — live in
-[`evaluation/scripts/README.md`](evaluation/scripts/README.md). Summary:
+live in [`evaluation/scripts/README.md`](evaluation/scripts/README.md).
 
-| Section                           | Scripts                                                              | Plot output                              |
-|-----------------------------------|----------------------------------------------------------------------|------------------------------------------|
-| End-to-End Performance Overhead   | `compile_hw_{ushell,baseline}.sh`, `compile_sw_{ushell,baseline}.sh` → `plot_e2e.py` | `plots/e2e.{png,pdf}`                    |
-| Programmability                   | `measure_complexity_{ushell,baseline}.sh` → `plot_app_modularity.py` | `plots/application_modularity_analysis.{pdf,png}` |
-| Scalability                       | `compile_scalability.sh`, `extract_util.tcl` → `plot_scalability.py` | `plots/plot_scalability_analysis.{pdf,png}` |
-| FPGA Acceleration Effectiveness   | `compile_effectiveness_hw.sh`, `compile_effectiveness_sw.sh` → `plot_effectiveness.py` | `plots/direct_comm_effectiveness.pdf`    |
-| Scheduling Improvements           | `examples_sw/apps/scheduler` → `plot_sched.py`, `plot_reconf_analysis.py`, `plot_reconfig_overhead.py` | `plots/sched.{png,pdf}`, `plots/reconfig_overhead.{png,pdf}`, `plots/reconf_analysis.pdf` |
-| Resource efficiency (supp.)       | `plot_efficiency.py`                                                 | `plots/resource_efficiency.pdf`          |
+### End-to-End Performance Overhead
 
-Each plot script is invoked from `evaluation/scripts/` and writes to
-`evaluation/plots/`. Most read either CSVs in `evaluation/data/` or hardcoded
-arrays from the paper run; the per-script README documents which.
+```bash
+cd evaluation/scripts
+bash ./compile_hw_ushell.sh   /path/to/microShell
+bash ./compile_hw_baseline.sh /path/to/baseline
+./compile_sw_ushell.sh   <app> <bitstream> /path/to/microShell
+./compile_sw_baseline.sh <app> <bitstream> /path/to/baseline
+python3 plot_e2e.py
+```
 
-Pre-built bitstreams under `bitstreams/` let you skip the 3-4 h Vivado runs
-and go straight to the SW + plot steps.
+Output: `evaluation/plots/e2e.{png,pdf}`.
 
----
+### Programmability
 
-## Troubleshooting
+```bash
+bash ./measure_complexity_baseline.sh /path/to/baseline
+bash ./measure_complexity_ushell.sh   /path/to/microShell
+python3 plot_app_modularity.py
+```
 
-- **Driver won't load** — `sudo rmmod coyote_drv && sudo insmod driver/coyote_drv.ko`.
-- **FPGA programming fails** — verify `bitstreams/cyt_top.bit` exists before running `program_fpga.sh`. Check `sudo dmesg | tail -50`.
-- **Hugepage shortage** — `cat /proc/sys/vm/nr_hugepages` should be ≥ 1024.
-- **Test process hangs** — `sudo pkill -9 test`, then re-program the FPGA.
+Output: `evaluation/plots/application_modularity_analysis.{pdf,png}`.
 
----
+### Scalability
+
+```bash
+bash ./compile_scalability.sh /path/to/baseline
+# Open <n>vfpga/checkpoints/shell_routed.dcp in Vivado, source extract_util.tcl
+python3 plot_scalability.py
+```
+
+Output: `evaluation/plots/plot_scalability_analysis.{pdf,png}`.
+
+### FPGA Acceleration Effectiveness
+
+```bash
+bash ./compile_effectiveness_hw.sh /path/to/baseline
+./compile_effectiveness_sw.sh fft     <bitstream> /path/to/baseline
+./compile_effectiveness_sw.sh quantize <bitstream> /path/to/baseline
+# ...repeat for: rle, aes_ctr, rsa, sha256, svm
+python3 plot_effectiveness.py
+```
+
+Output: `evaluation/plots/direct_comm_effectiveness.pdf`.
+
+### Scheduling Improvements
+
+```bash
+# Data is collected by examples_sw/apps/scheduler; CSVs land in evaluation/data/
+python3 plot_sched.py
+python3 plot_reconfig_overhead.py
+python3 plot_reconf_analysis.py
+```
+
+Output: `evaluation/plots/sched.{png,pdf}`, `reconfig_overhead.{png,pdf}`, `reconf_analysis.pdf`.
+
+## Artifact Claims
+
+All figures in the evaluation section are reproducible with the commands
+above. Numbers may differ slightly from the paper run depending on system
+state (driver version, FPGA temperature, hugepage availability).
+
+## Potential Issues
+
+- **Driver won't load** — `sudo rmmod coyote_drv && sudo insmod driver/coyote_drv.ko`. If that fails, reboot and retry; stuck driver state usually clears.
+- **FPGA programming fails** — verify `bitstreams/cyt_top.bit` exists before running `program_fpga.sh`. Check `sudo dmesg | tail -50` for PCIe / programming errors.
+- **Hugepage shortage** — `cat /proc/sys/vm/nr_hugepages` should be ≥ 1024. Re-run the `sysctl` command if the number resets after reboot.
+- **Test process hangs** — `sudo pkill -9 test`, then re-program the FPGA before retrying.
+
+## Repository layout
+
+```
+microShell/
+├── examples_hw/apps/         # HW pipelines (audio_processing, digital_signature, ...)
+│   └── modules/              #   single-module bring-ups (fft, rsa, sha256, ...)
+├── examples_sw/apps/         # Host programs, mirrors examples_hw
+│   ├── *_monolithic/         #   single-binary versions for the µShell baseline
+│   └── modules/              #   per-module test programs
+├── sw/{include,src}/         # µShell runtime: DFG, Pipeline, Buffer, ushell::*
+├── driver/                   # Linux kernel driver (Coyote-derived)
+├── bitstreams/               # Pre-built .bit / .ltx, one folder per EXAMPLE target
+├── evaluation/{scripts,data,plots}
+├── program_fpga.sh           # Load bitstream + driver + hugepages
+└── shell.nix                 # Reproducible build environment
+```
 
 ## License
 
-BSD 3-Clause — see [LICENSE.md](LICENSE.md). Coyote derivative; original
-Coyote copyright retained per file.
+MIT — see [LICENSE.md](LICENSE.md). Portions derived from
+[Coyote](https://github.com/fpgasystems/Coyote) under BSD-3-Clause; original
+copyright headers retained per file.
 
 ## Citation
 
