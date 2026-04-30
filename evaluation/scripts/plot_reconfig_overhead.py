@@ -168,6 +168,6 @@ plt.subplots_adjust(wspace=0, hspace=0.05)
 plt.margins(x=0.0, tight=True)
 
 # Save figure
-#plt.savefig("reconfig_overhead.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/reconfig_overhead.png", dpi=300, bbox_inches='tight')
 plt.savefig("../plots/reconfig_overhead.pdf", bbox_inches='tight')
 plt.show()
