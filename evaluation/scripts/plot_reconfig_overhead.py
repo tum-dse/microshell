@@ -28,7 +28,7 @@ color3 = palette[2]  # Green for buffer alloc
 color4 = palette[3]  # Red for partial reconfig
 
 # ===== DATA CONFIGURATION =====
-vFPGA_count = ["1 vFPGA", "2 vFPGA", "3 vFPGA", "4 vFPGA"]
+vFPGA_count = ["1 UL", "2 ULs", "3 ULs", "4 ULs"]
 x_positions = np.arange(len(vFPGA_count))
 
 # Time values in microseconds
