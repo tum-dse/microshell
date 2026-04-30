@@ -10,6 +10,8 @@ rust/
 .Xil/
 csim/
 .vscode/
+.venv/
+__pycache__/
 *.pb
 *.log
 *.tmp
