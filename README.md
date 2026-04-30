@@ -127,28 +127,41 @@ Run the following to generate figures using existing execution data.
 This generates the end-to-end performance comparison Figure 11.
 
 ```
+cd evalution/scripts/
 python3 plot_e2e.py
 ```
 
 ### 6.2 Scheduling Improvements (Figure 12)
 
 ```
+cd evalution/scripts/
 python3 plot_sched.py
 ```
 
 ### 6.3 Application Deployment Overheads (Figure 13)
 
 ```
+cd evalution/scripts/
 python3 plot_reconfig_overhead.py
 ```
 
 
 ### 6.4 Programmability (Table 5)
 
-
+```
+python3 plot_complexity.py \
+    --baseline-csv ../data/complexity_baseline_results.csv \
+    --ushell-csv   ../data/complexity_ushell_results.csv
+```
 
 ### 6.5 Resource Overheads (Table 6)
 
+```
+cd evalution/scripts/
+python3 extract_resource_usage.py
+```
+
+The table will be shown in the commandline interface.
 
 ## Artifact Claims
 
