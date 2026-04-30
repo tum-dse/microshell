@@ -79,12 +79,26 @@ cd evaluation/scripts && python3 plot_e2e.py
 ```bash
 bash ./measure_complexity_baseline.sh /path/to/baseline
 bash ./measure_complexity_ushell.sh   /path/to/microShell
-python3 plot_app_modularity.py
-# → evaluation/plots/application_modularity_analysis.{pdf,png}
+
+# Each script writes its CSV into <its repo>/evaluation/data/.
+# Point the plotter at both:
+python3 plot_complexity.py \
+    --baseline-csv /path/to/baseline/evaluation/data/complexity_baseline_results.csv \
+    --ushell-csv   /path/to/microShell/evaluation/data/complexity_ushell_results.csv
+# → evaluation/plots/complexity.{pdf,png}
 ```
 
-The scripts use `scc` (auto-installs if missing) to count LOC across each app.
-The ushell script reports both the composed and `_monolithic` variants.
+The shell scripts use `scc` (LOC + cyclomatic complexity) and `jq` (parse JSON).
+Install via `nix-shell -p scc jq` if either is missing — the scripts no longer
+attempt auto-installation.
+
+CSVs:
+- `complexity_baseline_results.csv` — one row per composed app
+- `complexity_ushell_results.csv` — two rows per app (`composed` + `monolithic`)
+- columns: `app_name, variant, files, lines, blanks, comments, code, complexity, timestamp`
+
+`plot_app_modularity.py` is unrelated — it draws a literature-survey breakdown
+of accelerator module categories and uses hardcoded counts from the paper.
 
 ## Scalability
 
