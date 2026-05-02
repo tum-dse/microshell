@@ -1,11 +1,11 @@
-# µShell: a microkernel-based FPGA shell architecture
+# $\mu$Shell: a microkernel-based FPGA shell architecture
 
-µShell is a hardware/OS co-design for modular accelerator deployment. Inspired
+$\mu$Shell is a hardware/OS co-design for modular accelerator deployment. Inspired
 by the microkernel principle, individual hardware modules (FFT, RSA, AES, …)
 are deployed into separate vFPGAs and dynamically chained together by a
 host-side dataflow graph (DFG) API to compose end-to-end accelerators.
 
-This repo contains the µShell shell, runtime, driver, example modules, and the
+This repo contains the $\mu$Shell shell, runtime, driver, example modules, and the
 end-to-end applications used in the paper. The accompanying baseline (the same
 applications written against an unmodified Coyote shell) lives at
 [TUM-DSE/microShell, branch `baseline`](https://github.com/TUM-DSE/microShell/tree/baseline).
@@ -15,7 +15,7 @@ applications written against an unmodified Coyote shell) lives at
 <div align="center">
   <img src="evaluation/plots/e2e.png" width="95%"/>
   <br/>
-  <em>Figure 11 — End-to-end performance: µShell vs. Coyote v2 baseline and a monolithic single-binary variant, across the five composed applications.</em>
+  <em>Figure 11 — End-to-end performance: $\mu$Shell vs. Coyote v2 baseline and a monolithic single-binary variant, across the five composed applications.</em>
 </div>
 
 <br/>
@@ -31,7 +31,7 @@ applications written against an unmodified Coyote shell) lives at
 <div align="center">
   <img src="evaluation/plots/reconfig_overhead.png" width="50%"/>
   <br/>
-  <em>Figure 13 — Application-deployment overhead: µShell capability/buffer updates vs. Coyote partial-reconfiguration cost, for accelerators of 1–4 user-logic components.</em>
+  <em>Figure 13 — Application-deployment overhead: $\mu$Shell capability/buffer updates vs. Coyote partial-reconfiguration cost, for accelerators of 1–4 user-logic components.</em>
 </div>
 
 
@@ -145,7 +145,6 @@ cd evalution/scripts/
 python3 plot_reconfig_overhead.py
 ```
 
-
 ### 6.4 Programmability (Table 5)
 
 ```
@@ -158,7 +157,7 @@ python3 plot_complexity.py \
 
 ```
 cd evalution/scripts/
-python3 extract_resource_usage.py
+python3 extract_util.py
 ```
 
 The table will be shown in the commandline interface.

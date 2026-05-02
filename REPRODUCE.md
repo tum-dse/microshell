@@ -245,81 +245,39 @@ python3 plot_complexity.py \
 
 ## §6.5 Resource overheads — Figures 4–5, Table 6
 
-Three sub-experiments: the per-vFPGA resource budget under different
-scalability targets (Figure 4), resource-usage breakdown across components
-(Figure 5, Table 6), and the FPGA-acceleration-effectiveness comparison
-(direct on-FPGA chaining vs. CPU-orchestrated chaining).
+We obtained the resource utilization of $\mu$Shell using Vivado. Table 6 summarizes the results for six bitstreams: the Coyote baseline, $\mu$Shell configurations with 3, 4, 6, and 8 vFPGAs, and a bitstream integrating all user logic.
 
-### Scalability — Figure 4
+Since generating all bitstreams is time-consuming, we use the $\mu$Shell configuration with 3 vFPGAs as a representative example to demonstrate the reproduction workflow. This setup provides approximately 50% of the data required for Table 6.
 
-```bash
-cd evaluation/scripts
-bash ./compile_scalability.sh /path/to/baseline
-# Builds 1vfpga, 2vfpga, 4vfpga, 8vfpga bitstreams.
-
-# On the build host, open each implementation checkpoint in Vivado and dump
-# the per-hierarchy utilization:
+```
 xilinx-shell
-vivado -mode tcl
-> open_checkpoint /path/to/baseline/examples_hw/<n>vfpga/checkpoints/shell_routed.dcp
-> source extract_util.tcl       # writes per-hierarchy CSV
+source /share/xilinx/Vivado/2022.1/settings64.sh
 
-python3 plot_scalability.py
-# → evaluation/plots/plot_scalability_analysis.{pdf,png}
+git checkout master
+mkdir build_ushell_3_hw && cd build_ushell_3_hw
+cmake ../hw/ -DFDEV_NAME=u280 -DEXAMPLE=ceu_3
+make project && make bitgen
 ```
 
-Resource per vFPGA:
+For the other bitstreams, the setups for them are
+
+- $\mu$Shell with 4 vFPGAs - ceu_4
+- $\mu$Shell with 6 vFPGAs - ceu_6
+- $\mu$Shell with 8 vFPGAs - ceu_8
+- coyote - ceu_3_strm (in coyote baseline branch)
+- user logics - all_apps
+
+To obtain resource usage csv file:
 
 ```
-per_vfpga = (U280_total - (inst_shell - inst_user_wrapper)) / num_vFPGAs
+bash ./extract_csv.sh
 ```
 
-U280 reference: 1,303,680 LUTs · 2,607,360 FFs · 2,016 BRAM (36Kb) · 960 URAM · 9,024 DSP.
+Copy the generated csv file into /evaluation/data/. Then run the `extract_util.py` to generate data for the table. 
 
-### Resource efficiency — Figure 5, Table 6
 
-```bash
-python3 plot_efficiency.py
-# → evaluation/plots/resource_efficiency.pdf
-```
 
-The numbers behind Table 6 come from the same Vivado utilization reports
-collected for the scalability experiment.
 
-### FPGA acceleration effectiveness
-
-Compares CPU-orchestrated chaining (sum of single-module latencies) against
-direct on-FPGA chaining (composed apps).
-
-```bash
-cd evaluation/scripts
-bash ./compile_effectiveness_hw.sh /path/to/baseline
-# Builds: aes_ctr, rsa, fft, svm, sha256, quantize, rle
-
-./compile_effectiveness_sw.sh fft      <bit> /path/to/baseline
-./compile_effectiveness_sw.sh quantize <bit> /path/to/baseline
-./compile_effectiveness_sw.sh rle      <bit> /path/to/baseline
-./compile_effectiveness_sw.sh aes_ctr  <bit> /path/to/baseline
-./compile_effectiveness_sw.sh rsa      <bit> /path/to/baseline
-./compile_effectiveness_sw.sh sha256   <bit> /path/to/baseline
-./compile_effectiveness_sw.sh svm      <bit> /path/to/baseline
-
-python3 plot_effectiveness.py
-# → evaluation/plots/direct_comm_effectiveness.pdf
-```
-
-CPU-sync latency = sum of component latencies; the direct-IPC values come
-from the composed `e2e_baseline_results.csv` row for the same app. Mapping:
-
-| App                  | Components              |
-|----------------------|-------------------------|
-| Audio Processing     | fft + quantize + rle    |
-| Digital Signature    | sha256 + rsa            |
-| Secure Storage       | rle + aes_ctr           |
-| Signed Compression   | rle + rsa               |
-| Speech Recognition   | fft + svm               |
-
----
 
 <!-- ## Artifact claims
 

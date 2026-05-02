@@ -93,6 +93,53 @@ if(EXAMPLE STREQUAL "ceu_3")
     create_hw()
 endif()
 
+if(EXAMPLE STREQUAL "ceu_4")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 4)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/perf_local"
+        VFPGA_C0_1 "apps/perf_local"
+        VFPGA_C0_2 "apps/perf_local"
+        VFPGA_C0_3 "apps/perf_local"
+    )
+
+    create_hw()
+endif()
+
+
+if(EXAMPLE STREQUAL "ceu_6")
+    set(BUILD_STATIC 1)
+    set(BUILD_SHELL 0)
+    set(BUILD_OPT 1)
+    set(N_REGIONS 6)
+    set(EN_STRM 1)
+    set(N_STRM_AXI 2)
+    # set(EN_MEM 1)
+    set(HBM_SPLIT 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/perf_local"
+        VFPGA_C0_1 "apps/perf_local"
+        VFPGA_C0_2 "apps/perf_local"
+        VFPGA_C0_3 "apps/perf_local"
+        VFPGA_C0_4 "apps/perf_local"
+        VFPGA_C0_5 "apps/perf_local"
+    )
+
+    create_hw()
+endif()
+
 if(EXAMPLE STREQUAL "schedule_6")
     set(BUILD_STATIC 1)
     set(BUILD_SHELL 0)
