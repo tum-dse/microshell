@@ -74,7 +74,7 @@ endif()
 # Streaming services example
 if(EXAMPLE STREQUAL "streaming_server")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/streaming_service/server")
-    message("** Example: Streaming service - Server (Coyote daemon)")
+    message("** Example: Streaming service - Server (uShell daemon)")
     include_directories(${TARGET_DIR}/../include ${TARGET_DIR}/include)
 endif()
 
@@ -84,10 +84,10 @@ if(EXAMPLE STREQUAL "streaming_client")
     include_directories(${TARGET_DIR}/../include)
 endif()
 
-# Streaming services example
+# Perf services example
 if(EXAMPLE STREQUAL "perf_server")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/perf_service/server")
-    message("** Example: perf_local service - Server (Coyote daemon)")
+    message("** Example: perf_local service - Server (uShell daemon)")
     include_directories(${TARGET_DIR}/../include ${TARGET_DIR}/include)
 endif()
 
@@ -96,6 +96,8 @@ if(EXAMPLE STREQUAL "perf_client")
     message("** Example: perf_local service - Client")
     include_directories(${TARGET_DIR}/../include)
 endif()
+
+
 
 if(EXAMPLE STREQUAL "multithreading")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/multithreading")
