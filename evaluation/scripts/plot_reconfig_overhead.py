@@ -32,15 +32,25 @@ vFPGA_count = ["1 vFPGA", "2 vFPGA", "3 vFPGA", "4 vFPGA"]
 x_positions = np.arange(len(vFPGA_count))
 
 # Time values in microseconds
-pr_time = [58000, 58000, 58000, 58000]  # Partial reconfiguration time
-buffer_alloc = [253.1, 253.1, 253.1, 253.1]  # Buffer allocation time
-object_alloc = [3.6, 3.6*2, 3.6*3, 3.6*4]  # Object capability time
-mem_values = [2, 2*2, 2*3, 2*4]  # Memory capability time
+# # data used in paper
+# pr_time = [58000, 58000, 58000, 58000]  # Partial reconfiguration time
+# buffer_alloc = [253.1, 253.1, 253.1, 253.1]  # Buffer allocation time
+# object_alloc = [3.6, 3.6*2, 3.6*3, 3.6*4]  # Object capability time
+# mem_values = [2, 2*2, 2*3, 2*4]  # Memory capability time
+
+CSV_FILE = "../data/reconfig_times.csv"
+
+df = pd.read_csv(CSV_FILE)
+
+pr_time = df.iloc[0].tolist()
+buffer_alloc = df.iloc[1].tolist()
+object_alloc = df.iloc[2].tolist()
+mem_values = df.iloc[3].tolist()
 
 # Y-axis limits for broken axis
 y_limits = [
     (55000, 61000),  # Top axis for large values
-    (200, 350),      # Middle axis
+    (200, buffer_alloc[0]+50),      # Middle axis
     (0, 25)          # Bottom axis for small values
 ]
 
