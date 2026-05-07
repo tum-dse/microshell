@@ -1,3 +1,12 @@
+/**
+ * Audio Processing Pipeline (monolithic / single-binary version).
+ *
+ * Three-stage µShell Dataflow: fft_processor -> quantizer -> rle_compressor,
+ * connected through four Buffers. The DFG runtime maps each Task onto a
+ * vFPGA region transparently; the "monolithic" label denotes the all-in-one
+ * end-to-end binary used for full pipeline runs (FFT → quantization → RLE).
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -40,6 +49,8 @@ constexpr auto const defSize = 32;
 constexpr auto const nBenchRuns = 1;
 constexpr float const sampleRate = 44100.0f;
 
+// Reference sine generator (1378.125 Hz tone at 44.1 kHz). Unused in the
+// default flow but kept for deterministic-input bring-up.
 float generateSineValue(int index) {
     const float amplitude = 1000.0f;
     const float frequency = 1378.125f;
@@ -65,6 +76,8 @@ void generateCompressibleAudio(float* audio_data, uint32_t input_size) {
     }
 }
 
+// Decode the RLE (count, value) pairs emitted by the FPGA and report a
+// compression summary. Stops at the first zero-count terminator.
 void printRLEOutput(uint8_t* output_ptr, int size) {
     std::cout << "\nRLE Pipeline Output:" << std::endl;
 
@@ -125,6 +138,7 @@ void printRLEOutput(uint8_t* output_ptr, int size) {
               << (pair_count * 2 * 100.0 / total_chars) << "%" << std::endl;
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -137,6 +151,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;

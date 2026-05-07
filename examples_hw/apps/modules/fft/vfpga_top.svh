@@ -1,3 +1,5 @@
+// modules/fft: standalone FFT bring-up for the §6.5 effectiveness experiment.
+
 import lynxTypes::*;
 
 AXI4SR axis_sink_int ();

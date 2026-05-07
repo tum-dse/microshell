@@ -1,3 +1,10 @@
+// perf_local vFPGA top.
+//
+// EN_STRM compiles in the host-stream loop, EN_MEM compiles in the
+// card-stream loop. Both can be enabled together to exercise both paths
+// in one bitstream. Each loop has an associated ILA capturing the AXIS
+// handshakes.
+
 import lynxTypes::*;
 
 `ifdef EN_STRM
@@ -9,6 +16,7 @@ perf_local inst_host_link (
     .aresetn  (aresetn)
 );
 
+// 6-probe ILA covering only the host stream (host-only build).
 ila_perf_host inst_ila_perf_host_c1 (
     .clk(aclk),
     .probe0(axis_host_recv[0].tvalid),
@@ -29,6 +37,7 @@ perf_local inst_card_link (
     .aresetn  (aresetn)
 );
 
+// 12-probe ILA covering both host and card streams when EN_MEM is set.
 ila_perf_host_2 inst_ila_perf_host_c1 (
     .clk(aclk),
     .probe0(axis_host_recv[0].tvalid),

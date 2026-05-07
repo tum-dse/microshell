@@ -7,6 +7,10 @@
  * MATLAB Coder version            : 5.5
  * C/C++ source code generated on  : 24-Dec-2022 03:09:46
  */
+
+// SVM HLS entry point. 32-bit AXIS in / 32-bit AXIS out (one beat per
+// packet, carrying the class label).
+
 #ifndef SVM_SPEECH_30_0_H
 #define SVM_SPEECH_30_0_H
 
@@ -18,7 +22,7 @@
 #include <stdlib.h>
 
 /* Function Declarations */
-void svm_speech_30_0(hls::stream<ap_axiu<32,0,0,0>>& input, 
+void svm_speech_30_0(hls::stream<ap_axiu<32,0,0,0>>& input,
                      hls::stream<ap_axiu<32,0,0,0>>& output);
 
 #endif

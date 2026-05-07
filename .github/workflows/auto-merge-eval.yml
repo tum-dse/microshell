@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - master-clean
     paths:
       - 'evaluation/**'
 
@@ -16,29 +17,39 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Configure Git
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
-      
-      - name: Merge directory
+
+      - name: Determine target branch
+        id: target
         run: |
-          # Fetch latest changes
-          git fetch origin baseline
-          
-          # Checkout target branch
-          git checkout baseline
-          git pull origin baseline
-          
-          # Get the directory from source branch
-          git checkout master -- evaluation/
-          
-          # Commit if there are changes
+          # master-clean syncs into baseline-clean; master syncs into baseline.
+          src="${GITHUB_REF##refs/heads/}"
+          if [ "$src" = "master-clean" ]; then
+            echo "target=baseline-clean" >> "$GITHUB_OUTPUT"
+          else
+            echo "target=baseline" >> "$GITHUB_OUTPUT"
+          fi
+          echo "source=$src" >> "$GITHUB_OUTPUT"
+
+      - name: Merge evaluation directory
+        env:
+          SRC: ${{ steps.target.outputs.source }}
+          DST: ${{ steps.target.outputs.target }}
+        run: |
+          git fetch origin "$DST"
+          git checkout "$DST"
+          git pull origin "$DST"
+
+          git checkout "$SRC" -- evaluation/
+
           if [ -n "$(git status --porcelain)" ]; then
             git add .
-            git commit -m "Auto-merge evaluation directory from master to baseline [skip ci]"
-            git push origin baseline
+            git commit -m "Auto-merge evaluation directory from $SRC to $DST [skip ci]"
+            git push origin "$DST"
           else
             echo "No changes to merge"
           fi

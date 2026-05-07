@@ -1,3 +1,12 @@
+/**
+ * Signed Compression Pipeline (monolithic / single-binary version).
+ *
+ * Two-stage µShell Dataflow: rle_compressor -> rsa_signer, connected through
+ * three Buffers (raw -> compressed -> signature). The "monolithic" label
+ * denotes the all-in-one end-to-end binary; the DFG runtime maps each Task
+ * onto a vFPGA region transparently.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -49,6 +58,7 @@ void generateStreamingRLEPattern(uint8_t* buffer, size_t size) {
     }
 }
 
+// Print up to 64 bytes of a buffer as ASCII characters (for the RLE input).
 void printBuffer(uint8_t* buffer, size_t size, const char* label) {
     std::cout << label << ": ";
     for(size_t i = 0; i < std::min(size, size_t(64)); i++) {
@@ -58,6 +68,7 @@ void printBuffer(uint8_t* buffer, size_t size, const char* label) {
     std::cout << std::endl;
 }
 
+// Print a buffer as one big hex word, MSB-first.
 void printHexBuffer(uint32_t* buffer, size_t words, const char* label) {
     std::cout << label << ": 0x";
     for(int i = words-1; i >= 0; i--) {
@@ -66,6 +77,8 @@ void printHexBuffer(uint32_t* buffer, size_t words, const char* label) {
     std::cout << std::dec << std::endl;
 }
 
+// Hex-dump the RSA signature and confirm the buffer has at least one
+// non-zero byte (silent-failure guard against an all-zero output).
 void analyzePipelineOutput(uint8_t* buffer, size_t buffer_size, uint32_t input_chunks) {
     std::cout << "Signed Compression Output Analysis:" << std::endl;
 
@@ -86,6 +99,7 @@ void analyzePipelineOutput(uint8_t* buffer, size_t buffer_size, uint32_t input_c
     }
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -98,6 +112,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;

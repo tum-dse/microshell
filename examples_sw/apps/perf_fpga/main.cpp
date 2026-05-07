@@ -1,3 +1,11 @@
+/**
+ * perf_fpga: HW-driven read/write throughput / latency micro-benchmark.
+ *
+ * Drives the perf_fpga_slv register file in HDL (see hdl/perf_fpga_slv.sv)
+ * to issue n_reps memory transfers of curr_size bytes, polls DONE_REG,
+ * then reads TIMER_REG and converts cycles -> ns with clkNs.
+ */
+
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -28,7 +36,7 @@ constexpr auto const defTargetVfid = 0;
 constexpr auto const nReps = 1;
 constexpr auto const defSize = 128;
 constexpr auto const maxSize = 1024;
-constexpr auto const clkNs = 1000.0 / 250.0;
+constexpr auto const clkNs = 1000.0 / 250.0;  // 250 MHz aclk -> ns per cycle
 constexpr auto const nBenchRuns = 100;
 
 // Mirrors the perf_fpga_slv register map in HDL.
@@ -63,12 +71,15 @@ int main(int argc, char *argv[])
     cThread<int> cthread(defTargetVfid, getpid(), defDevice);
     void *hMem = cthread.getMem({CoyoteAlloc::HPF, maxSize});
 
+    // Configure the slave registers, kick off the run by writing CTRL_REG,
+    // poll DONE_REG, return the measured cycles converted to ns.
     auto benchmark_run = [&](cThread<int>& cthread, const void* hMem, const BenchOper oper) {
         cthread.setCSR(reinterpret_cast<uint64_t>(hMem), static_cast<uint32_t>(BenchRegs::VADDR_REG));
         cthread.setCSR(curr_size, static_cast<uint32_t>(BenchRegs::LEN_REG));
         cthread.setCSR(cthread.getHpid(), static_cast<uint32_t>(BenchRegs::PID_REG));
         cthread.setCSR(n_reps, static_cast<uint32_t>(BenchRegs::N_REPS_REG));
 
+        // 64 B per AXI beat; round up so partial beats are counted.
         uint64_t n_beats = n_reps * ((curr_size + 64 - 1) / 64);
         cthread.setCSR(n_beats, static_cast<uint32_t>(BenchRegs::N_BEATS_REG));
         cthread.setCSR(dest, static_cast<uint32_t>(BenchRegs::DEST_REG));
@@ -89,6 +100,8 @@ int main(int argc, char *argv[])
             time_bench_rd.emplace_back(benchmark_run(cthread, hMem, BenchOper::START_RD));
             memset(hMem, 0xEA, maxSize);
             time_bench_wr.emplace_back(benchmark_run(cthread, hMem, BenchOper::START_WR));
+            // Verify the write-side payload pattern produced by the HW
+            // (counter-based, see vfpga_top.svh's axis_src_active.tdata).
             for (size_t i = 0; i < curr_size; i++) {
                 uint8_t value = (i / 64 + 1) >> std::min(((i % 64) * 8), (size_t) 63);
                 if (((int8_t *) hMem)[i] != value) {

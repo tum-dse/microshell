@@ -1,16 +1,4 @@
 build*/
-bstreams/
-examples_hw/speech/
-examples_hw/speech_mono/
-examples_hw/digi_sign/
-examples_hw/digi_sign_mono/
-examples_hw/audio/
-examples_hw/audio_mono/
-examples_hw/signcomp/
-examples_hw/signcomp_mono/
-examples_hw/secure/
-examples_hw/secure_mono/
-examples_hw/static/
 iprepo/
 tmp/
 hd_visual/
@@ -58,3 +46,11 @@ misc/
 *_funcsim.vhdl
 *.upgrade_log
 *.d
+
+# Track everything under evaluation/ (CSVs, plots, READMEs, scripts).
+# Reviewers and the AE process need the paper-time data and figures;
+# rules above (notably *.csv) would otherwise silently drop them.
+!evaluation/
+!evaluation/**
+evaluation/**/__pycache__/
+evaluation/**/*.pyc

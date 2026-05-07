@@ -1,3 +1,8 @@
+/**
+ * SVM module bring-up (DFG version): drives the standalone SVM vFPGA
+ * with 32-float windows and reports the predicted class label.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -29,11 +34,13 @@ constexpr auto const defDevice = 0;
 constexpr auto const defReps = 1;
 constexpr auto const defSize = 32;
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;

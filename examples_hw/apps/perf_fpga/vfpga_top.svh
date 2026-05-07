@@ -1,46 +1,58 @@
+// perf_fpga vFPGA top: HW-driven read/write throughput micro-benchmark.
+//
+// Host writes config (vaddr, len, n_reps, dest, pid) into the slave reg
+// file then sets bit 0 / bit 1 of CTRL to start a read or write run. The
+// FSM below issues n_reps requests on sq_rd/sq_wr, counts data beats on
+// the active stream pair, accumulates bench_timer until both done flags
+// are set, and stops. Host reads timer/done back over AXI-Lite.
+//
+// Two stream pairs are wired up; the active pair is selected at runtime
+// by bench_dest. EN_MEM swaps host streams for card streams.
+
 always_comb notify.tie_off_m();
 
-// I/O
 AXI4SR axis_sink_int[N_STRM_AXI]();
 AXI4SR axis_src_int[N_STRM_AXI]();
 
 `ifndef EN_MEM
 for (genvar i = 0; i < N_STRM_AXI; i++) begin
     axisr_reg inst_reg_sink_0 (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_host_recv[i]), .m_axis(axis_sink_int[i]));
-    axisr_reg inst_reg_src_0 (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int[i]), .m_axis(axis_host_send[i]));
+    axisr_reg inst_reg_src_0  (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int[i]),    .m_axis(axis_host_send[i]));
 end
 `else
 for (genvar i = 0; i < N_CARD_AXI; i++) begin
     axisr_reg inst_reg_sink_0 (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_card_recv[i]), .m_axis(axis_sink_int[i]));
-    axisr_reg inst_reg_src_0 (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int[i]), .m_axis(axis_card_send[i]));
+    axisr_reg inst_reg_src_0  (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int[i]),    .m_axis(axis_card_send[i]));
 end
 `endif
 
-// UL
+// CTRL register bit positions (host-writeable).
 parameter integer START_RD = 0;
 parameter integer START_WR = 1;
 
-// Benchmark slave
-logic [1:0] bench_ctrl;
-logic [31:0] bench_done;
-logic [63:0] bench_timer;
-logic [PID_BITS-1:0] bench_pid;
-logic [DEST_BITS-1:0] bench_dest;
+// Config registers driven by perf_fpga_slv (full reg map there).
+logic [1:0]            bench_ctrl;
+logic [31:0]           bench_done;
+logic [63:0]           bench_timer;
+logic [PID_BITS-1:0]   bench_pid;
+logic [DEST_BITS-1:0]  bench_dest;
 logic [VADDR_BITS-1:0] bench_vaddr;
-logic [LEN_BITS-1:0] bench_len;
-logic [31:0] bench_n_reps;
-logic [63:0] bench_n_beats;
+logic [LEN_BITS-1:0]   bench_len;
+logic [31:0]           bench_n_reps;
+logic [63:0]           bench_n_beats;
 
-logic done_req;
-logic done_data;
+// FSM-internal counters; both done flags must hold before returning to IDLE.
+logic        done_req;
+logic        done_data;
 logic [63:0] cnt_data;
 logic [31:0] bench_sent;
 
-typedef enum logic[1:0]  {ST_IDLE, ST_READ, ST_WRITE} state_t;
+typedef enum logic [1:0] {ST_IDLE, ST_READ, ST_WRITE} state_t;
 logic [1:0] state_C;
 
-logic[15:0] cnt_cq_rd;
-logic[15:0] cnt_cq_wr;
+// Diagnostic CQ counters (ILA only, not used by the FSM).
+logic [15:0] cnt_cq_rd;
+logic [15:0] cnt_cq_wr;
 
 always_ff @(posedge aclk) begin
     if(~aresetn) begin
@@ -52,10 +64,7 @@ always_ff @(posedge aclk) begin
         cnt_cq_wr <= cq_wr.valid ? cnt_cq_wr + 1 : cnt_cq_wr;
     end
 end
- 
-//
-// CSR
-//
+
 perf_fpga_slv inst_slave (
     .aclk(aclk),
     .aresetn(aresetn),
@@ -71,35 +80,39 @@ perf_fpga_slv inst_slave (
     .bench_n_beats(bench_n_beats)
 );
 
+// Mux the active stream pair on bench_dest. Inactive pair gets
+// tready=0/tvalid=0 so it stalls cleanly.
 AXI4SR axis_sink_active ();
 AXI4SR axis_src_active ();
 
-// active interface according to bench dest
-// sink
 assign axis_sink_active.tvalid = (bench_dest == 0) ? axis_sink_int[0].tvalid : axis_sink_int[1].tvalid;
-assign axis_sink_active.tkeep = (bench_dest == 0) ? axis_sink_int[0].tkeep : axis_sink_int[1].tkeep;
-assign axis_sink_active.tlast = (bench_dest == 0) ? axis_sink_int[0].tlast : axis_sink_int[1].tlast;
-assign axis_sink_active.tdata = (bench_dest == 0) ? axis_sink_int[0].tdata : axis_sink_int[1].tdata;
-assign axis_sink_active.tid = (bench_dest == 0) ? axis_sink_int[0].tid : axis_sink_int[1].tid;
+assign axis_sink_active.tkeep  = (bench_dest == 0) ? axis_sink_int[0].tkeep  : axis_sink_int[1].tkeep;
+assign axis_sink_active.tlast  = (bench_dest == 0) ? axis_sink_int[0].tlast  : axis_sink_int[1].tlast;
+assign axis_sink_active.tdata  = (bench_dest == 0) ? axis_sink_int[0].tdata  : axis_sink_int[1].tdata;
+assign axis_sink_active.tid    = (bench_dest == 0) ? axis_sink_int[0].tid    : axis_sink_int[1].tid;
 
 assign axis_sink_int[0].tready = (bench_dest == 0) ? axis_sink_active.tready : 1'b0;
 assign axis_sink_int[1].tready = (bench_dest == 0) ? 1'b0 : axis_sink_active.tready;
-// src
+
 assign axis_src_int[0].tvalid = (bench_dest == 0) ? axis_src_active.tvalid : 1'b0;
-assign axis_src_int[0].tkeep = axis_src_active.tkeep;
-assign axis_src_int[0].tlast = axis_src_active.tlast;
-assign axis_src_int[0].tdata = axis_src_active.tdata;
-assign axis_src_int[0].tid = axis_src_active.tid;
+assign axis_src_int[0].tkeep  = axis_src_active.tkeep;
+assign axis_src_int[0].tlast  = axis_src_active.tlast;
+assign axis_src_int[0].tdata  = axis_src_active.tdata;
+assign axis_src_int[0].tid    = axis_src_active.tid;
 
 assign axis_src_int[1].tvalid = (bench_dest == 0) ? 1'b0 : axis_src_active.tvalid;
-assign axis_src_int[1].tkeep = axis_src_active.tkeep;
-assign axis_src_int[1].tlast = axis_src_active.tlast;
-assign axis_src_int[1].tdata = axis_src_active.tdata;
-assign axis_src_int[1].tid = axis_src_active.tid;
+assign axis_src_int[1].tkeep  = axis_src_active.tkeep;
+assign axis_src_int[1].tlast  = axis_src_active.tlast;
+assign axis_src_int[1].tdata  = axis_src_active.tdata;
+assign axis_src_int[1].tid    = axis_src_active.tid;
 
 assign axis_src_active.tready = (bench_dest == 0) ? axis_src_int[0].tready : axis_src_int[1].tready;
 
-// REG
+// FSM: ST_IDLE waits for a start bit; ST_READ/ST_WRITE issue n_reps
+// requests and consume/produce n_beats data beats. Both done flags must
+// hold before returning to IDLE so the timer covers full request-to-drain.
+// bench_done counts CQ events; bench_timer is a free-running cycle counter
+// that resets on start and pauses once done >= n_reps.
 always_ff @(posedge aclk) begin
     if(aresetn == 1'b0) begin
         state_C <= ST_IDLE;
@@ -111,9 +124,9 @@ always_ff @(posedge aclk) begin
         done_data <= 'X;
         cnt_data <= 'X;
     end else begin
-        case(state_C) 
+        case(state_C)
             ST_IDLE: begin
-                state_C <= bench_ctrl[START_RD] ? ST_READ : 
+                state_C <= bench_ctrl[START_RD] ? ST_READ :
                            bench_ctrl[START_WR] ? ST_WRITE : ST_IDLE;
 
                 bench_sent <= 0;
@@ -123,22 +136,18 @@ always_ff @(posedge aclk) begin
                 cnt_data <= 0;
             end
             ST_READ: begin
-                // Requests
                 done_req <= ((bench_sent == bench_n_reps -1) && sq_rd.ready) ? 1'b1 : done_req;
                 bench_sent <= (sq_rd.valid && sq_rd.ready) ? bench_sent + 1 : bench_sent;
 
-                // Data
                 done_data <= ((cnt_data == bench_n_beats - 1) && axis_sink_active.tvalid) ? 1'b1 : done_data;
                 cnt_data <= (axis_sink_active.tvalid && axis_sink_active.tready) ? cnt_data + 1 : cnt_data;
 
                 state_C <= (done_req && done_data) ? ST_IDLE : ST_READ;
             end
             ST_WRITE: begin
-                // Requests
                 done_req <= ((bench_sent == bench_n_reps -1) && sq_wr.ready) ? 1'b1 : done_req;
                 bench_sent <= (sq_wr.valid && sq_wr.ready) ? bench_sent + 1 : bench_sent;
 
-                // Data
                 done_data <= ((cnt_data == bench_n_beats - 1) && axis_src_active.tready) ? 1'b1 : done_data;
                 cnt_data <= (axis_src_active.tvalid && axis_src_active.tready) ? cnt_data + 1 : cnt_data;
 
@@ -146,8 +155,7 @@ always_ff @(posedge aclk) begin
             end
         endcase
 
-        // Status
-        bench_done <= (bench_ctrl[START_RD] || bench_ctrl[START_WR]) ? 0 : 
+        bench_done <= (bench_ctrl[START_RD] || bench_ctrl[START_WR]) ? 0 :
                         (cq_rd.valid || cq_wr.valid) ? bench_done + 1 : bench_done;
 
         bench_timer <= (bench_ctrl[START_RD] || bench_ctrl[START_WR]) ? 0 :
@@ -156,66 +164,69 @@ always_ff @(posedge aclk) begin
     end
 end
 
-// DP
+// Combinational drive of request/data ports.
+//   sq_rd / sq_wr : send-queue requests, populated from bench config.
+//                   `last` hardwired since each request is single-transfer.
+//   cq_rd / cq_wr : completions consumed unconditionally.
+//   axis_sink_active.tready : asserted in READ until done_data.
+//   axis_src_active.t*      : in WRITE, payload is cnt_data+1 (synthetic
+//                             counter) so there's always something to send.
 always_comb begin
-    // Requests
     sq_rd.data = 0;
     sq_rd.data.opcode = LOCAL_READ;
-    sq_rd.data.strm = STRM_HOST;
-    sq_rd.data.mode = 0;
-    sq_rd.data.rdma = 0;
+    sq_rd.data.strm   = STRM_HOST;
+    sq_rd.data.mode   = 0;
+    sq_rd.data.rdma   = 0;
     sq_rd.data.remote = 0;
-    sq_rd.data.pid = bench_pid;
-    sq_rd.data.dest = bench_dest;
-    sq_rd.data.last = 1'b1;
-    sq_rd.data.vaddr = bench_vaddr;
-    sq_rd.data.len = bench_len;
-    sq_rd.valid = (state_C == ST_READ) && ~done_req;
+    sq_rd.data.pid    = bench_pid;
+    sq_rd.data.dest   = bench_dest;
+    sq_rd.data.last   = 1'b1;
+    sq_rd.data.vaddr  = bench_vaddr;
+    sq_rd.data.len    = bench_len;
+    sq_rd.valid       = (state_C == ST_READ) && ~done_req;
 
     sq_wr.data = 0;
     sq_wr.data.opcode = LOCAL_WRITE;
-    sq_wr.data.strm = STRM_HOST;
-    sq_wr.data.mode = 0;
-    sq_wr.data.rdma = 0;
+    sq_wr.data.strm   = STRM_HOST;
+    sq_wr.data.mode   = 0;
+    sq_wr.data.rdma   = 0;
     sq_wr.data.remote = 0;
-    sq_wr.data.pid = bench_pid;
-    sq_wr.data.dest = bench_dest;
-    sq_wr.data.last = 1'b1;
-    sq_wr.data.vaddr = bench_vaddr;
-    sq_wr.data.len = bench_len;
-    sq_wr.valid = (state_C == ST_WRITE) && ~done_req;
+    sq_wr.data.pid    = bench_pid;
+    sq_wr.data.dest   = bench_dest;
+    sq_wr.data.last   = 1'b1;
+    sq_wr.data.vaddr  = bench_vaddr;
+    sq_wr.data.len    = bench_len;
+    sq_wr.valid       = (state_C == ST_WRITE) && ~done_req;
 
     cq_rd.ready = 1'b1;
     cq_wr.ready = 1'b1;
 
-    // Data
     axis_sink_active.tready = (state_C == ST_READ) && ~done_data;
 
-    axis_src_active.tdata = cnt_data + 1;
-    axis_src_active.tkeep = ~0;
-    axis_src_active.tid   = 0;
-    axis_src_active.tlast = 1'b0;
+    axis_src_active.tdata  = cnt_data + 1;
+    axis_src_active.tkeep  = ~0;
+    axis_src_active.tid    = 0;
+    axis_src_active.tlast  = 1'b0;
     axis_src_active.tvalid = (state_C == ST_WRITE) && ~done_data;
 end
 
-// Debug
-
+// ILA: bench config + FSM counters/flags + both stream pairs + SQ/CQ traffic.
 ila_perf_fpga inst_ila_perf_fpga (
     .clk(aclk),
-    .probe0(bench_ctrl), // 2
-    .probe1(bench_done), // 32
-    .probe2(bench_timer), // 64
-    .probe3(bench_vaddr), // 48
-    .probe4(bench_len), // 28
-    .probe5(bench_pid), // 6
-    .probe6(bench_n_reps), // 32
-    .probe7(bench_n_beats), // 64
+    .probe0(bench_ctrl),
+    .probe1(bench_done),
+    .probe2(bench_timer),
+    .probe3(bench_vaddr),
+    .probe4(bench_len),
+    .probe5(bench_pid),
+    .probe6(bench_n_reps),
+    .probe7(bench_n_beats),
     .probe8(done_req),
     .probe9(done_data),
-    .probe10(cnt_data), // 64
-    .probe11(bench_sent), // 32
-    .probe12(cnt_cq_rd), // 16
-    .probe13(cnt_cq_wr), // 16
+    .probe10(cnt_data),
+    .probe11(bench_sent),
+    .probe12(cnt_cq_rd),
+    .probe13(cnt_cq_wr),
     .probe14(axis_sink_int[0].tvalid),
     .probe15(axis_sink_int[0].tready),
     .probe16(axis_sink_int[0].tlast),
@@ -229,14 +240,14 @@ ila_perf_fpga inst_ila_perf_fpga (
     .probe24(axis_src_int[1].tready),
     .probe25(axis_src_int[1].tlast),
     .probe26(cq_rd.valid),
-    .probe27(cq_rd.data.pid), // 6
-    .probe28(cq_rd.data.host), 
-    .probe29(cq_rd.data.dest), // 4
+    .probe27(cq_rd.data.pid),
+    .probe28(cq_rd.data.host),
+    .probe29(cq_rd.data.dest),
     .probe30(cq_wr.valid),
-    .probe31(cq_wr.data.pid), // 6
-    .probe32(cq_wr.data.host), 
-    .probe33(cq_wr.data.dest), // 4
-    .probe34(bench_dest), // 4
+    .probe31(cq_wr.data.pid),
+    .probe32(cq_wr.data.host),
+    .probe33(cq_wr.data.dest),
+    .probe34(bench_dest),
     .probe35(sq_wr.valid),
     .probe36(sq_rd.valid)
 );

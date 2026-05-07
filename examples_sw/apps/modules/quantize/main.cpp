@@ -1,3 +1,8 @@
+/**
+ * Quantizer module bring-up (DFG version): drives the standalone
+ * quantizer vFPGA with synthetic FFT data and analyses the bin histogram.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -59,6 +64,7 @@ void generateFFTData(int32_t* data, uint32_t num_samples, float freq = 1000.0f, 
     }
 }
 
+// Map an output byte from the quantizer back to its bin label.
 std::string interpretQuantizedByte(uint8_t byte) {
     switch(byte) {
         case 0x41: return "A (Very Low)";
@@ -70,6 +76,7 @@ std::string interpretQuantizedByte(uint8_t byte) {
     }
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -82,6 +89,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;

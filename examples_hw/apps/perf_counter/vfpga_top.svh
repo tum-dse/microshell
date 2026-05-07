@@ -1,3 +1,8 @@
+// perf_counter vFPGA top.
+//
+// Like perf_local but with an idle-cycle counter exposed via user_data.
+// EN_STRM compiles in the host-stream loop, EN_MEM the card-stream loop.
+
 import lynxTypes::*;
 
 `ifdef EN_STRM

@@ -25,6 +25,13 @@
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   */
 
+/**
+ * perf_mem bring-up: exercises the on-card memory path (HBM/DDR) instead of
+ * the host PCIe path. The benchmark sweeps transfer sizes through OFFLOAD/
+ * READ/WRITE/SYNC ops on a single vFPGA, with both src and dst streams
+ * pinned to strmCard so the data lives on the FPGA's local memory.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>

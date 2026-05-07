@@ -1,3 +1,12 @@
+/**
+ * Speech Recognition Pipeline (monolithic / single-binary version).
+ *
+ * Two-stage µShell Dataflow: fft_processor -> svm_classifier, connected
+ * through three Buffers (audio -> FFT magnitudes -> classification). The
+ * "monolithic" label denotes the all-in-one end-to-end binary; the DFG
+ * runtime maps each Task onto a vFPGA region transparently.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -37,6 +46,7 @@ constexpr auto const nRepsLat = 1;
 constexpr auto const defSize = 32;
 constexpr auto const nBenchRuns = 1;
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -49,6 +59,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;

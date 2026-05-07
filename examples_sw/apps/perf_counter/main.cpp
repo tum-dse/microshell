@@ -25,6 +25,14 @@
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   */
 
+/**
+ * perf_counter bring-up: drives the µShell HW perf-counter wrapper end-to-end.
+ *
+ * Two vFPGAs are routed through the on-chip ioSwitch (Inter_2_TO_DTU_0) so
+ * that vFPGA 0's output is consumed by vFPGA 1; the cycle counter captured
+ * by the HW wrapper is read back via userData() and reported as latency.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>

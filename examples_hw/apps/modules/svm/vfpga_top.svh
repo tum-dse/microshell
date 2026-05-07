@@ -1,5 +1,11 @@
+// modules/svm: standalone SVM classifier bring-up.
+//
+//   axis_host_recv -> dwidth_512_32 -> [svm_speech_30_0] -> dwidth_32_512
+//                  -> axis_host_send
+
 import lynxTypes::*;
 
+    // 32-bit AXIS plumbing between width converters and the SVM kernel.
     logic        dwidth_in_tvalid;
     logic        dwidth_in_tready;
     logic [31:0] dwidth_in_tdata;

@@ -4,9 +4,12 @@ import lynxTypes::*;
 
 `include "axi_macros.svh"
 
-// Perf-local kernel (axis_src = axis_sink+1) plus an idle-cycle counter that
-// measures the gap between the last accepted output beat and the next accepted
-// input beat. last_idle_cycles is exposed for the host via user_data.
+// Perf-local kernel (axis_src = axis_sink+1 lane-wise) plus an idle-cycle
+// counter that measures the gap between the last accepted output beat and
+// the next accepted input beat. last_idle_cycles is exposed for the host
+// via user_data, so the host-side micro-benchmark can read how long the
+// kernel sat idle between transfers without needing a separate AXI-Lite
+// readback path.
 module perf_counter (
     AXI4SR.s             axis_sink,
     AXI4SR.m             axis_src,
@@ -16,12 +19,15 @@ module perf_counter (
     input  logic         aresetn
 );
 
+// Skid registers isolate kernel timing from upstream/downstream.
 AXI4SR axis_sink_int ();
 AXI4SR axis_src_int ();
 
 axisr_reg inst_reg_sink (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_sink),     .m_axis(axis_sink_int));
 axisr_reg inst_reg_src  (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int), .m_axis(axis_src));
 
+// Idle counter: starts when the kernel first emits an output beat,
+// stops when the next input beat arrives, latches the result.
 logic count_enable;
 logic [31:0] idle_counter;
 logic [31:0] last_idle_cycles;

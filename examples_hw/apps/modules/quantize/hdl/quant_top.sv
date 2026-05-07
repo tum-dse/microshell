@@ -1,3 +1,10 @@
+// FFT-magnitude quantizer.
+//   [FFT 512b] -> dwidth_512_64 -> fft_quantizer -> [512b out]
+//
+// fft_quantizer emits one ASCII byte per 64-bit complex sample; 64 such
+// bytes pack into one 512-bit beat. The 4:1 reduction produces long runs
+// the downstream RLE encoder can compress.
+
 module quant_top (
     AXI4SR.s axis_sink,
     AXI4SR.m axis_src,
@@ -42,7 +49,8 @@ module quant_top (
 endmodule
 
 // Collects 64 complex FFT samples (32b real + 32b imag), bins each |re|+|im|
-// magnitude into one of five ASCII bytes, and emits a packed 512-bit beat.
+// magnitude into one of five ASCII bytes, packs 64 bytes into a 512-bit beat.
+// Bin thresholds tuned for speech-like FFT magnitudes.
 module fft_quantizer (
     input  logic         aclk,
     input  logic         aresetn,
@@ -58,6 +66,7 @@ module fft_quantizer (
     output logic         m_axis_tlast
 );
 
+    // IDLE -> COLLECT (pack 64 quantised bytes) -> OUTPUT (emit beat) -> ...
     typedef enum logic [1:0] {
         IDLE,
         COLLECT,
@@ -66,11 +75,12 @@ module fft_quantizer (
 
     state_t state, next_state;
 
-    logic [5:0]   sample_count;
-    logic [511:0] output_buffer;
+    logic [5:0]   sample_count;     // 0..63
+    logic [511:0] output_buffer;    // packed LSB-first
     logic         output_tlast;
-    logic         saw_tlast;
+    logic         saw_tlast;        // latched if any sample in the window had tlast
 
+    // Magnitude approximation = |Re| + |Im|.
     logic [31:0] real_part, imag_part;
     assign real_part = s_axis_tdata[31:0];
     assign imag_part = s_axis_tdata[63:32];
@@ -80,6 +90,7 @@ module fft_quantizer (
     assign imag_abs = imag_part[31] ? (~imag_part + 1) : imag_part;
     assign magnitude_approx = real_abs + imag_abs;
 
+    // 'A'=quiet, 'P'=peak.
     logic [7:0] quantized_byte;
     always_comb begin
         if      (magnitude_approx < 32'd500)    quantized_byte = 8'h41; // 'A'
@@ -130,6 +141,7 @@ module fft_quantizer (
         end
     end
 
+    // Emit early if we saw tlast partway through the 64-sample window.
     always_comb begin
         next_state = state;
 

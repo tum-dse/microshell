@@ -1,3 +1,7 @@
+// signed_compression vFPGA top.
+//
+//   axis_host_recv -> [RLE] -> [RSA] -> axis_host_send
+
 import lynxTypes::*;
 
 AXI4SR axis_host_sink_int ();
@@ -14,6 +18,7 @@ rle_top inst_rle (
     .aresetn  (aresetn)
 );
 
+// rsa_top.sv declares `module r_top` (historical name).
 r_top inst_rsa (
     .axis_sink(axis_rle_out_int),
     .axis_src (axis_host_src_int),

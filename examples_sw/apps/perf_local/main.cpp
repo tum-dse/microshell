@@ -25,6 +25,14 @@
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   */
 
+/**
+ * perf_local: latency benchmark for the chained-vFPGA perf_local kernel.
+ *
+ * Sweeps transfer sizes; each iteration runs the ul0 -> host -> ul1 chain
+ * via two cThreads. Throughput pass exists behind EN_THR_TESTS but is off
+ * by default.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -136,6 +144,9 @@ int main(int argc, char *argv[])
     std::vector<std::unique_ptr<cThread<std::any>>> cthread;
     void* hMem[n_regions];
 
+    // Allocate one buffer per vFPGA. mapped=true uses Coyote's huge-page
+    // allocator (no first-touch faults); else fall back to MAP_HUGETLB or
+    // plain malloc.
     for (int i = 0; i < n_regions; i++) {
         cthread.emplace_back(new cThread<std::any>(i, getpid(), cs_dev));
         hMem[i] = mapped ? (cthread[i]->getMem({huge ? CoyoteAlloc::HPF : CoyoteAlloc::REG, max_size}))

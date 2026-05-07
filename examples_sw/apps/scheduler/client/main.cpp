@@ -1,3 +1,14 @@
+/**
+ * Scheduler client: drives the µShell coverage-aware vFPGA scheduler.
+ *
+ * Each "app" needs two HW modules (app_mapping); the scheduler picks tasks
+ * whose required modules already overlap with currently-loaded vFPGAs to
+ * minimise partial reconfigurations. Tasks live in three priority queues
+ * with aging (queues bubble up after waiting >= 3 cycles). The HW_TEST
+ * branch exercises real cThread LOCAL_TRANSFER ops; otherwise workers
+ * sleep to simulate fixed task durations.
+ */
+
 #include "types.hpp"
 
 #include <thread>

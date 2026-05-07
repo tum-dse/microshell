@@ -1,3 +1,8 @@
+/**
+ * RSA module bring-up (DFG version): drives the standalone RSA vFPGA
+ * with a 256-bit input and prints the signed result.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -51,6 +56,7 @@ struct BigInt256 {
     }
 };
 
+// Print a buffer as one big hex word, MSB-first.
 void printHexBuffer(uint32_t* buffer, size_t words, const char* label) {
     std::cout << label << ": 0x";
     for(int i = words-1; i >= 0; i--) {
@@ -59,6 +65,7 @@ void printHexBuffer(uint32_t* buffer, size_t words, const char* label) {
     std::cout << std::dec << std::endl;
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -71,6 +78,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;

@@ -1,3 +1,12 @@
+/**
+ * Secure Storage Pipeline (monolithic / single-binary version).
+ *
+ * Single µShell Dataflow Task (secure_processor) wired between an input
+ * Buffer and an output Buffer. The fused vFPGA performs RLE compression
+ * on the first chunk and RLE+AES on subsequent chunks, exercising the
+ * full secure-storage path from a single binary.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -43,6 +52,9 @@ enum PatternType {
     PATTERN_LONG_RUNS = 2
 };
 
+// Three input distributions exercise different RLE compression regimes:
+// REGULAR repeats every 4 bytes (~2:1), RANDOM defeats RLE entirely, and
+// LONG_RUNS produces 16-64 byte runs for best-case compression.
 void generatePattern(uint8_t* buffer, size_t size, PatternType pattern) {
     switch(pattern) {
         case PATTERN_REGULAR:
@@ -137,6 +149,7 @@ void analyzePipelineOutput(uint8_t* buffer, size_t buffer_size, size_t input_siz
               << (double)input_size / total_non_zero << ":1" << std::endl;
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -149,6 +162,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;

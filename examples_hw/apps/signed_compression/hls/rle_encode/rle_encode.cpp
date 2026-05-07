@@ -1,3 +1,10 @@
+// HLS run-length encoder.
+//
+// One 512-bit beat (64 bytes) in -> one 512-bit beat out, byte-pair encoded:
+// each (count, value) pair takes 2 bytes. The write_pos < 62 guard stops
+// before we'd overrun the output beat (>= 31 runs); leftover input is
+// dropped.
+
 #include "rle_encode.hpp"
 
 void rle_encode(
@@ -27,6 +34,7 @@ void rle_encode(
             ap_uint<8> current_byte = input_packet.data.range(read_pos*8 + 7, read_pos*8);
             ap_uint<8> count = 1;
 
+            // Cap run length at 255; longer runs split across pairs.
             int next_pos = read_pos + 1;
             while (next_pos < 64 && count < 255) {
                 ap_uint<8> next_byte = input_packet.data.range(next_pos*8 + 7, next_pos*8);

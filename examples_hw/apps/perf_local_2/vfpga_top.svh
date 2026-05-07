@@ -1,6 +1,12 @@
+// perf_local_2 vFPGA top.
+//
+// Two perf_local_2 kernels chained via an internal AXI4SR to test
+// back-to-back streaming (host_recv -> kernel_1 -> kernel_2 -> host_send).
+
 import lynxTypes::*;
 
 `ifdef EN_STRM
+// Internal stream linking the two chained kernels.
 AXI4SR axis_interconnect ();
 
 perf_local_2 inst_host_link_1 (

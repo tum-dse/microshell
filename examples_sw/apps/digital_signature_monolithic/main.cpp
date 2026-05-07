@@ -1,3 +1,12 @@
+/**
+ * Digital Signature Pipeline (monolithic / single-binary version).
+ *
+ * Two-stage µShell Dataflow: sha256_hasher -> rsa_signer, connected through
+ * three Buffers (message -> hash -> signature). The "monolithic" label
+ * denotes the all-in-one end-to-end binary; the DFG runtime maps each Task
+ * onto a vFPGA region transparently.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -50,6 +59,7 @@ const std::map<uint32_t, std::string> expectedSignatures = {
     {512 * 1024, "09f219ce7f89d489446567fa85e2849a06258a9f9529bf3c4692b11da41578cf"}
 };
 
+// Print a buffer as one big hex word, MSB-first.
 void printHexBuffer(uint32_t* buffer, size_t bytes, const char* label) {
     std::cout << label << ": 0x";
     for(int i = (bytes/4)-1; i >= 0; i--) {
@@ -58,6 +68,8 @@ void printHexBuffer(uint32_t* buffer, size_t bytes, const char* label) {
     std::cout << std::dec << std::endl;
 }
 
+// Same MSB-first hex format as printHexBuffer, but returned as a string for
+// signature comparison against expectedSignatures.
 std::string bufferToHexString(uint32_t* buffer, size_t bytes) {
     std::stringstream ss;
     for(int i = (bytes/4)-1; i >= 0; i--) {
@@ -66,6 +78,7 @@ std::string bufferToHexString(uint32_t* buffer, size_t bytes) {
     return ss.str();
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -78,6 +91,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;

@@ -1,3 +1,8 @@
+/**
+ * RLE module bring-up (DFG version): drives the standalone RLE encoder
+ * vFPGA and reports compression stats.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -30,6 +35,7 @@ constexpr auto const defSize = 64;
 constexpr auto const maxSize = 1024 * 1024;
 
 // AAAABBBB...PPPP — every char repeated 4 times so RLE compresses 4:1 to ABCD..P.
+// 4-byte runs of A..P (4:1 RLE-compressible).
 void generateRLEPattern(uint8_t* buffer, size_t size) {
     memset(buffer, 0, size);
 
@@ -39,6 +45,7 @@ void generateRLEPattern(uint8_t* buffer, size_t size) {
     }
 }
 
+// Walk the encoder output and tally compressed bytes / pair count / ratio.
 void analyzeRLEOutput(uint8_t* buffer, size_t buffer_size, uint32_t input_chunks) {
     std::cout << "RLE Output Analysis:" << std::endl;
 
@@ -87,6 +94,7 @@ void analyzeRLEOutput(uint8_t* buffer, size_t buffer_size, uint32_t input_chunks
     }
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -99,6 +107,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;

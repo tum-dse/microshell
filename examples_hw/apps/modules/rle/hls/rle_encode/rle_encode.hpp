@@ -1,3 +1,5 @@
+// rle_encode interface; impl in rle_encode.cpp.
+
 #ifndef RLE_HPP
 #define RLE_HPP
 

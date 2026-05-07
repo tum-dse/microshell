@@ -1,3 +1,8 @@
+/**
+ * SHA-256 module bring-up (DFG version): drives the standalone SHA-256
+ * vFPGA with a fixed input pattern and prints the digests.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -30,6 +35,7 @@ constexpr auto const defReps = 1;
 constexpr auto const defSize = 64 * 1024;
 constexpr auto const SHA256_DIGEST_LENGTH = 32;
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -42,6 +48,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;
@@ -49,6 +56,7 @@ void print_header(const std::string& header) {
 
 // Fill input with the constant 512-bit chunk used by the testbench:
 //   FEDCBA9876543210 repeated 8 times.
+// Fill input with the testbench reference pattern (0xFEDCBA9876543210 x N).
 void generateTestData(uint32_t* buffer, size_t size_bytes) {
     size_t num_words = size_bytes / 4;
     for (size_t j = 0; j < num_words; j += 2) {
@@ -59,6 +67,7 @@ void generateTestData(uint32_t* buffer, size_t size_bytes) {
     }
 }
 
+// Print one digest as a hex string.
 void printHashResult(unsigned char* hash, int index) {
     std::cout << "Hash " << index << ": ";
     for(int j = 0; j < SHA256_DIGEST_LENGTH; j++) {

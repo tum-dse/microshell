@@ -2,7 +2,9 @@
 import lynxTypes::*;
 `include "axi_macros.svh"
 
-// Pass-through stage that measures cycles between the first input beat and tlast.
+// Pass-through latency probe: forwards every beat unchanged and reports
+// cycles between the first valid beat of a packet and its tlast on
+// cycle_count / count_valid.
 module counter_top (
     AXI4SR.s             axis_sink,
     AXI4SR.m             axis_src,
@@ -24,6 +26,7 @@ module counter_top (
     assign axis_src.tid     = axis_sink.tid;
     assign axis_sink.tready = axis_src.tready;
 
+    // Latches on the first accepted beat, clears on tlast.
     always_ff @(posedge aclk or negedge aresetn) begin
         if (!aresetn) begin
             first_data_seen <= 1'b0;
@@ -50,6 +53,8 @@ module counter_top (
 
 endmodule
 
+// start_event resets and starts counting; end_event freezes the count
+// and asserts count_valid until the next start.
 module cycle_counter #(
     parameter COUNTER_WIDTH = 32
 )(
@@ -100,6 +105,7 @@ module cycle_counter #(
             end
 
             DONE: begin
+                // Stay in DONE so count_valid stays high until the next packet.
                 if (start_event) begin
                     next_state = COUNTING;
                     counter_reset = 1'b1;

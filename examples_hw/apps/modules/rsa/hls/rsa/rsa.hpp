@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+// HLS RSA interface. Engine in asymmetric.hpp, primitives in modular.hpp.
+// AP_INT_MAX_W >= 4097 needed for Montgomery multiplication.
+
 #define AP_INT_MAX_W 4097
 #include "asymmetric.hpp"
 #include <hls_stream.h>

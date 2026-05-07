@@ -1,3 +1,10 @@
+// digital_signature vFPGA top.
+//
+//   axis_host_recv -> [SHA-256] -> [RSA] -> [counter_top probe] -> axis_host_send
+//
+// counter_top is transparent on data; it just measures cycles from the
+// first input beat to tlast and exposes the result via latency_result_reg.
+
 import lynxTypes::*;
 
 AXI4SR axis_sink_int ();
@@ -19,6 +26,7 @@ sha256_top inst_sha256 (
     .aresetn  (aresetn)
 );
 
+// rsa_top.sv declares `module r_top` (historical name).
 r_top inst_rsa (
     .axis_sink(sha256_to_rsa),
     .axis_src (rsa_to_counter),
@@ -35,6 +43,7 @@ counter_top inst_counter (
     .count_valid(pipeline_count_valid)
 );
 
+// Latch latency on count_valid so the host can read a stable number.
 always_ff @(posedge aclk or negedge aresetn) begin
     if (!aresetn) begin
         latency_result_reg <= '0;

@@ -2,6 +2,11 @@
 import lynxTypes::*;
 `include "axi_macros.svh"
 
+// AXI4SR wrapper around the HLS rsa IP (rsa.cpp). Sandwiches a single
+// rsa instance between dwidth_512_256 and dwidth_256_512 converters.
+// Modulus + public exponent are hardwired test values below.
+//
+// Module name `r_top` is the historical wrapper name.
 module r_top (
     AXI4SR.s axis_sink,
     AXI4SR.m axis_src,
@@ -68,7 +73,7 @@ rsa inst_rsa (
 );
 
 assign rsa_modulus  = 256'hF4F5E3D2C1B0A9876543210FEDCBA9876543210FEDCBA9876543210FEDCBA98;
-assign rsa_exponent = 20'h10001;
+assign rsa_exponent = 20'h10001;  // 65537
 
 dwidth_converter_256_512 inst_dwidth_send (
     .aclk(aclk),

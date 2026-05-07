@@ -1,3 +1,4 @@
+// AES-256 reference core (Homer Hsing, Apache 2.0). License preserved below.
 /*
  * Copyright 2012, Homer Hsing <homer.hsing@gmail.com>
  *

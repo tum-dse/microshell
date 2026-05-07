@@ -1,6 +1,8 @@
 // 512-bit AXI4-Stream wrapper around the byte-serial sha256_core below.
-// Serializes each 512-bit beat into 64 bytes, asserts tlast only on the last
-// byte of the final chunk, and waits for the digest before accepting more input.
+// FSM: IDLE latches an incoming beat into byte_array, SENDING feeds bytes
+// 0..63 to the core, WAITING parks for ovalid before accepting the next
+// message. tlast on the byte-serial side only fires for the final byte of
+// the final chunk.
 module sha256 (
     input  wire         aclk,
     input  wire         aresetn,
@@ -33,13 +35,14 @@ module sha256 (
                WAITING = 2'b10;
 
     reg [1:0]   state;
-    reg [6:0]   byte_counter;
-    reg         final_chunk;
+    reg [6:0]   byte_counter;     // 0..63 — which byte we're feeding
+    reg         final_chunk;      // remembers axis_sink_tlast for the in-flight beat
     reg [511:0] data_buffer;
-    reg [7:0]   byte_array[0:63];
+    reg [7:0]   byte_array[0:63]; // beat unpacked MSB-first
 
     wire        start_serialization;
 
+    // tlast == tvalid: one output beat per digest.
     assign axis_src_tdata  = sha_osha;
     assign axis_src_tkeep  = 64'hffffffffffffffff;
     assign axis_src_tid    = sha_oid[7:0];
@@ -82,6 +85,7 @@ module sha256 (
                 SENDING: begin
                     if (sha_tready) begin
                         if (byte_counter == 7'd63) begin
+                            // After 64 bytes: WAITING if final beat, else IDLE.
                             byte_counter <= 7'd0;
                             if (final_chunk) begin
                                 state <= WAITING;
@@ -109,11 +113,13 @@ module sha256 (
     sha256_core sha256_core_inst (
         .rstn(aresetn),
         .clk(aclk),
+        // Input interface
         .tready(sha_tready),
         .tvalid(sha_tvalid),
         .tlast(sha_tlast),
         .tid(sha_tid),
         .tdata(sha_tdata),
+        // Output interface
         .ovalid(sha_ovalid),
         .oid(sha_oid),
         .olen(sha_olen),
@@ -124,9 +130,9 @@ endmodule
 
 
 //--------------------------------------------------------------------------------------------------------
-// Module  : sha256_core
-// Type    : synthesizable, IP's top
-// Standard: Verilog 2001 (IEEE1364-2001)
+// sha256_core: textbook FIPS 180-4 SHA-256. Byte-serial in, 256-bit digest
+// out. Sigma helpers, K table, H register file, 16-deep W schedule, and an
+// IDLE/RUN/ADD8/ADD0/ADDLEN/DONE FSM that injects the standard padding.
 //--------------------------------------------------------------------------------------------------------
 
 module sha256_core(
@@ -179,6 +185,7 @@ endfunction
 
 
 
+// K_0..K_63 (FIPS 180-4 §4.2.2).
 wire [31:0] k [0:63];
 assign k[ 0] = 'h428a2f98;
 assign k[ 1] = 'h71374491;
@@ -247,6 +254,7 @@ assign k[63] = 'hc67178f2;
 
 integer i;
 
+// H_0..H_7 (FIPS 180-4 §5.3.3) + working register files for the rounds.
 wire [31:0] hinit [0:7];
 reg  [31:0] h [0:7];
 reg  [31:0] hsave [0:7];
@@ -263,11 +271,16 @@ initial for(i=0; i<8; i=i+1) h[i] = 0;
 initial for(i=0; i<8; i=i+1) hsave[i] = 0;
 initial for(i=0; i<8; i=i+1) hadder[i] = 0;
 
+// w[0] = newest schedule word, w[1..15] = previous 1..15. buff[] caches
+// the current 64-byte block.
 reg [31:0] w [0:15];
 reg [ 7:0] buff [0:63];
 initial for(i=0; i<16; i=i+1) w[i] = 0;
 initial for(i=0; i<64; i=i+1) buff[i] = 8'd0;
 
+// Padding-injection FSM. RUN streams payload, ADD8 emits 0x80, ADD0
+// pads to length≡56 mod 64, ADDLEN emits the 64-bit big-endian length,
+// DONE pulses ovalid.
 localparam [2:0] IDLE   = 3'd0,
                  RUN    = 3'd1,
                  ADD8   = 3'd2,
@@ -276,10 +289,11 @@ localparam [2:0] IDLE   = 3'd0,
                  DONE   = 3'd5;
 reg  [ 2:0] status = IDLE;
 
-reg  [60:0] cnt = 61'd0;
-reg  [ 5:0] tcnt = 6'd0;
-wire [63:0] bitlen = {cnt,3'h0};
+reg  [60:0] cnt = 61'd0;          // total payload bytes consumed
+reg  [ 5:0] tcnt = 6'd0;          // running byte index inside current 64-byte block
+wire [63:0] bitlen = {cnt,3'h0};  // payload length in bits, packed for ADDLEN
 
+// One-cycle delayed input handshake, drives the schedule pipeline.
 wire       iinit;
 reg        ifirst = 1'b0;
 reg        ivalid = 1'b0;
@@ -313,6 +327,7 @@ reg [31:0] wk = 0;
 assign tready = (status==IDLE) || (status==RUN);
 assign iinit  = (status==IDLE) & tvalid;
 
+// Stage 1: padding/length FSM.
 always @ (posedge clk or negedge rstn)
     if(~rstn) begin
         status <= IDLE;
@@ -378,6 +393,7 @@ always @ (posedge clk or negedge rstn)
         endcase
     end
 
+// Stage 2: pack bytes into the 64-byte block buffer.
 always @ (posedge clk or negedge rstn)
     if(~rstn) begin
         icnt <= 6'd0;
@@ -391,6 +407,7 @@ always @ (posedge clk or negedge rstn)
         end
     end
 
+// Stage 3: kick off block processing when the buffer fills.
 always @ (posedge clk or negedge rstn)
     if(~rstn) begin
         minit <= 1'b0;
@@ -422,6 +439,8 @@ always @ (posedge clk or negedge rstn)
     end
 
 
+// Stage 4: build W[0..63]. mcnt<16: slice from buff[]; else: SSIG0/SSIG1
+// recurrence over the 16-window.
 wire [5:0] waddr0, waddr1, waddr2, waddr3;
 assign waddr0 = {mcnt[3:0],2'd0};
 assign waddr1 = {mcnt[3:0],2'd1};
@@ -455,6 +474,7 @@ always @ (posedge clk or negedge rstn)
         for(i=1; i<16; i=i+1) w[i] <= w[i-1];
     end
 
+// Stage 5: K_t + W_t precompute.
 always @ (posedge clk or negedge rstn)
     if(~rstn) begin
         wkinit <= 1'b0;
@@ -474,6 +494,7 @@ always @ (posedge clk or negedge rstn)
         wk <= w[0] + wadder;
     end
 
+// Snapshot h[] at block start; added back at block end via hadder for H_i+1.
 always @ (posedge clk or negedge rstn)
     if(~rstn) begin
         for(i=0; i<8; i=i+1) hsave[i] <= 0;
@@ -494,6 +515,8 @@ always @ (posedge clk or negedge rstn)
     end
 
 
+// SHA-256 round: T1=H+Σ1(E)+Ch(E,F,G)+K+W, T2=Σ0(A)+Maj(A,B,C).
+// h[] is reversed: h[7]=A ... h[0]=H.
 wire [31:0] t1 = ( h[7] + BSIG1(h[4]) + ((h[4] &  h[5]) ^ (~h[4] & h[6])) + wk );
 wire [31:0] t2 = ( BSIG0(h[0]) + ((h[0] & h[1]) ^ (h[0] & h[2]) ^ (h[1] & h[2])) );
 
@@ -526,6 +549,7 @@ always @ (posedge clk or negedge rstn)
         oid  <= wkid;
         olen <= wklen;
     end
+// Final digest, big-endian.
 assign osha = {h[0],h[1],h[2],h[3],h[4],h[5],h[6],h[7]};
 
 endmodule

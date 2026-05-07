@@ -25,6 +25,14 @@
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   */
 
+/**
+ * pipeline bring-up: drives the on-chip ioSwitch (Inter_2 / Inter_3) to
+ * compose multi-vFPGA pipelines via host or CEU-CEU paths. Exactly one of
+ * EN_DIRECT_TESTS / EN_INTER_2_TESTS / EN_INTER_3_TESTS selects the
+ * topology; offset_r/offset_w pick which of the 7 streaming lanes a vFPGA
+ * reads from / writes to.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>

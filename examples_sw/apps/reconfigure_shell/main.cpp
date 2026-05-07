@@ -25,6 +25,11 @@
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   */
 
+/**
+ * reconfigure_shell: standalone utility that loads a new shell .bin onto
+ * the target device via cRnfg::shellReconfigure() and times the operation.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>

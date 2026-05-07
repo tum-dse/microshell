@@ -1,3 +1,10 @@
+// HLS entry point for the SVM stage.
+//
+// 30 32-bit AXIS samples in (FFT magnitudes), one 32-bit class label out
+// (digit 1..5). 5-class one-vs-one ECOC classifier; model constants
+// (coding matrix, support vectors, scaling) are declared inside the
+// function body so the HLS dataflow carries no inter-packet state.
+
 /* Include Files */
 #include "svm_speech_30_0.h"
 #include "CompactClassificationECOC.h"

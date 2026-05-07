@@ -1,3 +1,8 @@
+/**
+ * FFT module bring-up (DFG version): drives the standalone FFT vFPGA
+ * with a sine wave through a single-Task µShell Dataflow.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -33,6 +38,7 @@ constexpr auto const defReps = 1;
 constexpr auto const defSize = 32;
 constexpr float const sampleRate = 44100.0f;
 
+// Generate sine wave value
 float generateSineValue(int index) {
     const float amplitude = 1000.0f;
     const float frequency = 1378.125f;
@@ -42,6 +48,7 @@ float generateSineValue(int index) {
     return amplitude * sin(2.0f * M_PI * frequency * t + phase);
 }
 
+// Per-bin magnitude table for the first 16 bins (rest is the mirror).
 void printRawFFT(float* output_ptr, int size) {
     const int nyquistBins = size/2;
 
@@ -66,6 +73,7 @@ void printRawFFT(float* output_ptr, int size) {
     }
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -78,6 +86,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
             << " MB/s" << std::endl;
 }
 
+// Coloured red bold section banner.
 void print_header(const std::string& header) {
     std::cout << "\n-- \033[31m\e[1m" << header << "\033[0m\e[0m" << std::endl;
     std::cout << "-----------------------------------------------" << std::endl;

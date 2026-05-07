@@ -1,3 +1,5 @@
+// modules/aes-ctr: standalone AES-256 CTR bring-up for §6.5 effectiveness.
+
 import lynxTypes::*;
 
 AXI4SR axis_host_sink_int ();
