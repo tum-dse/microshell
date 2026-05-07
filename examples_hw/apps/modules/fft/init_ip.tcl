@@ -1,3 +1,5 @@
+# 512<->64 width converters and 32-point floating-point FFT IP.
+
 create_ip -name axis_dwidth_converter -vendor xilinx.com -library ip -version 1.1 -module_name dwidth_converter_512_64
 set_property -dict [list \
     CONFIG.S_TDATA_NUM_BYTES {64} \

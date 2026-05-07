@@ -1,3 +1,6 @@
+# 512<->32 width converters bridging the shell to the SVM AXIS interface,
+# plus an ILA for hardware bring-up.
+
 create_ip -name axis_dwidth_converter -vendor xilinx.com -library ip -version 1.1 -module_name dwidth_converter_512_32
 set_property -dict [list \
     CONFIG.S_TDATA_NUM_BYTES {64} \

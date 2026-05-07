@@ -1,3 +1,7 @@
+# Vivado ILA for secure_storage bring-up. Probes 0..13 are wired in
+# hdl/aes_top.sv (input/output streams, first 128 bits + metadata).
+# Probes 14..20 reserved.
+
 create_ip -name ila -vendor xilinx.com -library ip -version 6.2 -module_name ila_0
 set_property -dict [list \
 CONFIG.C_NUM_OF_PROBES {14} \

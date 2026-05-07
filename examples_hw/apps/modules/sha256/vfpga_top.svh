@@ -1,3 +1,7 @@
+// modules/sha256: standalone SHA-256 bring-up with inline latency probe.
+//
+//   axis_host_recv -> [sha256_top] -> [counter_top probe] -> axis_host_send
+
 import lynxTypes::*;
 
 AXI4SR axis_sink_int ();
@@ -27,6 +31,7 @@ counter_top inst_counter (
     .count_valid(pipeline_count_valid)
 );
 
+// Latch latency on count_valid.
 always_ff @(posedge aclk or negedge aresetn) begin
     if (!aresetn) begin
         latency_result_reg <= '0;

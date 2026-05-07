@@ -1,3 +1,15 @@
+// speech_recognition vFPGA top.
+//
+//   axis_host_recv -> dwidth_512_64 -> [xfft_0] -> [tap to 32-bit]
+//                  -> [svm_speech_30_0] -> dwidth_32_512 -> axis_host_send
+//
+// 5-class digit (1..5) classifier on 30-sample frames.
+//
+// TLAST gating: the FFT pipeline is deeper than the SVM expects, so the
+// always_ff below holds host TLAST for ~16 cycles before letting it
+// propagate. final_packet_tlast (host_tlast_captured AND fft TLAST)
+// drives svm_tlast.
+
 import lynxTypes::*;
 
 AXI4SR axis_sink_int ();
@@ -30,6 +42,7 @@ logic [3:0]  axis_host_send_tkeep;
 logic [15:0] axis_host_send_tid;
 logic        axis_host_send_tlast;
 
+// FFT IP config: 8'h1 = forward FFT, valid stays high.
 logic [7:0] xlconstant_0_dout;
 logic       xlconstant_1_dout;
 
@@ -58,9 +71,11 @@ dwidth_converter_512_64 inst_dwidth_recv_fft (
     .m_axis_tid(axis_host_recv_tid)
 );
 
-// Hold host TLAST for ~16 cycles before letting it propagate, so it lines up
-// with the FFT's per-frame TLAST and we don't issue a premature end-of-stream
-// to the SVM. Cleared once the SVM has emitted its final result.
+// Hold host TLAST ~16 cycles so it lines up with the FFT's per-frame TLAST.
+// Cleared once the SVM emits its final result.
+//   - host_tlast_immediate latches on the host's tlast.
+//   - tlast_delay_counter counts to 16, then host_tlast_captured latches.
+//   - host_stream_complete latches on svm_out tlast; next cycle clears all four.
 logic       host_tlast_immediate;
 logic [4:0] tlast_delay_counter;
 logic       host_tlast_captured;
@@ -118,6 +133,7 @@ xfft_0 inst_xfft (
     .s_axis_config_tready()
 );
 
+// Tap the low 32 bits (real part) of each FFT output beat into the SVM.
 logic        svm_tvalid;
 logic        svm_tready;
 logic [31:0] svm_tdata;
@@ -137,6 +153,7 @@ end
 
 assign axis_host_send_tready = svm_tready;
 
+// SVM emits one beat per packet (tlast == tvalid) carrying the class label.
 logic        svm_out_tvalid;
 logic        svm_out_tready;
 logic [31:0] svm_out_tdata;

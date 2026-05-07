@@ -1,3 +1,8 @@
+/**
+ * SHA-256 module bring-up: feeds a fixed input pattern into the
+ * standalone SHA-256 vFPGA and prints the 256-bit digests.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -33,6 +38,7 @@ constexpr auto const defSize = 64 * 1024;
 constexpr auto const defDW = 4;
 constexpr auto const SHA256_DIGEST_LENGTH = 32;
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;

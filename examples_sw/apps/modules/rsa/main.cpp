@@ -1,3 +1,8 @@
+/**
+ * RSA module bring-up: drives the standalone RSA vFPGA with one of three
+ * test patterns and prints the 256-bit signature.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -30,6 +35,7 @@ constexpr auto const defSize = 32;
 constexpr auto const RSA_OUTPUT_SIZE = 32;
 constexpr auto const maxSize = 1024 * 1024;
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -42,6 +48,7 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
               << " MB/s" << std::endl;
 }
 
+// Print a buffer as one big hex word, MSB-first.
 void printHexBuffer(uint32_t* buffer, size_t words, const char* label) {
     std::cout << label << ": 0x";
     for(int i = words-1; i >= 0; i--) {
@@ -50,6 +57,7 @@ void printHexBuffer(uint32_t* buffer, size_t words, const char* label) {
     std::cout << std::dec << std::endl;
 }
 
+// Print the first 64 bytes of a buffer as hex (16 per line).
 void printBufferPreview(uint8_t* buffer, size_t size, const char* label) {
     std::cout << label << " (first 64 bytes): ";
     for(size_t i = 0; i < std::min(size, size_t(64)); i++) {
@@ -59,6 +67,8 @@ void printBufferPreview(uint8_t* buffer, size_t size, const char* label) {
     std::cout << std::dec << std::endl;
 }
 
+// Three test patterns: counter (0x00..0xff), random (fixed seed 42), or
+// a fixed 8-byte tile.
 void generateTestPattern(uint8_t* buffer, size_t size, const std::string& pattern_type) {
     if (pattern_type == "counter") {
         for (size_t i = 0; i < size; i++) {

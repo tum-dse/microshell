@@ -1,3 +1,5 @@
+// Macros for the AES_engine switch fabric (packet format, debug, switch IDs).
+
 `timescale 1ns / 1ps
 `define PANIC_DESC_WIDTH (128)          // INCREASE from 96 to 128 bits
 `define PANIC_DESC_LEN_SIZE (32)        // Your change - good!

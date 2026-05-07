@@ -1,3 +1,5 @@
+// MATLAB Coder-generated; do not hand-edit. Entry point in svm_speech_30_0.cpp.
+
 /*
  * Abstract:
  *      MATLAB for code generation function to initialize non-finites,

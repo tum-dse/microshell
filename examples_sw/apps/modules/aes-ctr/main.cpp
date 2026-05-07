@@ -1,3 +1,9 @@
+/**
+ * AES-CTR module bring-up: drives the standalone AES-256 vFPGA via the
+ * PANIC switch wrapper, prepending the 16-byte descriptor each packet
+ * needs and printing the ciphertext.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -55,6 +61,7 @@ void createPanicDescriptor(uint8_t* desc_ptr, uint32_t data_size) {
     desc_ptr[7] = 0x00;
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;

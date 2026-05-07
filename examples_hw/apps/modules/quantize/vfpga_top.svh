@@ -1,3 +1,5 @@
+// modules/quantize: standalone quantizer bring-up for §6.5 effectiveness.
+
 import lynxTypes::*;
 
 AXI4SR axis_sink_int ();

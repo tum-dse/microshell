@@ -1,3 +1,14 @@
+// perf_fpga vFPGA top: HW-driven read/write throughput micro-benchmark.
+//
+// Host writes config (vaddr, len, n_reps, dest, pid) into the slave reg
+// file then sets bit 0 / bit 1 of CTRL to start a read or write run. The
+// FSM below issues n_reps requests on sq_rd/sq_wr, counts data beats on
+// the active stream pair, accumulates bench_timer until both done flags
+// are set, and stops. Host reads timer/done back over AXI-Lite.
+//
+// Two stream pairs are wired up; the active pair is selected at runtime
+// by bench_dest. EN_MEM swaps host streams for card streams.
+
 always_comb notify.tie_off_m();
 
 AXI4SR axis_sink_int[N_STRM_AXI]();
@@ -15,9 +26,11 @@ for (genvar i = 0; i < N_CARD_AXI; i++) begin
 end
 `endif
 
+// CTRL register bit positions (host-writeable).
 parameter integer START_RD = 0;
 parameter integer START_WR = 1;
 
+// Config registers driven by perf_fpga_slv (full reg map there).
 logic [1:0]            bench_ctrl;
 logic [31:0]           bench_done;
 logic [63:0]           bench_timer;
@@ -28,6 +41,7 @@ logic [LEN_BITS-1:0]   bench_len;
 logic [31:0]           bench_n_reps;
 logic [63:0]           bench_n_beats;
 
+// FSM-internal counters; both done flags must hold before returning to IDLE.
 logic        done_req;
 logic        done_data;
 logic [63:0] cnt_data;
@@ -36,6 +50,7 @@ logic [31:0] bench_sent;
 typedef enum logic [1:0] {ST_IDLE, ST_READ, ST_WRITE} state_t;
 logic [1:0] state_C;
 
+// Diagnostic CQ counters (ILA only, not used by the FSM).
 logic [15:0] cnt_cq_rd;
 logic [15:0] cnt_cq_wr;
 
@@ -65,10 +80,11 @@ perf_fpga_slv inst_slave (
     .bench_n_beats(bench_n_beats)
 );
 
+// Mux the active stream pair on bench_dest. Inactive pair gets
+// tready=0/tvalid=0 so it stalls cleanly.
 AXI4SR axis_sink_active ();
 AXI4SR axis_src_active ();
 
-// Mux the active stream pair based on bench_dest (0 -> stream 0, else -> stream 1).
 assign axis_sink_active.tvalid = (bench_dest == 0) ? axis_sink_int[0].tvalid : axis_sink_int[1].tvalid;
 assign axis_sink_active.tkeep  = (bench_dest == 0) ? axis_sink_int[0].tkeep  : axis_sink_int[1].tkeep;
 assign axis_sink_active.tlast  = (bench_dest == 0) ? axis_sink_int[0].tlast  : axis_sink_int[1].tlast;
@@ -92,6 +108,11 @@ assign axis_src_int[1].tid    = axis_src_active.tid;
 
 assign axis_src_active.tready = (bench_dest == 0) ? axis_src_int[0].tready : axis_src_int[1].tready;
 
+// FSM: ST_IDLE waits for a start bit; ST_READ/ST_WRITE issue n_reps
+// requests and consume/produce n_beats data beats. Both done flags must
+// hold before returning to IDLE so the timer covers full request-to-drain.
+// bench_done counts CQ events; bench_timer is a free-running cycle counter
+// that resets on start and pauses once done >= n_reps.
 always_ff @(posedge aclk) begin
     if(aresetn == 1'b0) begin
         state_C <= ST_IDLE;
@@ -143,6 +164,13 @@ always_ff @(posedge aclk) begin
     end
 end
 
+// Combinational drive of request/data ports.
+//   sq_rd / sq_wr : send-queue requests, populated from bench config.
+//                   `last` hardwired since each request is single-transfer.
+//   cq_rd / cq_wr : completions consumed unconditionally.
+//   axis_sink_active.tready : asserted in READ until done_data.
+//   axis_src_active.t*      : in WRITE, payload is cnt_data+1 (synthetic
+//                             counter) so there's always something to send.
 always_comb begin
     sq_rd.data = 0;
     sq_rd.data.opcode = LOCAL_READ;
@@ -182,6 +210,7 @@ always_comb begin
     axis_src_active.tvalid = (state_C == ST_WRITE) && ~done_data;
 end
 
+// ILA: bench config + FSM counters/flags + both stream pairs + SQ/CQ traffic.
 ila_perf_fpga inst_ila_perf_fpga (
     .clk(aclk),
     .probe0(bench_ctrl),

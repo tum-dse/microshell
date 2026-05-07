@@ -1,3 +1,7 @@
+// secure_storage vFPGA top.
+//
+//   axis_host_recv -> [RLE] -> [AES-256] -> axis_host_send
+
 import lynxTypes::*;
 
 AXI4SR axis_host_sink_int ();

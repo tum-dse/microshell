@@ -1,3 +1,8 @@
+/**
+ * RLE module bring-up: drives the standalone RLE encoder vFPGA with one
+ * of three input patterns and reports compression ratio + correctness.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -38,6 +43,7 @@ enum PatternType {
     PATTERN_LONG_RUNS = 2
 };
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -50,6 +56,8 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
               << " MB/s" << std::endl;
 }
 
+// Three test patterns: REGULAR (4-byte runs of A..P, ~4:1 compressible),
+// RANDOM (no runs, worst-case for RLE), LONG_RUNS (16..63-byte runs).
 void generatePattern(uint8_t* buffer, size_t size, PatternType pattern) {
     switch(pattern) {
         case PATTERN_REGULAR:
@@ -83,6 +91,7 @@ struct CompressionStats {
     double ratio;
 };
 
+// Walk the encoder output and tally compressed bytes / pair count / ratio.
 CompressionStats analyzeOutput(uint8_t* buffer, size_t buffer_size, uint32_t chunks) {
     CompressionStats stats = {0};
     stats.input_bytes = chunks * 64;

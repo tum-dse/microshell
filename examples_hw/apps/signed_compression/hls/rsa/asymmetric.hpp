@@ -1,3 +1,8 @@
+// xf::security::rsa: streaming RSA engine. process() accumulates 256-bit
+// AXIS beats with rotate-XOR-and-counter mixing; on tlast, lifts the
+// accumulator into Montgomery form and computes m^e mod N.
+// updateKey() precomputes rMod = R^2 mod N.
+
 #ifndef XF_SECURITY_ASYMMETRIC_CRYPTOGRAPHY_HPP_
 #define XF_SECURITY_ASYMMETRIC_CRYPTOGRAPHY_HPP_
 #include <ap_int.h>
@@ -46,8 +51,6 @@ public:
                 packet_count = 1;
             } else {
                 packet_count++;
-                // Mix the packet count into the rotation+xor so a 256-chunk run
-                // of identical input cannot cancel out to zero.
                 ap_uint<256> rotated = (accumulator << 7) | (accumulator >> (256-7));
                 accumulator = rotated ^ msg ^ ap_uint<256>(packet_count);
             }

@@ -1,8 +1,12 @@
+/**
+ * Speech Recognition Pipeline 
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
-#include <time.h>
-#include <sys/time.h>
+#include <time.h> 
+#include <sys/time.h>  
 #include <chrono>
 #include <fstream>
 #include <fcntl.h>
@@ -22,16 +26,19 @@ using namespace std;
 using namespace std::chrono;
 using namespace fpga;
 
-std::atomic<bool> stalled(false);
+/* Signal handler */
+std::atomic<bool> stalled(false); 
 void gotInt(int) {
     stalled.store(true);
 }
 
+/* Default parameters */
 constexpr auto const defDevice = 0;
-constexpr auto const targetVfid = 0;
+constexpr auto const targetVfid = 0;  
 constexpr auto const defReps = 1;
-constexpr auto const defSize = 32;
+constexpr auto const defSize = 32;  // Default: single 32-point FFT
 
+// Helper function to print latency statistics
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -39,8 +46,8 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
     std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
     std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
     std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
-    std::cout << "Throughput: " << std::setw(8)
-              << (1000.0 * data_size_bytes) / avg_latency_ns
+    std::cout << "Throughput: " << std::setw(8) 
+              << (1000.0 * data_size_bytes) / avg_latency_ns 
               << " MB/s" << std::endl;
 }
 
@@ -55,32 +62,34 @@ int main(int argc, char *argv[]) {
     programDescription.add_options()
         ("size,s", boost::program_options::value<uint32_t>(), "Total samples (must be multiple of 32)")
         ("reps,r", boost::program_options::value<uint32_t>(), "Number of repetitions");
-
+    
     boost::program_options::variables_map commandLineArgs;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, programDescription), commandLineArgs);
     boost::program_options::notify(commandLineArgs);
 
     uint32_t size = defSize;
     uint32_t n_reps = defReps;
-
+    
     if(commandLineArgs.count("size") > 0) size = commandLineArgs["size"].as<uint32_t>();
     if(commandLineArgs.count("reps") > 0) n_reps = commandLineArgs["reps"].as<uint32_t>();
 
-    // FFT IP is fixed at 32-point.
+    // Ensure size is a multiple of 32 (FFT requirement)
     if (size % 32 != 0) {
-        std::cout << "Warning: Size must be multiple of 32. Adjusting " << size
+        std::cout << "Warning: Size must be multiple of 32. Adjusting " << size 
                   << " to " << ((size + 31) / 32) * 32 << std::endl;
         size = ((size + 31) / 32) * 32;
     }
 
-    uint32_t num_ffts = size / 32;
-
-    // Input is interleaved real/imag complex floats; output is one float
-    // classification per 32-point FFT.
-    uint32_t complex_samples = 2 * size;
+    // FIXED: Calculate buffer requirements correctly
+    uint32_t num_ffts = size / 32;  // Number of 32-point FFTs
+    
+    // CRITICAL FIX: Input should be complex (interleaved real/imaginary) for FFT
+    uint32_t complex_samples = 2 * size;  // Each sample becomes [real, imag]
     uint32_t input_buffer_size = complex_samples * sizeof(float);
+    
+    // Output: one classification per 32-point FFT
     uint32_t output_buffer_size = num_ffts * sizeof(float);
-
+    
     uint32_t n_pages_input = (input_buffer_size + hugePageSize - 1) / hugePageSize;
     uint32_t n_pages_output = (output_buffer_size + hugePageSize - 1) / hugePageSize;
 
@@ -95,12 +104,12 @@ int main(int argc, char *argv[]) {
     try {
         std::unique_ptr<cThread<std::any>> cthread(new cThread<std::any>(targetVfid, getpid(), defDevice));
         cthread->start();
-
+        
         std::vector<float*> input_buffers(n_reps, nullptr);
         std::vector<float*> output_buffers(n_reps, nullptr);
 
-        // Reference 32-sample magnitude pattern that produces a known SVM
-        // classification; each FFT in the run uses an offset-shifted variant.
+        // FIXED: Generate test data that will produce known SVM results after FFT
+        // Use the same base pattern that works in your SVM-only test, but apply it per FFT
         float base_pattern[32] = {
             36257662.0f, 70308074.0f, 162763557.0f, 109956489.0f, 86125933.0f,
             35535698.0f, 5473712.0f, 2191429.0f, 1655529.0f, 1427210.0f,
@@ -111,33 +120,42 @@ int main(int argc, char *argv[]) {
             678854.0f, 636897.0f
         };
 
+        // Show first FFT input data
         std::cout << "\nFirst 32-point FFT input (complex format):\n";
-        for (int i = 0; i < 16; ++i) {
-            std::cout << std::fixed << std::setprecision(1)
+        for (int i = 0; i < 16; ++i) {  // Show first 16 complex pairs
+            std::cout << std::fixed << std::setprecision(1) 
                       << base_pattern[i] << "+0.0i ";
             if ((i + 1) % 4 == 0) std::cout << "\n";
         }
         std::cout << "... (remaining 16 samples omitted)\n\n";
 
+        // Allocate and initialize memory
         for(int i = 0; i < n_reps; i++) {
             input_buffers[i] = (float*) cthread->getMem({CoyoteAlloc::HPF, n_pages_input});
             output_buffers[i] = (float*) cthread->getMem({CoyoteAlloc::HPF, n_pages_output});
-
+            
             if (!input_buffers[i] || !output_buffers[i]) {
                 throw std::runtime_error("Memory allocation failed");
             }
 
+            // FIXED: Fill complex data for FFT input
+            // Each FFT gets a different variant of the base pattern
             for(int fft_idx = 0; fft_idx < num_ffts; fft_idx++) {
                 for(int sample = 0; sample < 32; sample++) {
                     int complex_base = (fft_idx * 32 + sample) * 2;
-                    input_buffers[i][complex_base]     = base_pattern[sample] + (fft_idx * 1000.0f);
+                    
+                    // Real part: base pattern + offset per FFT
+                    input_buffers[i][complex_base] = base_pattern[sample] + (fft_idx * 1000.0f);
+                    
+                    // Imaginary part: zero (pure real signal)
                     input_buffers[i][complex_base + 1] = 0.0f;
                 }
             }
 
+            // Clear output buffer
             memset(output_buffers[i], 0, output_buffer_size);
         }
-
+        
         sgEntry sg;
         sgFlags sg_flags = { true, true, false };
 
@@ -149,7 +167,7 @@ int main(int argc, char *argv[]) {
         auto benchmark_thr = [&]() {
             for(int i = 0; i < n_reps; i++) {
                 memset(&sg, 0, sizeof(localSg));
-
+                
                 sg.local.src_addr = input_buffers[i];
                 sg.local.src_len = input_buffer_size;
                 sg.local.src_stream = strmHost;
@@ -161,7 +179,7 @@ int main(int argc, char *argv[]) {
                 sg.local.dst_dest = targetVfid;
 
                 sg_flags.last = (i == n_reps-1);
-
+                
                 cthread->invoke(CoyoteOper::LOCAL_TRANSFER, &sg, sg_flags);
             }
 
@@ -172,18 +190,19 @@ int main(int argc, char *argv[]) {
 
         bench.runtime(benchmark_thr);
 
+        // Print performance metrics using printLatencyStats
         PR_HEADER("LATENCY MEASUREMENTS");
         printLatencyStats(bench.getAvg() / n_reps, input_buffer_size, n_reps);
 
         PR_HEADER("RESULTS");
+        // Print all classification results
         for(int i = 0; i < n_reps; i++) {
             std::cout << "Rep " << i << " classification results:\n";
             for (uint32_t fft_idx = 0; fft_idx < num_ffts; fft_idx++) {
                 float result = output_buffers[i][fft_idx];
                 std::cout << "  FFT " << (fft_idx + 1) << "/" << num_ffts << ": " << result;
-
-                // Decode the IEEE-754 bit pattern of canonical class outputs
-                // (1.0/2.0/3.0/4.0/5.0) into human-readable class labels.
+                
+                // Map result to class label if it matches known values
                 uint32_t result_bits = *(uint32_t*)&result;
                 switch(result_bits) {
                     case 0x40800000: std::cout << " (Class 4)"; break;
@@ -191,7 +210,7 @@ int main(int argc, char *argv[]) {
                     case 0x40000000: std::cout << " (Class 2)"; break;
                     case 0x40400000: std::cout << " (Class 3)"; break;
                     case 0x40A00000: std::cout << " (Class 5)"; break;
-                    default:
+                    default: 
                         if (result == 0.0f) std::cout << " (No result - check pipeline)";
                         else std::cout << " (Unknown class)";
                         break;
@@ -200,9 +219,11 @@ int main(int argc, char *argv[]) {
             }
             std::cout << std::endl;
         }
-
+        
+        // Print debug info
         cthread->printDebug();
 
+        // Cleanup
         for(int i = 0; i < n_reps; i++) {
             if(input_buffers[i]) {
                 cthread->freeMem(input_buffers[i]);
@@ -218,6 +239,6 @@ int main(int argc, char *argv[]) {
         std::cerr << "Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
-
+    
     return EXIT_SUCCESS;
 }

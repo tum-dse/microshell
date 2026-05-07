@@ -1,3 +1,5 @@
+// MATLAB Coder-generated; do not hand-edit. Entry point in svm_speech_30_0.cpp.
+
 /* Include Files */
 #include "CompactClassificationECOC.h"
 #include "rt_nonfinite.h"

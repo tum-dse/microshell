@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+// HLS top for the RSA stage. Wraps xf::security::rsa as a streaming
+// kernel. modulus/exponent are static (ap_none) inputs driven from
+// hdl/rsa_top.sv. The while(true) is required for an always-on AXIS
+// kernel; PIPELINE off prevents conflicts with the iterative Montgomery
+// exponentiation inside process().
+
 #include "rsa.hpp"
 #include "asymmetric.hpp"
 #include <hls_stream.h>
@@ -29,7 +35,7 @@ void rsa(
     #pragma HLS INTERFACE ap_none port=modulus
     #pragma HLS INTERFACE ap_none port=exponent
     #pragma HLS INTERFACE ap_ctrl_none port=return
-    
+
     xf::security::rsa processor;
     processor.updateKey(modulus, exponent);
 

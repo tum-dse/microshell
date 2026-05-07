@@ -2,8 +2,9 @@
 import lynxTypes::*;
 `include "axi_macros.svh"
 
-// AXI4SR wrapper around the third-party AES_engine, plus an ILA on the
-// 128-bit head of the input/output streams for hardware bring-up.
+// AXI4SR wrapper around AES_engine (which wraps the AES-256 core in
+// aes_256.v). tdest/tuser forced to 0; this app uses one logical dest.
+// ila_0 is wired up for hw bring-up (input/output streams + metadata).
 module aes_top (
     AXI4SR.s axis_sink,
     AXI4SR.m axis_src,

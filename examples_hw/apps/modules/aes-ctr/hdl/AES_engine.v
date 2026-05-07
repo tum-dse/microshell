@@ -1,3 +1,6 @@
+// AES_engine: project switch wrapper around the Hsing AES core, with
+// AXI4-Stream + credit-based flow control.
+
 
 `timescale 1ns / 1ps
 `include "panic_define.v"

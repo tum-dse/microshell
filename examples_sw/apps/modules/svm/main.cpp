@@ -1,3 +1,8 @@
+/**
+ * SVM module bring-up: feeds 32-float windows into the standalone SVM
+ * vFPGA and reports the predicted class label per window.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -33,6 +38,7 @@ constexpr auto const defSize = 128;
 constexpr auto const maxPrintPackets = 3;
 constexpr auto const maxPrintOutputs = 5;
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;

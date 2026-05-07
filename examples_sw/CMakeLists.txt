@@ -91,6 +91,33 @@ if(EXAMPLE STREQUAL "svm")
     message("** Example: SVM")
 endif()
 
+# CPU-sync variants for the direct_comm_effectiveness comparison.
+
+if(EXAMPLE STREQUAL "audio_processing_cpusync")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/audio_processing_cpusync")
+    message("** Example: Audio Processing (CPU-sync)")
+endif()
+
+if(EXAMPLE STREQUAL "digital_signature_cpusync")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/digital_signature_cpusync")
+    message("** Example: Digital Signature (CPU-sync)")
+endif()
+
+if(EXAMPLE STREQUAL "secure_storage_cpusync")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure_storage_cpusync")
+    message("** Example: Secure Storage (CPU-sync)")
+endif()
+
+if(EXAMPLE STREQUAL "signed_compression_cpusync")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/signed_compression_cpusync")
+    message("** Example: Signed Compression (CPU-sync)")
+endif()
+
+if(EXAMPLE STREQUAL "speech_recognition_cpusync")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech_recognition_cpusync")
+    message("** Example: Speech Recognition (CPU-sync)")
+endif()
+
 set(EXEC test)
 add_executable(${EXEC} ${TARGET_DIR}/main.cpp)
 target_link_libraries(${EXEC} PUBLIC Coyote)

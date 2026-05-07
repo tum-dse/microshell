@@ -4,6 +4,9 @@ import lynxTypes::*;
 
 `include "axi_macros.svh"
 
+// AXI4SR wrapper around the HLS rle_encode IP. Splays interface members
+// into per-port wires; tkeep forced all-ones since upstream guarantees
+// full beats.
 module rle_top (
     AXI4SR.s axis_sink,
     AXI4SR.m axis_src,

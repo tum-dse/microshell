@@ -1,3 +1,4 @@
+// verilog-axis (Alex Forencich, MIT). License preserved below.
 /*
 
 Copyright (c) 2016-2018 Alex Forencich

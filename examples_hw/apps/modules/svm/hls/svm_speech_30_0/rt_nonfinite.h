@@ -1,3 +1,5 @@
+// MATLAB Coder-generated; do not hand-edit. Entry point in svm_speech_30_0.cpp.
+
 #ifndef RT_NONFINITE_H
 #define RT_NONFINITE_H
 

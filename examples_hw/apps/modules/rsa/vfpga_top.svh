@@ -1,3 +1,7 @@
+// modules/rsa: standalone RSA bring-up with inline latency probe.
+//
+//   axis_host_recv -> [r_top] -> [counter_top probe] -> axis_host_send
+
 import lynxTypes::*;
 
 AXI4SR axis_sink_int ();
@@ -11,7 +15,8 @@ logic [31:0] latency_result_reg;
 axisr_reg inst_reg_sink (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_host_recv[0]), .m_axis(axis_sink_int));
 axisr_reg inst_reg_src  (.aclk(aclk), .aresetn(aresetn), .s_axis(axis_src_int),     .m_axis(axis_host_send[0]));
 
-rsa_top inst_rsa (
+// hdl/rsa_top.sv declares `module r_top` (historical name).
+r_top inst_rsa (
     .axis_sink(axis_sink_int),
     .axis_src (rsa_to_counter),
     .aclk     (aclk),
@@ -27,6 +32,7 @@ counter_top inst_counter (
     .count_valid(pipeline_count_valid)
 );
 
+// Latch latency on count_valid.
 always_ff @(posedge aclk or negedge aresetn) begin
     if (!aresetn) begin
         latency_result_reg <= '0;
@@ -41,4 +47,3 @@ always_comb sq_rd.tie_off_m();
 always_comb sq_wr.tie_off_m();
 always_comb cq_rd.tie_off_s();
 always_comb cq_wr.tie_off_s();
-assign user_data = 0;

@@ -1,5 +1,10 @@
 import lynxTypes::*;
 
+// AXI-Lite slave for the perf_fpga micro-benchmark. Holds the config
+// register file and exposes the cycle counter / completion count back to
+// the host. Control-plane logic (AW/AR/B/W/R FSMs, lower half of the
+// file) is the standard Xilinx AXI-Lite template; design-specific bits
+// are the register map and the two case statements above it.
 module perf_fpga_slv (
   input  logic                        aclk,
   input  logic                        aresetn,
@@ -17,6 +22,7 @@ module perf_fpga_slv (
   output logic [DEST_BITS-1:0]        bench_dest
 );
 
+// 9 registers, addressed in AXIL_DATA_BITS/8-byte units.
 localparam integer N_REGS = 9;
 localparam integer ADDR_LSB = $clog2(AXIL_DATA_BITS/8);
 localparam integer ADDR_MSB = $clog2(N_REGS);
@@ -39,15 +45,16 @@ logic slv_reg_wren;
 logic aw_en;
 
 // Register map:
-//   0 (W1S) BENCH_CTRL_REG    - bit0: start read, bit1: start write
-//   1 (RO)  BENCH_DONE_REG    - completed request count
-//   2 (RO)  BENCH_TIMER_REG   - cycle timer
-//   3 (RW)  BENCH_VADDR_REG
-//   4 (RW)  BENCH_LEN_REG
-//   5 (RW)  BENCH_PID_REG
-//   6 (RW)  BENCH_N_REPS_REG
-//   7 (RW)  BENCH_N_BEATS_REG
-//   8 (RW)  BENCH_DEST_REG
+//   0 (W1S) CTRL    - bit0: start read; bit1: start write. Auto-cleared
+//                     so a host write becomes a 1-cycle pulse.
+//   1 (RO)  DONE    - completed-request count.
+//   2 (RO)  TIMER   - cycle counter (free-running between starts).
+//   3 (RW)  VADDR   - virtual address for sq_rd/sq_wr.
+//   4 (RW)  LEN     - per-request length.
+//   5 (RW)  PID     - process ID stamped on each request.
+//   6 (RW)  N_REPS  - number of requests per run.
+//   7 (RW)  N_BEATS - expected data beats per run.
+//   8 (RW)  DEST    - selects active stream pair.
 localparam integer BENCH_CTRL_REG    = 0;
 localparam integer BENCH_DONE_REG    = 1;
 localparam integer BENCH_TIMER_REG   = 2;
@@ -60,6 +67,8 @@ localparam integer BENCH_DEST_REG    = 8;
 
 assign slv_reg_wren = axi_wready && axi_ctrl.wvalid && axi_awready && axi_ctrl.awvalid;
 
+// Write decode: byte-wise update gated by wstrb. CTRL auto-clears each
+// cycle (line above the case) so writes become 1-cycle pulses.
 always_ff @(posedge aclk) begin
   if ( aresetn == 1'b0 ) begin
     slv_reg <= 0;
@@ -119,6 +128,7 @@ end
 
 assign slv_reg_rden = axi_arready & axi_ctrl.arvalid & ~axi_rvalid;
 
+// Read decode. DONE/TIMER come from the kernel-side inputs (live values).
 always_ff @(posedge aclk) begin
   if( aresetn == 1'b0 ) begin
     axi_rdata <= 0;
@@ -150,6 +160,7 @@ always_ff @(posedge aclk) begin
   end
 end
 
+// Project register slices out to the kernel.
 always_comb begin
   bench_ctrl    = slv_reg[BENCH_CTRL_REG][1:0];
   bench_vaddr   = slv_reg[BENCH_VADDR_REG][VADDR_BITS-1:0];

@@ -2,6 +2,9 @@
 import lynxTypes::*;
 `include "axi_macros.svh"
 
+// AXI4SR wrapper around sha256.v (plain Verilog). Splays interface
+// members into wires; widens the 256-bit digest back to 512 bits via
+// dwidth_converter_256_512 so downstream sees a standard shell stream.
 module sha256_top (
     AXI4SR.s axis_sink,
     AXI4SR.m axis_src,
@@ -54,4 +57,5 @@ module sha256_top (
         .m_axis_tlast (axis_src.tlast),
         .m_axis_tid   (axis_src.tid)
     );
+
 endmodule

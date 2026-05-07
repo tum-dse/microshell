@@ -1,3 +1,8 @@
+/**
+ * FFT module bring-up: drives the standalone 32-point FFT vFPGA with a
+ * sine wave and prints the dominant bins. Used in §6.5 effectiveness.
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
@@ -37,6 +42,7 @@ constexpr auto const defDW = 4;
 constexpr float const sampleRate = 44100.0f;
 constexpr auto const maxBinsToShow = 8;
 
+// Generate sine wave value
 float generateSineValue(int index) {
     const float amplitude = 1000.0f;
     const float frequency = 1378.125f;
@@ -46,6 +52,7 @@ float generateSineValue(int index) {
     return amplitude * sin(2.0f * M_PI * frequency * t + phase);
 }
 
+// Find the dominant bin in the first half of the spectrum and print it.
 void printFFTSummary(float* output_ptr, int fft_index) {
     float freqResolution = sampleRate / 32;
 
@@ -72,6 +79,7 @@ void printFFTSummary(float* output_ptr, int fft_index) {
               << "with magnitude " << std::setprecision(0) << maxMagnitude << std::endl;
 }
 
+// Per-bin magnitude table for the first maxBinsToShow bins.
 void printDetailedFFT(float* output_ptr) {
     const float freqResolution = sampleRate / 32;
 
@@ -91,6 +99,7 @@ void printDetailedFFT(float* output_ptr) {
     std::cout << "... (" << (16 - maxBinsToShow) << " more bins omitted)\n";
 }
 
+// Helper function to print latency statistics.
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;

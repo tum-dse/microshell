@@ -47,3 +47,11 @@ misc/
 *_funcsim.vhdl
 *.upgrade_log
 *.d
+
+# Track everything under evaluation/ (CSVs, plots, READMEs, scripts).
+# Reviewers and the AE process need the paper-time data and figures;
+# rules above (notably *.csv) would otherwise silently drop them.
+!evaluation/
+!evaluation/**
+evaluation/**/__pycache__/
+evaluation/**/*.pyc

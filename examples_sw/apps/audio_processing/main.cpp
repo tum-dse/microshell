@@ -1,8 +1,12 @@
+/**
+ * Audio Processing Pipeline
+ */
+
 #include <iostream>
 #include <string>
 #include <malloc.h>
-#include <time.h>
-#include <sys/time.h>
+#include <time.h> 
+#include <sys/time.h>  
 #include <chrono>
 #include <fstream>
 #include <fcntl.h>
@@ -24,53 +28,58 @@ using namespace std;
 using namespace std::chrono;
 using namespace fpga;
 
-std::atomic<bool> stalled(false);
+std::atomic<bool> stalled(false); 
 void gotInt(int) {
     stalled.store(true);
 }
 
 constexpr auto const defDevice = 0;
-constexpr auto const targetVfid = 0;
+constexpr auto const targetVfid = 0;  
 constexpr auto const defReps = 1;
-constexpr auto const defSize = 32;
+constexpr auto const defSize = 32;       
 constexpr auto const defDW = 4;
 constexpr float const sampleRate = 44100.0f;
 
+// Generate sine wave value
 float generateSineValue(int index) {
     const float amplitude = 1000.0f;
     const float frequency = 1378.125f;
     const float phase = 0.0f;
-
+    
     float t = (float)index / sampleRate;
     return amplitude * sin(2.0f * M_PI * frequency * t + phase);
 }
 
-// Wide uniform distribution drives the input across every quantization bin
-// (<1, <100, <1000, <10000, >=10000) so the downstream RLE has variety to compress.
 void generateCompressibleAudio(float* audio_data, uint32_t input_size) {
     std::cout << "\nGenerating random audio for quantization testing..." << std::endl;
-
+    
     std::random_device rd;
     std::mt19937 gen(rd());
+    
+    // Generate random amplitudes that will hit all quantization levels
+    // Based on quantization thresholds: <1.0, <100.0, <1000.0, <10000.0, >=10000.0
     std::uniform_real_distribution<float> dist(-15000.0f, 15000.0f);
-
+    
     for (uint32_t sample_idx = 0; sample_idx < input_size; ++sample_idx) {
+        // Generate random amplitude
         float real = dist(gen);
-        audio_data[2*sample_idx]     = real;
-        audio_data[2*sample_idx + 1] = 0.00f;
+        
+        audio_data[2*sample_idx] = real;     // Real part
+        audio_data[2*sample_idx + 1] = 0.00f;   // Imaginary part
     }
 }
 
+// Print raw output analysis
 void printRawOutput(uint8_t* output_ptr, int size) {
     std::cout << "\nRaw Pipeline Output:" << std::endl;
     std::cout << "Hex (first 64 bytes): ";
     for(int i = 0; i < min(64, size); i++) {
-        std::cout << std::hex << std::setw(2) << std::setfill('0')
+        std::cout << std::hex << std::setw(2) << std::setfill('0') 
                   << static_cast<int>(output_ptr[i]) << " ";
         if ((i + 1) % 16 == 0) std::cout << std::endl << "                      ";
     }
     std::cout << std::dec << std::endl;
-
+    
     std::cout << "ASCII (first 64 bytes): ";
     for(int i = 0; i < min(64, size); i++) {
         if (output_ptr[i] >= 'A' && output_ptr[i] <= 'Z') {
@@ -82,6 +91,7 @@ void printRawOutput(uint8_t* output_ptr, int size) {
     std::cout << std::endl;
 }
 
+// Helper function to print latency statistics
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "\nLatency Measurements:" << std::endl;
@@ -89,8 +99,8 @@ void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t
     std::cout << "Processing completed at: " << avg_latency_ns << " ns" << std::endl;
     std::cout << "Total latency: " << avg_latency_ns << " ns (" << (avg_latency_ns / 1000) << " us)" << std::endl;
     std::cout << "Average latency per KB: " << (avg_latency_ns * 1024 / data_size_bytes) << " ns" << std::endl;
-    std::cout << "Throughput: " << std::setw(8)
-              << (1000.0 * data_size_bytes) / avg_latency_ns
+    std::cout << "Throughput: " << std::setw(8) 
+              << (1000.0 * data_size_bytes) / avg_latency_ns 
               << " MB/s" << std::endl;
 }
 
@@ -106,32 +116,33 @@ int main(int argc, char *argv[]) {
         ("size,s", boost::program_options::value<uint32_t>(), "Audio samples (must be multiple of 32)")
         ("reps,r", boost::program_options::value<uint32_t>(), "Number of reps")
         ("freq,f", boost::program_options::value<float>(), "Input signal frequency (Hz)");
-
+    
     boost::program_options::variables_map commandLineArgs;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, programDescription), commandLineArgs);
     boost::program_options::notify(commandLineArgs);
 
     uint32_t n_reps = defReps;
-    uint32_t size = defSize;
-
+    uint32_t size = defSize; 
+    
     if(commandLineArgs.count("size") > 0) size = commandLineArgs["size"].as<uint32_t>();
     if(commandLineArgs.count("reps") > 0) n_reps = commandLineArgs["reps"].as<uint32_t>();
 
-    // The FFT IP is fixed at 32-point, so size must be a multiple of 32.
+    // Ensure size is multiple of 32 (FFT hardware constraint)
     if(size % 32 != 0) {
-        std::cout << "Warning: Size must be multiple of 32. Adjusting " << size
+        std::cout << "Warning: Size must be multiple of 32. Adjusting " << size 
                   << " to " << ((size + 31) / 32) * 32 << std::endl;
         size = ((size + 31) / 32) * 32;
     }
 
-    uint32_t input_size = size;
-    uint32_t complex_size = 2 * input_size;
-    uint32_t input_buffer_size = complex_size * sizeof(float);
-    uint32_t num_ffts = size / 32;
-
-    uint32_t rle_chunks = (input_size + 63) / 64;
-    uint32_t output_buffer_size = rle_chunks * 64;
-
+    uint32_t input_size = size;                    // Complex samples
+    uint32_t complex_size = 2 * input_size;       // Total floats (real + imag)
+    uint32_t input_buffer_size = complex_size * sizeof(float);  // Input bytes
+    uint32_t num_ffts = size / 32;                 // Number of 32-point FFTs
+    
+    // Output expects RLE compressed data in 64-byte packets
+    uint32_t rle_chunks = (input_size + 63) / 64;  // Approximate chunks after compression
+    uint32_t output_buffer_size = rle_chunks * 64; // RLE output buffer
+    
     uint32_t n_pages_input = (input_buffer_size + hugePageSize - 1) / hugePageSize;
     uint32_t n_pages_output = (output_buffer_size + hugePageSize - 1) / hugePageSize;
 
@@ -146,26 +157,28 @@ int main(int argc, char *argv[]) {
     try {
         std::unique_ptr<cThread<std::any>> cthread(new cThread<std::any>(targetVfid, getpid(), defDevice));
         cthread->start();
-
+        
         std::vector<float*> input_buffers(n_reps, nullptr);
         std::vector<uint8_t*> output_buffers(n_reps, nullptr);
 
         std::vector<float> audio_data(complex_size, 0.0f);
 
+        // Generate realistic audio patterns
         generateCompressibleAudio(audio_data.data(), input_size);
-
+        
         std::cout << "\nFirst 32 audio values:" << std::endl;
         for (uint32_t i = 0; i < min(32U, input_size); ++i) {
-            std::cout << std::fixed << std::setprecision(6)
+            std::cout << std::fixed << std::setprecision(6) 
                      << audio_data[2*i] << " " << audio_data[2*i + 1] << " ";
             if ((i + 1) % 4 == 0) std::cout << "\n";
         }
         std::cout << "\n";
 
+        // Allocate and initialize memory
         for(int i = 0; i < n_reps; i++) {
             input_buffers[i] = (float*) cthread->getMem({CoyoteAlloc::HPF, n_pages_input});
             output_buffers[i] = (uint8_t*) cthread->getMem({CoyoteAlloc::HPF, n_pages_output});
-
+            
             if (!input_buffers[i] || !output_buffers[i]) {
                 throw std::runtime_error("Memory allocation failed");
             }
@@ -184,7 +197,7 @@ int main(int argc, char *argv[]) {
         auto benchmark_thr = [&]() {
             for(int i = 0; i < n_reps; i++) {
                 memset(&sg, 0, sizeof(localSg));
-
+                
                 sg.local.src_addr = input_buffers[i];
                 sg.local.src_len = input_buffer_size;
                 sg.local.src_stream = strmHost;
@@ -196,7 +209,7 @@ int main(int argc, char *argv[]) {
                 sg.local.dst_dest = targetVfid;
 
                 sg_flags.last = (i == n_reps-1);
-
+                
                 cthread->invoke(CoyoteOper::LOCAL_TRANSFER, &sg, sg_flags);
             }
 
@@ -207,9 +220,11 @@ int main(int argc, char *argv[]) {
 
         bench.runtime(benchmark_thr);
 
+        // Print performance metrics using printLatencyStats
         PR_HEADER("LATENCY MEASUREMENTS");
         printLatencyStats(bench.getAvg() / n_reps, input_buffer_size, n_reps);
 
+        // Print pipeline results
         PR_HEADER("RESULTS");
         for(int i = 0; i < n_reps; i++) {
             std::cout << "\n--- Pipeline Run #" << (i + 1) << " ---";
@@ -218,6 +233,7 @@ int main(int argc, char *argv[]) {
 
         cthread->printDebug();
 
+        // Cleanup
         for(int i = 0; i < n_reps; i++) {
             if(input_buffers[i]) {
                 cthread->freeMem(input_buffers[i]);
@@ -233,6 +249,6 @@ int main(int argc, char *argv[]) {
         std::cerr << "Error: " << e.what() << std::endl;
         return EXIT_FAILURE;
     }
-
+    
     return EXIT_SUCCESS;
 }

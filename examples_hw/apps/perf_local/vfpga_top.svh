@@ -1,3 +1,9 @@
+// perf_local vFPGA top.
+//
+// EN_STRM compiles in the host-stream loop, EN_MEM compiles in the
+// card-stream loop. Both can be enabled together to exercise both paths
+// in one bitstream.
+
 import lynxTypes::*;
 
 `ifdef EN_STRM

@@ -1,3 +1,5 @@
+# 512<->256 width converters for the SHA-256 / RSA stages.
+
 create_ip -name axis_dwidth_converter -vendor xilinx.com -library ip -version 1.1 -module_name dwidth_converter_512_256
 set_property -dict [list \
     CONFIG.S_TDATA_NUM_BYTES {64} \
