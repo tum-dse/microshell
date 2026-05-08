@@ -1,3 +1,6 @@
+import csv
+import os
+import statistics
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
@@ -26,26 +29,81 @@ size_colors = [color1, color2, color3]  # Order: 8KB=Orange, 256KB=Blue, 1MB=Gre
 
 # ===== DATA =====
 applications = ["Audio Processing", "Digital Signature", "Secure Storage", "Signed Compression", "Speech Recognition"]
-display_names = ["Audio Processing", "Digital Signature", "Secure Storage", "Signed Compression", "Speech Recognition"]
+display_names = applications[:]
 data_sizes = ["8KB", "256KB", "1MB"]
+data_size_bytes = [8192, 262144, 1048576]
 
-# Format: [baseline, µShell_mono, µShell] for each data size
-data = {
-    "Audio Processing": [97.9, 98.5, 95.0, 224.9, 226.0, 219.0, 225.8, 224.8, 218.8],
-    "Digital Signature": [88.4, 87.3, 84.8, 233.1, 233.9, 229.4, 239.5, 238.3, 232.3],
-    "Secure Storage": [147.3, 146.8, 141.0, 159.6, 158.5, 150.5, 159.8, 160.7, 155.7],
-    "Signed Compression": [73.5, 74.5, 72.3, 150.1, 149.2, 143.7, 154.4, 153.6, 150.6],
-    "Speech Recognition": [82.0, 81.2, 77.4, 69.9, 70.6, 67.8, 69.6, 70.2, 67.4]
-}
+# CSV uses internal app keys + system tags; the column order in `data[app]`
+# below is [coyote_8K, ushell_mono_8K, ushell_8K, coyote_256K, ..., ushell_1M].
+app_keys = ["audio_processing", "digital_signature", "secure_storage",
+            "signed_compression", "speech_recognition"]
+systems = ["coyote", "ushell_mono", "ushell"]   # column order within each size group
 
-# Error data (standard deviations)
-error_data = {
-    "Audio Processing": [10.2, 10.0, 10.0, 3.4, 2.0, 2.0, 0.5, 0.5, 0.5],
-    "Digital Signature": [1.2, 1.2, 1.2, 0.2, 0.2, 0.2, 1.2, 0.2, 0.2],
-    "Secure Storage": [0.5, 0.2, 0.2, 0.0, 0.6, 0.6, 0.1, 0.1, 0.1],
-    "Signed Compression": [0.1, 0.1, 0.1, 0.5, 0.4, 0.4, 0.0, 0.0, 0.0],
-    "Speech Recognition": [0.5, 0.5, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-}
+CSV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        "..", "..", "data", "e2e", "e2e.csv")
+
+
+def load_e2e():
+    """Read data/e2e/e2e.csv (rows tagged source=paper or source=measured).
+    For each (app, system, size):
+      - if any source=measured rows exist → average them, std-dev → error
+      - else → use the source=paper row's throughput_MBps + stddev_MBps
+        directly
+
+    The paper rows act as the fallback baseline. Once measured rows arrive,
+    they take over per-cell. The CSV is the only source of truth — there
+    are no hardcoded numbers in this script."""
+    if not os.path.exists(CSV_PATH):
+        raise SystemExit(
+            f"[plot_e2e] {CSV_PATH} not found.\n"
+            f"  Re-create it with the paper baseline (source=paper rows), or run\n"
+            f"  bash run_e2e.sh <baseline> <microshell> first."
+        )
+
+    measured = {}  # (app, size_bytes, system) -> [thr, ...]
+    paper = {}     # (app, size_bytes, system) -> (thr, stddev)
+    with open(CSV_PATH) as f:
+        for row in csv.DictReader(f):
+            try:
+                thr = float(row["throughput_MBps"])
+                key = (row["app"], int(row["size_bytes"]), row["system"])
+            except (KeyError, ValueError):
+                continue
+            if row.get("source") == "paper":
+                try:
+                    sd = float(row.get("stddev_MBps") or 0.0)
+                except ValueError:
+                    sd = 0.0
+                paper[key] = (thr, sd)
+            else:
+                measured.setdefault(key, []).append(thr)
+
+    data, error_data = {}, {}
+    for app_idx, app_key in enumerate(app_keys):
+        display = applications[app_idx]
+        d, e = [], []
+        for size_b in data_size_bytes:
+            for sys in systems:
+                key = (app_key, size_b, sys)
+                ms = measured.get(key)
+                if ms:
+                    d.append(sum(ms) / len(ms))
+                    e.append(statistics.stdev(ms) if len(ms) > 1 else 0.0)
+                elif key in paper:
+                    thr, sd = paper[key]
+                    d.append(thr)
+                    e.append(sd)
+                else:
+                    raise SystemExit(
+                        f"[plot_e2e] no data for {app_key}/{sys}/{size_b} "
+                        f"(no measured or paper row in CSV)."
+                    )
+        data[display] = d
+        error_data[display] = e
+    return data, error_data
+
+
+data, error_data = load_e2e()
 
 # ===== PLOT SETUP =====
 fig, ax = plt.subplots(figsize=(16, 4))

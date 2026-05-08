@@ -10,6 +10,7 @@ LABEL_SIZE = 10
 TICK_SIZE = 10
 LEGEND_SIZE = 9
 ANNOTATION_SIZE = 9
+VALUE_SIZE = 7
 
 plt.rcParams['mathtext.fontset'] = 'cm'
 plt.rcParams['font.size'] = FONT_SIZE
