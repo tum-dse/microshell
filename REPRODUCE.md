@@ -177,29 +177,70 @@ python3 plot_sched.py
 
 Measures the cost of deploying multi-component accelerators: µShell's
 capability/buffer updates vs. Coyote's partial-reconfiguration cost, for
-configurations of 1–4 user-logic components.
+configurations of 1–4 user-logic components. Two separate bitstreams feed
+the figure — one for the capability/buffer path, one for partial
+reconfiguration.
 
-### Step 1 — collect data
+### Step 1 — collect capability/buffer-update timings
 
-The reconfiguration micro-benchmark lives in
-[`examples_sw/apps/reconfigure_shell/`](examples_sw/apps/reconfigure_shell/).
+Program the `ceu_3` bitstream and run the
+[`pipeline`](examples_sw/apps/pipeline) host app, which exercises capability
+and buffer updates:
 
 ```bash
-cd examples_sw && mkdir build_reconfigure_shell && cd build_reconfigure_shell
-cmake ../ -DEXAMPLE=reconfigure_shell
+bash ./program_fpga.sh cyt_top_ceu_3
+mkdir build_pipe_sw && cd build_pipe_sw
+cmake ../examples_sw/ -DEXAMPLE=pipeline -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 make
-cd bin && ./test
+
+sudo ./bin/test >> reconfig_cap.log
+cp reconfig_cap.log ../evaluation/data/reconfig/
 ```
 
-### Step 2 — plot
+### Step 2 — collect partial-reconfiguration timings
+
+Program a second bitstream and drive it with the
+[`perf_service`](examples_sw/apps/perf_service) server + client. The server
+publishes a perf_local accelerator; the client sequentially reconfigures
+1–4 components and triggers each with `-1 true`. Open two terminals on the
+FPGA host:
 
 ```bash
-cd evaluation/scripts
-python3 plot_reconfig_overhead.py
-# → evaluation/plots/reconfig_overhead.{png,pdf}
+# Terminal 1 — server
+bash ./program_fpga.sh cyt_top_pr_time_3
+mkdir build_perf_server_sw && cd build_perf_server_sw
+cmake ../examples_sw/ -DEXAMPLE=perf_server -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+make
+sudo ./bin/test
+```
 
-python3 plot_reconf_analysis.py    # supplementary breakdown
-# → evaluation/plots/reconf_analysis.pdf
+```bash
+# Terminal 2 — client
+mkdir build_perf_client_sw && cd build_perf_client_sw
+cmake ../examples_sw/ -DEXAMPLE=perf_client -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+make
+sudo ./bin/test -1 true
+```
+
+The PR timings land in the system journal. Capture them:
+
+```bash
+journalctl -n 100 > reconfig_pr.log
+cp reconfig_pr.log ../evaluation/data/reconfig/
+```
+
+### Step 3 — extract and plot
+
+`extract_reconfig.py` parses both logs and writes a merged
+`reconfig_times.csv`; `plot_reconfig_overhead.py` consumes that CSV.
+
+```bash
+python3 evaluation/scripts/reconfig/extract_reconfig.py
+python3 evaluation/scripts/reconfig/plot_reconfig_overhead.py
+# → evaluation/plots/reconfig/reconfig_overhead.{png,pdf}
+
+python3 evaluation/scripts/reconfig/plot_reconf_analysis.py    # supplementary breakdown
+# → evaluation/plots/reconfig/reconf_analysis.pdf
 ```
 
 ---

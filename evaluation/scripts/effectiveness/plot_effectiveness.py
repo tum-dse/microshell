@@ -36,48 +36,65 @@ applications = ["Audio\nProcessing", "Digital\nSignature", "Secure\nStorage", "S
 app_keys = ["audio_processing", "digital_signature", "secure_storage",
             "signed_compression", "speech_recognition"]
 
-# Paper values — used as a fallback if no measurement CSV is present, so the
-# plot still renders against the original numbers.
-PAPER_CPU_SYNC = [61.2, 215.1, 153.9, 149.3, 26.0]
-PAPER_IPC      = [225.8, 239.5, 159.8, 154.4, 69.7]
-PAPER_CPU_ERR  = [0.1, 1.4, 0.4, 0.2, 0.0]
-PAPER_IPC_ERR  = [0.5, 1.2, 0.1, 0.0, 0.0]
-
 CSV_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "data", "effectiveness", "effectiveness.csv")
 
-def load_measurements():
-    """Aggregate (app, mode) -> (mean throughput, stddev). Multiple CSV rows
-    for the same (app, mode) are averaged; the std-dev across rows becomes
-    the error bar. Missing entries fall back to the paper numbers above so
-    partial measurements still produce a sensible plot."""
-    if not os.path.exists(CSV_PATH):
-        print(f"[plot_effectiveness] {CSV_PATH} not found — using paper numbers.")
-        return PAPER_CPU_SYNC[:], PAPER_IPC[:], PAPER_CPU_ERR[:], PAPER_IPC_ERR[:]
 
-    samples = {}  # (app, mode) -> [throughputs]
+def load_measurements():
+    """Read effectiveness.csv (rows tagged source=paper or source=measured).
+    For each (app, mode):
+      - if any source=measured rows exist → average them, std-dev → error
+      - else → use the source=paper row's throughput_MBps + stddev_MBps directly
+
+    The paper rows act as the fallback baseline. Once measured rows arrive,
+    they take over per-cell. The CSV is the only source of truth — there are
+    no hardcoded numbers in this script."""
+    if not os.path.exists(CSV_PATH):
+        raise SystemExit(
+            f"[plot_effectiveness] {CSV_PATH} not found.\n"
+            f"  Re-create it with the paper baseline (source=paper rows), or run\n"
+            f"  bash run_effectiveness.sh <baseline> first."
+        )
+
+    measured = {}   # (app, mode) -> [thr, ...]
+    paper = {}      # (app, mode) -> (thr, stddev)
     with open(CSV_PATH) as f:
         for row in csv.DictReader(f):
             try:
                 thr = float(row["throughput_MBps"])
             except (KeyError, ValueError):
                 continue
-            samples.setdefault((row["app"], row["mode"]), []).append(thr)
+            key = (row["app"], row["mode"])
+            if row.get("source") == "paper":
+                try:
+                    sd = float(row.get("stddev_MBps") or 0.0)
+                except ValueError:
+                    sd = 0.0
+                paper[key] = (thr, sd)
+            else:
+                measured.setdefault(key, []).append(thr)
 
     cpu, ipc, cpu_err, ipc_err = [], [], [], []
-    for i, app in enumerate(app_keys):
-        cs = samples.get((app, "cpu_sync"))
-        if cs:
-            cpu.append(sum(cs) / len(cs))
-            cpu_err.append(statistics.stdev(cs) if len(cs) > 1 else 0.0)
-        else:
-            cpu.append(PAPER_CPU_SYNC[i]); cpu_err.append(PAPER_CPU_ERR[i])
-        ds = samples.get((app, "direct"))
-        if ds:
-            ipc.append(sum(ds) / len(ds))
-            ipc_err.append(statistics.stdev(ds) if len(ds) > 1 else 0.0)
-        else:
-            ipc.append(PAPER_IPC[i]); ipc_err.append(PAPER_IPC_ERR[i])
+    for app in app_keys:
+        for mode, out_vals, out_errs in (
+            ("cpu_sync", cpu, cpu_err),
+            ("direct",   ipc, ipc_err),
+        ):
+            key = (app, mode)
+            ms = measured.get(key)
+            if ms:
+                out_vals.append(sum(ms) / len(ms))
+                out_errs.append(statistics.stdev(ms) if len(ms) > 1 else 0.0)
+            elif key in paper:
+                thr, sd = paper[key]
+                out_vals.append(thr)
+                out_errs.append(sd)
+            else:
+                raise SystemExit(
+                    f"[plot_effectiveness] no data for {app}/{mode} (no measured "
+                    f"or paper row in CSV)."
+                )
     return cpu, ipc, cpu_err, ipc_err
+
 
 cpu_sync_values, ipc_values, cpu_sync_errors, ipc_errors = load_measurements()
 

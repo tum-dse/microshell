@@ -52,6 +52,14 @@ applications written against an unmodified Coyote shell) lives at
 - Vivado 2022.x (loaded by `xilinx-shell`)
 - Python ≥ 3.11 for the plotting scripts under `evaluation/scripts/`
 
+## For OSDI evaluation testers
+
+Due to the FPGA hardware and Vivado software requirements, we provide SSH
+access to our evaluation machines so reviewers don't have to set up the
+environment themselves. Please contact the paper authors through HotCRP to
+obtain SSH keys. The machines already have the correct hardware and software
+installed; for any issues, reach us through HotCRP.
+
 ## Getting started
 
 A "hello world"-equivalent run using `perf_local` — the smallest end-to-end
@@ -102,21 +110,65 @@ Reports average throughput across two vFPGAs.
 
 ## Reproducing the paper
 
-The detailed step-by-step flow — bitstream generation, host-side measurements,
-CSV outputs, plot generation — lives in [REPRODUCE.md](REPRODUCE.md). The
-mapping from paper artifacts to repo scripts:
+All figures and tables in §6 can be regenerated from the collected execution
+data in [`evaluation/data/`](evaluation/data/). The mapping from paper
+artifacts to repo scripts:
 
 | Paper section | Artifact         | Repo plot                                    | Driver scripts                                                    |
 |---------------|------------------|----------------------------------------------|-------------------------------------------------------------------|
-| §6.1          | Figure 11        | `evaluation/plots/e2e.{png,pdf}`             | `compile_hw_*.sh`, `compile_sw_*.sh` → `plot_e2e.py`              |
-| §6.2          | Figure 12 (a–e)  | `evaluation/plots/sched.{png,pdf}`           | `examples_sw/apps/scheduler` → `plot_sched.py`                    |
-| §6.3          | Figure 13        | `evaluation/plots/reconfig_overhead.{png,pdf}` | `examples_sw/apps/reconfigure_shell` → `plot_reconfig_overhead.py` |
-| §6.4          | Table 5          | `evaluation/plots/complexity.{png,pdf}`      | `measure_complexity_*.sh` → `plot_complexity.py`                  |
-| §6.5          | Figures 4–5, Table 6 | `evaluation/plots/{plot_scalability_analysis,resource_efficiency,direct_comm_effectiveness}.pdf` | `compile_scalability.sh`, `compile_effectiveness_*.sh` → `plot_scalability.py`, `plot_efficiency.py`, `plot_effectiveness.py` |
+| §6.1          | Figure 11        | `evaluation/plots/e2e/e2e.{png,pdf}`         | `e2e/compile_hw_*.sh`, `e2e/compile_sw_*.sh` → `e2e/plot_e2e.py`  |
+| §6.2          | Figure 12 (a–e)  | `evaluation/plots/scheduling/sched.{png,pdf}` | `examples_sw/apps/scheduler` → `scheduling/plot_sched.py`         |
+| §6.3          | Figure 13        | `evaluation/plots/reconfig/reconfig_overhead.{png,pdf}` | `examples_sw/apps/reconfigure_shell` → `reconfig/plot_reconfig_overhead.py` |
+| §6.4          | Table 5          | `evaluation/plots/complexity/complexity.{png,pdf}` | `complexity/measure_complexity_*.sh` → `complexity/extract_complexity.py` |
+| §6.5          | Figures 4–5, Table 6 | `evaluation/plots/{scalability/scalability_analysis,efficiency/resource_efficiency,effectiveness/direct_comm_effectiveness}.pdf` | `scalability/compile_scalability.sh`, `effectiveness/compile_effectiveness_*.sh` → `scalability/plot_scalability.py`, `efficiency/plot_efficiency.py`, `effectiveness/plot_effectiveness.py` |
 
+The detailed step-by-step flow — bitstream generation, host-side measurements,
+CSV outputs, plot generation — lives in [REPRODUCE.md](REPRODUCE.md).
 Pre-built bitstreams under [`bitstreams/`](bitstreams/) (one folder per
 `EXAMPLE` target) let you skip the 3–4 h Vivado runs and go straight to the
 measurement and plotting steps.
+
+### Quick reproduction (with collected data)
+
+Each command below regenerates the corresponding figure or table from the
+data already shipped under `evaluation/data/`:
+
+#### §6.1 End-to-end performance — Figure 11
+
+```bash
+python3 evaluation/scripts/e2e/plot_e2e.py
+```
+
+#### §6.2 Scheduling improvements — Figure 12
+
+```bash
+python3 evaluation/scripts/scheduling/plot_sched.py
+```
+
+#### §6.3 Application-deployment overheads — Figure 13
+
+```bash
+python3 evaluation/scripts/reconfig/plot_reconfig_overhead.py
+```
+
+#### §6.4 Programmability — Table 5
+
+```bash
+python3 evaluation/scripts/complexity/extract_complexity.py
+```
+
+The table is printed to the terminal.
+
+#### §6.5 Resource overheads — Figures 4–5, Table 6
+
+```bash
+# Figure 4 — per-vFPGA budget across 1/2/4/8 vFPGAs
+python3 evaluation/scripts/scalability/plot_scalability.py
+# Figure 5 — per-module resource breakdown
+python3 evaluation/scripts/efficiency/plot_efficiency.py
+# Figure 3 — direct-comm vs CPU-sync effectiveness
+python3 evaluation/scripts/effectiveness/plot_effectiveness.py
+```
 
 ## Repository layout
 

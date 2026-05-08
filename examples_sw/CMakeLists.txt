@@ -143,6 +143,21 @@ if(EXAMPLE STREQUAL "svm")
     message("** Example: SVM (µShell daemon)")
 endif()
 
+# Perf services example — drives the §6.3 partial-reconfiguration
+# measurement (server publishes a perf_local accelerator; client triggers
+# 1–4-component reconfigurations and logs PR timings to journald).
+if(EXAMPLE STREQUAL "perf_server")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/perf_service/server")
+    message("** Example: perf_local service - Server (µShell daemon)")
+    include_directories(${TARGET_DIR}/../include ${TARGET_DIR}/include)
+endif()
+
+if(EXAMPLE STREQUAL "perf_client")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/perf_service/client")
+    message("** Example: perf_local service - Client")
+    include_directories(${TARGET_DIR}/../include)
+endif()
+
 # Build target
 
 set(EXEC test)
