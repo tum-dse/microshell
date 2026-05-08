@@ -31,7 +31,11 @@ void gotInt(int) { stalled.store(true); }
 
 constexpr auto const defDevice = 0;
 constexpr auto const defReps   = 1;
-constexpr auto const defSize   = 32;       // complex samples (must be %32)
+// One Quantize chunk = 64 complex samples (512 B). Going below that hangs
+// the cpu_sync pipeline at the Quantize stage because the host DMA can't
+// flush a partial chunk out — unlike the composed app where AXI-stream
+// TLAST handles tail data on-chip. Default to 64; user -s rounds up.
+constexpr auto const defSize   = 64;
 constexpr auto const N_STAGES  = 3;        // FFT, Quantize, RLE
 
 void printLatencyStats(double avg_latency_ns, uint32_t data_size_bytes, uint32_t n_reps) {
@@ -50,7 +54,7 @@ int main(int argc, char *argv[]) {
 
     boost::program_options::options_description opts("Options:");
     opts.add_options()
-        ("size,s", boost::program_options::value<uint32_t>(), "Audio samples (multiple of 32)")
+        ("size,s", boost::program_options::value<uint32_t>(), "Audio samples (multiple of 64)")
         ("reps,r", boost::program_options::value<uint32_t>(), "Number of reps");
     boost::program_options::variables_map vm;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, opts), vm);
@@ -58,7 +62,10 @@ int main(int argc, char *argv[]) {
 
     uint32_t size   = vm.count("size") ? vm["size"].as<uint32_t>() : defSize;
     uint32_t n_reps = vm.count("reps") ? vm["reps"].as<uint32_t>() : defReps;
-    if (size % 32 != 0) size = ((size + 31) / 32) * 32;
+    // Round up to a multiple of 64 — that's the Quantize chunk size in
+    // complex samples (64 × 8 B/sample = 512 B). Any smaller and the host
+    // DMA can't flush the tail out of Quantize → pipeline stalls.
+    if (size % 64 != 0) size = ((size + 63) / 64) * 64;
 
     // Per-stage byte sizes match the composed-pipeline contract:
     //   FFT:      complex floats in/out (2 * size * 4 B)
@@ -118,14 +125,14 @@ int main(int argc, char *argv[]) {
         sg[0].local.dst_stream = strmHost; sg[0].local.dst_dest = 0;
         // Stage 1: Quantize (q_in -> q_out)
         sg[1].local.src_addr = q_in;    sg[1].local.src_len = fft_buf;
-        sg[1].local.src_stream = strmHost; sg[1].local.src_dest = 1;
+        sg[1].local.src_stream = strmHost; sg[1].local.src_dest = 0;
         sg[1].local.dst_addr = q_out;   sg[1].local.dst_len = quant_buf;
-        sg[1].local.dst_stream = strmHost; sg[1].local.dst_dest = 1;
+        sg[1].local.dst_stream = strmHost; sg[1].local.dst_dest = 0;
         // Stage 2: RLE (rle_in -> rle_out)
         sg[2].local.src_addr = rle_in;  sg[2].local.src_len = quant_buf;
-        sg[2].local.src_stream = strmHost; sg[2].local.src_dest = 2;
+        sg[2].local.src_stream = strmHost; sg[2].local.src_dest = 0;
         sg[2].local.dst_addr = rle_out; sg[2].local.dst_len = rle_buf;
-        sg[2].local.dst_stream = strmHost; sg[2].local.dst_dest = 2;
+        sg[2].local.dst_stream = strmHost; sg[2].local.dst_dest = 0;
 
         cBench bench(n_reps);
         for (auto& t : cthread) t->clearCompleted();

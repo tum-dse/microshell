@@ -100,9 +100,9 @@ int main(int argc, char *argv[]) {
         sg[0].local.dst_stream = strmHost; sg[0].local.dst_dest = 0;
 
         sg[1].local.src_addr = rsa_in;     sg[1].local.src_len = compressed_size;
-        sg[1].local.src_stream = strmHost; sg[1].local.src_dest = 1;
+        sg[1].local.src_stream = strmHost; sg[1].local.src_dest = 0;
         sg[1].local.dst_addr = sig_out;    sg[1].local.dst_len = SIG_SIZE;
-        sg[1].local.dst_stream = strmHost; sg[1].local.dst_dest = 1;
+        sg[1].local.dst_stream = strmHost; sg[1].local.dst_dest = 0;
 
         cBench bench(n_reps);
         for (auto& t : cthread) t->clearCompleted();
