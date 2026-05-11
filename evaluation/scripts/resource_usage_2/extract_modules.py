@@ -20,7 +20,7 @@ MODULES = [
     ("FFT",      "inst_fft"),
     ("Quantize", "inst_quant"),
     ("RLE",      "inst_rle"),
-    ("SHA-256",  "inst_sha256"),
+    ("SHA-256",  "inst_sha2"),    # baseline apps/sha2 names the instance inst_sha2
     ("RSA",      "inst_rsa_c0_4"),
     ("AES-CTR",  "inst_aes"),
     ("SVM",      "inst_svm"),

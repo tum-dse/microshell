@@ -9,8 +9,11 @@
 # <short>_direct_top.bit.
 #
 # Each session runs:
-#   xilinx-shell -c "cmake ../ -DEXAMPLE=<short>_direct -DFDEV_NAME=u280 \
+#   xilinx-shell -c "cmake ../ -DEXAMPLE=<baseline_composed_target> -DFDEV_NAME=u280 \
 #                    && make project && make bitgen"
+# where the target is baseline's composed-mode EXAMPLE name (audio, digi,
+# secure, signcomp, speech). The mapping from short label → target is
+# below in the hw_target map.
 # Bitgen takes 3-4h per session. Sessions stay alive after bitgen for review;
 # `tmux attach -t bitgen_<short>_coyote` to inspect timing reports. Promotion
 # to <baseline>/bitstreams/<short>_coyote_top.{bit,ltx} is a separate step
@@ -55,6 +58,13 @@ fi
 
 apps=(audio digital secure signed speech)
 
+# Map short label → baseline's actual HW EXAMPLE name (composed, single-vFPGA
+# pipeline = Fig 11 coyote = Fig 3 direct). Baseline's HW CMakeLists uses
+# "digi" for digital signature, not "digi_sign".
+declare -A hw_target=(
+    [audio]=audio [digital]=digi [secure]=secure [signed]=signcomp [speech]=speech
+)
+
 # Make sure all 5 build dirs exist.
 for short in "${apps[@]}"; do
     mkdir -p "$BASELINE_BASE/examples_hw/build_${short}_coyote"
@@ -66,7 +76,7 @@ echo "================================================="
 for short in "${apps[@]}"; do
     session="bitgen_${short}_coyote"
     build_dir="$BASELINE_BASE/examples_hw/build_${short}_coyote"
-    cmake_target="${short}_direct"
+    cmake_target="${hw_target[$short]}"
 
     # Kill any prior session with the same name.
     tmux kill-session -t "$session" 2>/dev/null || true

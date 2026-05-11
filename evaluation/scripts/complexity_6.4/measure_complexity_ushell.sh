@@ -84,9 +84,19 @@ echo "  base : $ushell_BASE"
 echo "  csv  : $CSV_FILE"
 echo "----"
 
+# Map canonical long names → master's actual short SW dir names. Composed
+# uses the short name; monolithic uses the short name + "_mono" suffix
+# (matches master's examples_sw/apps/ layout).
+declare -A ushell_sw_dir=(
+    [audio_processing]=audio
+    [digital_signature]=digi_sign
+    [secure_storage]=secure
+    [signed_compression]=signcomp
+    [speech_recognition]=speech
+)
 for app in audio_processing digital_signature secure_storage signed_compression speech_recognition; do
-    run_scc "$app" "composed"    "$app"
-    run_scc "$app" "monolithic"  "${app}_monolithic"
+    run_scc "$app" "composed"    "${ushell_sw_dir[$app]}"
+    run_scc "$app" "monolithic"  "${ushell_sw_dir[$app]}_mono"
 done
 
 echo "----"

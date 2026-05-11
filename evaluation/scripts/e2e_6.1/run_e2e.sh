@@ -32,7 +32,7 @@
 set -e
 
 usage() {
-    echo "Usage: $0 <baseline_base_dir> <microshell_base_dir> [--reps N] [--sizes A,B,C]"
+    echo "Usage: $0 <baseline_base_dir> <microshell_base_dir> [--sizes A,B,C]"
     echo ""
     echo "  baseline_base_dir   Path to baseline (Coyote v2) repo — supplies"
     echo "                      coyote bitstreams + SW."
@@ -103,6 +103,24 @@ declare -A app_short=(
     [speech_recognition]=speech
 )
 
+# SW cmake EXAMPLE names — both baseline and master use the same short forms
+# for composed apps and the same *_mono suffix for monolithic. Baseline doesn't
+# have monolithic SW so ushell_mono only uses master.
+declare -A sw_composed=(
+    [audio_processing]=audio
+    [digital_signature]=digi_sign
+    [secure_storage]=secure
+    [signed_compression]=signcomp
+    [speech_recognition]=speech
+)
+declare -A sw_mono=(
+    [audio_processing]=audio_mono
+    [digital_signature]=digi_sign_mono
+    [secure_storage]=secure_mono
+    [signed_compression]=signcomp_mono
+    [speech_recognition]=speech_mono
+)
+
 # Per-test timeout (seconds). Largest cell (1 MB × 5 reps) completes well
 # under 1 s on a working build; this is a safety guard for HW-level hangs.
 TEST_TIMEOUT=120
@@ -151,13 +169,13 @@ resolve_target() {
     local short="${app_short[$app]}"
     case "$system" in
         coyote)
-            echo "$BASELINE_BASE|$app|build_${short}_coyote/bitstreams/cyt_top.bit|${short}_coyote|examples_sw/build_${short}_coyote"
+            echo "$BASELINE_BASE|${sw_composed[$app]}|build_${short}_coyote/bitstreams/cyt_top.bit|${short}_coyote|examples_sw/build_${short}_coyote"
             ;;
         ushell)
-            echo "$MSHELL_BASE|$app|$app/bitstreams/cyt_top.bit|${short}_ushell|examples_sw/build_${short}_ushell"
+            echo "$MSHELL_BASE|${sw_composed[$app]}|build_${short}_ushell/bitstreams/cyt_top.bit|${short}_ushell|examples_sw/build_${short}_ushell"
             ;;
         ushell_mono)
-            echo "$MSHELL_BASE|${app}_monolithic|${app}_monolithic/bitstreams/cyt_top.bit|${short}_mono|examples_sw/build_${short}_mono"
+            echo "$MSHELL_BASE|${sw_mono[$app]}|build_${short}_mono/bitstreams/cyt_top.bit|${short}_mono|examples_sw/build_${short}_mono"
             ;;
         *) return 1 ;;
     esac
@@ -236,12 +254,19 @@ run_one_app_system() {
     fi
 
     for size in "${SIZES[@]}"; do
-        local out rc persist
+        local out rc persist size_arg="$size"
+        # audio/speech SW interpret -s as complex samples (8 B each); the
+        # other 3 apps use byte sizes directly. Convert the byte-valued
+        # SIZES_CSV entry to samples for those two so the actual data
+        # transferred matches the paper's 8K/256K/1M targets.
+        if [ "$app" = "audio_processing" ] || [ "$app" = "speech_recognition" ]; then
+            size_arg=$(( size / 8 ))
+        fi
         # `sudo` precedes `timeout` so timeout runs as root and can SIGKILL
         # the test child directly after the grace period.
         set +e
         out=$(cd "$build_dir/bin" && sudo timeout --kill-after=5 "$TEST_TIMEOUT" \
-                ./test -s "$size" 2>&1)
+                ./test -s "$size_arg" 2>&1)
         rc=$?
         set -e
 

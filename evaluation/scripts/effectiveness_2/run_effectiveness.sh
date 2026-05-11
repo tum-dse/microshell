@@ -166,8 +166,26 @@ resolve_bitstream() {
 
 run_one() {
     local app="$1" mode="$2"
-    local example_name="$app"
-    [ "$mode" = "cpu_sync" ] && example_name="${app}_cpusync"
+    # Baseline SW EXAMPLE names (short forms). digital_signature maps to
+    # "digi_sign" in SW (unlike baseline HW which uses "digi"). The
+    # *_cpu variants for cpu_sync mode were added on baseline alongside
+    # the composed apps.
+    declare -A sw_composed=(
+        [audio_processing]=audio
+        [digital_signature]=digi_sign
+        [secure_storage]=secure
+        [signed_compression]=signcomp
+        [speech_recognition]=speech
+    )
+    declare -A sw_cpusync=(
+        [audio_processing]=audio_cpu
+        [digital_signature]=digi_sign_cpu
+        [secure_storage]=secure_cpu
+        [signed_compression]=signcomp_cpu
+        [speech_recognition]=speech_cpu
+    )
+    local example_name="${sw_composed[$app]}"
+    [ "$mode" = "cpu_sync" ] && example_name="${sw_cpusync[$app]}"
 
     echo ""
     echo "============================================================"
@@ -268,4 +286,4 @@ echo "Done. Rows appended to $CSV_FILE"
 echo "Logs:        $LOG_DIR"
 echo ""
 echo "For averaged Figure 3 numbers, run this orchestrator 4 more times."
-echo "Then: python3 ../plot_effectiveness.py"
+echo "Then: python3 plot_effectiveness.py  (from this same effectiveness_2/ dir)"

@@ -1,3 +1,4 @@
+import argparse
 import csv
 import os
 import matplotlib.pyplot as plt
@@ -48,14 +49,22 @@ resources = ["LUTs", "Registers", "BRAM", "URAM"]
 
 DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "scalability_2")
 SUMMARY_CSV = os.path.join(DATA, "scalability.csv")
-# Raw util CSVs live next to the bitstream they came from — i.e. inside each
-# build's own directory. Search there first; fall back to evaluation/data/scalability_2/
-# if a user has copied them out of the build tree.
-EXAMPLES_HW = "/scratch/anubhav/baseline/microShell/examples_hw"
-RAW_PATH_TEMPLATES = [
-    os.path.join(EXAMPLES_HW, "{n}vfpga", "util_{n}vfpga.csv"),
-    os.path.join(DATA,                     "util_{n}vfpga.csv"),
-]
+
+# Raw util CSVs live next to the bitstream they came from — i.e. inside
+# each build's own directory at <baseline>/examples_hw/<n>vfpga/. Pass the
+# baseline path via --baseline (or the BASELINE_BASE env var), or copy the
+# util_<n>vfpga.csv dumps into evaluation/data/scalability_2/ as a fallback.
+_p = argparse.ArgumentParser(add_help=False)
+_p.add_argument("--baseline",
+                default=os.environ.get("BASELINE_BASE"),
+                help="path to baseline repo (default: $BASELINE_BASE)")
+_args, _ = _p.parse_known_args()
+
+RAW_PATH_TEMPLATES = []
+if _args.baseline:
+    RAW_PATH_TEMPLATES.append(
+        os.path.join(_args.baseline, "examples_hw", "{n}vfpga", "util_{n}vfpga.csv"))
+RAW_PATH_TEMPLATES.append(os.path.join(DATA, "util_{n}vfpga.csv"))
 U280_TOTALS = [1_303_680, 2_607_360, 2_016, 960]  # LUTs, Regs, BRAM tiles, URAM
 PAPER = {
     1: [96.93, 96.83, 97.72, 100.0],

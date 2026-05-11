@@ -7,8 +7,11 @@
 #   xilinx-shell -c "cmake ../ -DEXAMPLE=<target> -DFDEV_NAME=u280 \
 #                    && make project && make bitgen"
 #
-# Build dirs use the existing long-form example names (matches µShell's CMake
-# example layout); staged labels use short forms (see stage_bitstreams_e2e.sh).
+# Build dirs use short-form names (build_<short>_<mode>/) to keep build
+# state separate from source dirs and to match the convention that
+# stage_bitstreams_e2e.sh and run_e2e.sh read from. cmake EXAMPLE values
+# are master's actual HW target names (audio / digi_sign / secure /
+# signcomp / speech, and the _mono variants).
 #
 # Bitgen takes 3-4h per session. Sessions stay alive after bitgen so you can
 # review the build via `tmux attach -t bitgen_<short>_<mode>`. Staging the
@@ -60,13 +63,31 @@ declare -A app_short=(
     [signed_compression]=signed
     [speech_recognition]=speech
 )
+# Master HW uses short names: composed = "audio", "digi_sign", "secure",
+# "signcomp", "speech"; monolithic adds the "_mono" suffix.
+declare -A hw_composed=(
+    [audio_processing]=audio
+    [digital_signature]=digi_sign
+    [secure_storage]=secure
+    [signed_compression]=signcomp
+    [speech_recognition]=speech
+)
+declare -A hw_mono=(
+    [audio_processing]=audio_mono
+    [digital_signature]=digi_sign_mono
+    [secure_storage]=secure_mono
+    [signed_compression]=signcomp_mono
+    [speech_recognition]=speech_mono
+)
 apps=(audio_processing digital_signature secure_storage signed_compression speech_recognition)
 modes=(ushell mono)
 
-# Make sure all 10 build dirs exist.
+# Build dirs named build_<short>_<mode>/ — independent of the cmake target,
+# so multiple bitgens can coexist without clobbering each other.
 for app in "${apps[@]}"; do
-    mkdir -p "$MSHELL_BASE/examples_hw/$app"
-    mkdir -p "$MSHELL_BASE/examples_hw/${app}_monolithic"
+    short="${app_short[$app]}"
+    mkdir -p "$MSHELL_BASE/examples_hw/build_${short}_ushell"
+    mkdir -p "$MSHELL_BASE/examples_hw/build_${short}_mono"
 done
 
 echo "Spawning 10 bitgen tmux sessions in $MSHELL_BASE"
@@ -75,10 +96,13 @@ echo "================================================"
 for app in "${apps[@]}"; do
     short="${app_short[$app]}"
     for mode in "${modes[@]}"; do
-        cmake_target="$app"
-        [ "$mode" = "mono" ] && cmake_target="${app}_monolithic"
+        if [ "$mode" = "mono" ]; then
+            cmake_target="${hw_mono[$app]}"
+        else
+            cmake_target="${hw_composed[$app]}"
+        fi
         session="bitgen_${short}_${mode}"
-        build_dir="$MSHELL_BASE/examples_hw/$cmake_target"
+        build_dir="$MSHELL_BASE/examples_hw/build_${short}_${mode}"
 
         # Kill any prior session with the same name.
         tmux kill-session -t "$session" 2>/dev/null || true

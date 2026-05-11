@@ -1,7 +1,8 @@
 #!/bin/bash
-# Move bitgen outputs from per-build dirs into <base>/bitstreams/ with the
+# Copy bitgen outputs from per-build dirs into <base>/bitstreams/ with the
 # labelled naming convention (audio_direct_top.bit etc.) that
-# program_fpga.sh and run_effectiveness.sh expect.
+# program_fpga.sh and run_effectiveness.sh expect. Sources are preserved
+# in the build dirs so re-staging is a no-op (matches stage_bitstreams_e2e.sh).
 #
 # Run AFTER compile_bitgen_effectiveness.sh has finished and you've reviewed
 # the timing reports. Bitgen exits 0 even on timing violations, so this is a
@@ -12,9 +13,9 @@ set -e
 usage() {
     echo "Usage: $0 <baseline_base_dir>"
     echo ""
-    echo "Moves cyt_top.{bit,ltx} from each build_<short>_<mode>/bitstreams/"
+    echo "Copies cyt_top.{bit,ltx} from each build_<short>_<mode>/bitstreams/"
     echo "to <base>/bitstreams/<short>_<mode>_top.{bit,ltx}, replacing any"
-    echo "previously-staged file."
+    echo "previously-staged file (source is preserved)."
     exit 1
 }
 
@@ -44,9 +45,9 @@ for app in "${apps[@]}"; do
         dst_ltx="$BASELINE_BASE/bitstreams/${ex}_top.ltx"
 
         if [ -f "$src_bit" ]; then
-            mv "$src_bit" "$dst_bit"
+            cp "$src_bit" "$dst_bit"
             if [ -f "$src_ltx" ]; then
-                mv "$src_ltx" "$dst_ltx"
+                cp "$src_ltx" "$dst_ltx"
                 printf "  staged %-22s -> %s\n" "$ex" "${ex}_top.{bit,ltx}"
             else
                 printf "  staged %-22s -> %s (no .ltx)\n" "$ex" "${ex}_top.bit"

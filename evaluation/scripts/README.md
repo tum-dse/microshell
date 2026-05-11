@@ -34,19 +34,29 @@ and copied to Clara before running any SW-side script.
 
 ## Application names
 
-The composed pipelines and their single-binary "monolithic" counterparts:
+µShell uses short, unrefactored names in both the baseline and µShell repos.
+The eval scripts translate the paper's canonical long names (kept in CSVs and
+plot labels) to whatever's in each repo's `examples_{hw,sw}/CMakeLists.txt`.
 
-| Composed (DFG)          | Monolithic                       | Modules used         |
-|-------------------------|----------------------------------|----------------------|
-| `audio_processing`      | `audio_processing_monolithic`    | fft + quantize + rle |
-| `digital_signature`     | `digital_signature_monolithic`   | sha256 + rsa         |
-| `secure_storage`        | `secure_storage_monolithic`      | rle + aes_ctr        |
-| `signed_compression`    | `signed_compression_monolithic`  | rle + rsa            |
-| `speech_recognition`    | `speech_recognition_monolithic`  | fft + svm            |
+| Paper name (canonical)  | Master HW       | Master SW       | Baseline HW   | Baseline SW       |
+|-------------------------|-----------------|-----------------|---------------|-------------------|
+| Audio Processing        | `audio`         | `audio`         | `audio`       | `audio`           |
+| Digital Signature       | `digi_sign`     | `digi_sign`     | **`digi`**    | `digi_sign`       |
+| Secure Storage          | `secure`        | `secure`        | `secure`      | `secure`          |
+| Signed Compression      | `signcomp`      | `signcomp`      | `signcomp`    | `signcomp`        |
+| Speech Recognition      | `speech`        | `speech`        | `speech`      | `speech`          |
 
-Single-module bring-ups: `aes_ctr`, `fft`, `quantize`, `rle`, `rsa`, `sha256`, `svm`.
+µShell-monolithic SW (master): `audio_mono`, `digi_sign_mono`, `secure_mono`,
+`signcomp_mono`, `speech_mono`.
 
-The baseline repo only ships the composed apps (no `_monolithic`).
+Fig 3 cpu_sync SW (baseline): `audio_cpu`, `digi_sign_cpu`, `secure_cpu`,
+`signcomp_cpu`, `speech_cpu`. Matching HW EXAMPLE entries on baseline
+(`audio_cpu`, `digi_cpu`, `secure_cpu`, `signcomp_cpu`, `speech_cpu`) bitgen
+a multi-vFPGA bitstream with one module per region — N_STRM_AXI=2 to avoid
+the Vivado dataflow-opt segfault that N=1 triggers.
+
+Single-module bring-ups (baseline + master): `aes_ctr`, `fft`, `quant`,
+`rle`, `rsa`, `sha2`, `svm`.
 
 ---
 
