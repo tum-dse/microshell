@@ -248,15 +248,17 @@ endif()
 
 if(EXAMPLE STREQUAL "audio_processing")
     set(EN_STRM 1)
-    set(N_REGIONS 1)
-    set(N_STRM_AXI 1)
+    set(N_REGIONS 3)
+    set(N_STRM_AXI 2)
     set(EN_MEM 0)
     set(EN_PR 0)
 
     validation_checks_hw()
 
     load_apps (
-        VFPGA_C0_0 "apps/audio_processing"
+        VFPGA_C0_0 "apps/modules/fft"
+        VFPGA_C0_1 "apps/modules/quantize"
+        VFPGA_C0_2 "apps/modules/rle"
     )
 
     create_hw()
@@ -264,15 +266,16 @@ endif()
 
 if(EXAMPLE STREQUAL "digital_signature")
     set(EN_STRM 1)
-    set(N_REGIONS 1)
-    set(N_STRM_AXI 1)
+    set(N_REGIONS 2)
+    set(N_STRM_AXI 2)
     set(EN_MEM 0)
     set(EN_PR 0)
 
     validation_checks_hw()
 
     load_apps (
-        VFPGA_C0_0 "apps/digital_signature"
+        VFPGA_C0_0 "apps/modules/sha256"
+        VFPGA_C0_1 "apps/modules/rsa"
     )
 
     create_hw()
@@ -280,15 +283,16 @@ endif()
 
 if(EXAMPLE STREQUAL "secure_storage")
     set(EN_STRM 1)
-    set(N_REGIONS 1)
-    set(N_STRM_AXI 1)
+    set(N_REGIONS 2)
+    set(N_STRM_AXI 2)
     set(EN_MEM 0)
     set(EN_PR 0)
 
     validation_checks_hw()
 
     load_apps (
-        VFPGA_C0_0 "apps/secure_storage"
+        VFPGA_C0_0 "apps/modules/aes-ctr"
+        VFPGA_C0_1 "apps/modules/rle"
     )
 
     create_hw()
@@ -296,15 +300,16 @@ endif()
 
 if(EXAMPLE STREQUAL "signed_compression")
     set(EN_STRM 1)
-    set(N_REGIONS 1)
-    set(N_STRM_AXI 1)
+    set(N_REGIONS 2)
+    set(N_STRM_AXI 2)
     set(EN_MEM 0)
     set(EN_PR 0)
 
     validation_checks_hw()
 
     load_apps (
-        VFPGA_C0_0 "apps/signed_compression"
+        VFPGA_C0_0 "apps/modules/rle"
+        VFPGA_C0_1 "apps/modules/rsa"
     )
 
     create_hw()
@@ -312,15 +317,16 @@ endif()
 
 if(EXAMPLE STREQUAL "speech_recognition")
     set(EN_STRM 1)
-    set(N_REGIONS 1)
-    set(N_STRM_AXI 1)
+    set(N_REGIONS 2)
+    set(N_STRM_AXI 2)
     set(EN_MEM 0)
     set(EN_PR 0)
 
     validation_checks_hw()
 
     load_apps (
-        VFPGA_C0_0 "apps/speech_recognition"
+        VFPGA_C0_0 "apps/modules/fft"
+        VFPGA_C0_1 "apps/modules/svm"
     )
 
     create_hw()

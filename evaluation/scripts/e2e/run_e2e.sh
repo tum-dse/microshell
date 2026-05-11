@@ -38,23 +38,22 @@ usage() {
     echo "                      coyote bitstreams + SW."
     echo "  microshell_base_dir Path to µShell repo — supplies ushell and"
     echo "                      ushell_mono bitstreams + SW."
-    echo "  --reps N            Repetitions per ./test run (default: 5)."
     echo "  --sizes A,B,C       Comma-separated transfer sizes in bytes."
     echo "                      Default: 8192,262144,1048576 (= 8 KB, 256 KB, 1 MB)."
     echo ""
     echo "Auto-enters nix-shell at the baseline root if not already inside one."
-    echo "Run multiple times for averaged Fig 11 numbers."
+    echo "Each ./test runs with the SW default of 1 rep (matches Fig 3 convention —"
+    echo "reps>1 risks hangs in some SW paths). Run multiple times for averaged"
+    echo "Fig 11 numbers; plot_e2e.py averages measured rows."
     exit 1
 }
 
 if [ $# -lt 2 ]; then usage; fi
 BASELINE_BASE=$(realpath "$1"); shift
 MSHELL_BASE=$(realpath "$1"); shift
-N_REPS=5
 SIZES_CSV="8192,262144,1048576"
 while [ $# -gt 0 ]; do
     case "$1" in
-        --reps)  N_REPS="$2";   shift 2 ;;
         --sizes) SIZES_CSV="$2"; shift 2 ;;
         *) echo "Unknown arg: $1"; usage ;;
     esac
@@ -80,7 +79,7 @@ if [ -z "$IN_NIX_SHELL" ]; then
     SCRIPT=$(realpath "$0")
     echo "[run_e2e] entering nix-shell at $BASELINE_BASE..."
     cd "$BASELINE_BASE"
-    exec nix-shell shell.nix --run "bash '$SCRIPT' '$BASELINE_BASE' '$MSHELL_BASE' --reps $N_REPS --sizes $SIZES_CSV"
+    exec nix-shell shell.nix --run "bash '$SCRIPT' '$BASELINE_BASE' '$MSHELL_BASE' --sizes $SIZES_CSV"
 fi
 
 EVAL_DIR="$(dirname "$(realpath "$0")")/../../data/e2e"
@@ -152,13 +151,13 @@ resolve_target() {
     local short="${app_short[$app]}"
     case "$system" in
         coyote)
-            echo "$BASELINE_BASE|$app|build_${short}_coyote/bitstreams/cyt_top.bit|${short}_coyote|examples_sw/${app}_e2e"
+            echo "$BASELINE_BASE|$app|build_${short}_coyote/bitstreams/cyt_top.bit|${short}_coyote|examples_sw/build_${short}_coyote"
             ;;
         ushell)
-            echo "$MSHELL_BASE|$app|$app/bitstreams/cyt_top.bit|${short}_ushell|examples_sw/${app}_e2e"
+            echo "$MSHELL_BASE|$app|$app/bitstreams/cyt_top.bit|${short}_ushell|examples_sw/build_${short}_ushell"
             ;;
         ushell_mono)
-            echo "$MSHELL_BASE|${app}_monolithic|${app}_monolithic/bitstreams/cyt_top.bit|${short}_mono|examples_sw/${app}_monolithic_e2e"
+            echo "$MSHELL_BASE|${app}_monolithic|${app}_monolithic/bitstreams/cyt_top.bit|${short}_mono|examples_sw/build_${short}_mono"
             ;;
         *) return 1 ;;
     esac
@@ -242,7 +241,7 @@ run_one_app_system() {
         # the test child directly after the grace period.
         set +e
         out=$(cd "$build_dir/bin" && sudo timeout --kill-after=5 "$TEST_TIMEOUT" \
-                ./test -s "$size" -r "$N_REPS" 2>&1)
+                ./test -s "$size" 2>&1)
         rc=$?
         set -e
 
@@ -269,7 +268,10 @@ run_one_app_system() {
             local ts; ts=$(date '+%Y-%m-%d %H:%M:%S')
             # stddev_MBps=0 — single sample; aggregation across rows happens
             # in plot_e2e.py.
-            echo "$app,$system,$size,$thr,$lat,$N_REPS,0,measured,$ts" >> "$CSV_FILE"
+            # n_reps=1 (SW default), stddev_MBps=0 (single sample). Aggregation
+            # across rows happens in plot_e2e.py — run the orchestrator
+            # multiple times for averaged numbers.
+            echo "$app,$system,$size,$thr,$lat,1,0,measured,$ts" >> "$CSV_FILE"
         else
             persist="$LOG_DIR/${app}_${system}_${size}_parse_$(date +%Y%m%d_%H%M%S).log"
             echo "$out" > "$persist"
