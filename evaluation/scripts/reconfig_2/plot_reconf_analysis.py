@@ -26,7 +26,7 @@ reconf_avg = (sum(reconf_raw) / len(reconf_raw)) / 1000 # ms order
 pr_values = [reconf_avg, reconf_avg*(0.75), reconf_avg*(0.50), reconf_avg*(0.25), 0]
 coyote_values = [reconf_avg, reconf_avg, reconf_avg, reconf_avg, 0]
 
-# df = pandas.read_csv("../../data/sched_motive.csv")
+# df = pandas.read_csv("../../data/reconfig_2/sched_motive.csv")
 # print(df)
 # 
 # df_coyote = df[df['Policy'] == 'Coyote']
@@ -127,5 +127,5 @@ ax.text(0.1, 1.08, 'Lower is better ↓', transform=ax.transAxes,
 
 plt.tight_layout()
 # fig.savefig("reconf_analysis.png", bbox_inches="tight")
-plt.savefig("../../plots/reconfig/reconf_analysis.pdf", bbox_inches="tight")
+plt.savefig("../../plots/reconfig_2/reconf_analysis.pdf", bbox_inches="tight")
 plt.show()

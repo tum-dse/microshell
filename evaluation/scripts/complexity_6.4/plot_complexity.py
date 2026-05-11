@@ -4,12 +4,14 @@ comparing baseline vs µShell-composed vs µShell-monolithic.
 Inputs : complexity_{baseline,ushell}_results.csv produced by
          measure_complexity_{baseline,ushell}.sh.
 
-         The baseline CSV lives in the baseline repo's evaluation/data/, so
-         pass its location with --baseline-csv if you're running this from
-         the µShell repo. Defaults assume both CSVs are in the µShell
-         repo's evaluation/data/ (e.g. you copied the baseline CSV over).
+         The baseline CSV lives in the baseline repo's
+         evaluation/data/complexity_6.4/, so pass its location with
+         --baseline-csv if you're running this from the µShell repo.
+         Defaults assume both CSVs are in the µShell repo's
+         evaluation/data/complexity_6.4/ (e.g. you copied the baseline
+         CSV over).
 
-Outputs: evaluation/plots/complexity.{png,pdf}
+Outputs: evaluation/plots/complexity_6.4/complexity.{png,pdf}
 """
 
 import argparse
@@ -21,19 +23,19 @@ import numpy as np
 import seaborn as sns
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.normpath(os.path.join(HERE, "..", "..", "data", "complexity"))
-PLOTS = os.path.normpath(os.path.join(HERE, "..", "..", "plots", "complexity"))
+DATA = os.path.normpath(os.path.join(HERE, "..", "..", "data", "complexity_6.4"))
+PLOTS = os.path.normpath(os.path.join(HERE, "..", "..", "plots", "complexity_6.4"))
 
 parser = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument("--baseline-csv",
                     default=os.path.join(DATA, "complexity_baseline_results.csv"),
                     help="path to baseline complexity CSV "
-                         "(default: <ushell>/evaluation/data/complexity_baseline_results.csv)")
+                         "(default: <ushell>/evaluation/data/complexity_6.4/complexity_baseline_results.csv)")
 parser.add_argument("--ushell-csv",
                     default=os.path.join(DATA, "complexity_ushell_results.csv"),
                     help="path to µShell complexity CSV "
-                         "(default: <ushell>/evaluation/data/complexity_ushell_results.csv)")
+                         "(default: <ushell>/evaluation/data/complexity_6.4/complexity_ushell_results.csv)")
 args = parser.parse_args()
 
 BASELINE_CSV = args.baseline_csv

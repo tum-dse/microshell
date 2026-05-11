@@ -4,7 +4,7 @@
 # Runs each of the 5 paper apps in two modes — "direct" (composed pipeline
 # on a single vFPGA) and "cpu_sync" (one module per vFPGA, host shuttling
 # between stages) — and appends per-mode throughput/latency rows tagged
-# source=measured to evaluation/data/effectiveness/effectiveness.csv.
+# source=measured to evaluation/data/effectiveness_2/effectiveness.csv.
 #
 # Bitstream lookup priority:
 #   1. <base>/examples_hw/build_<short>_<mode>/bitstreams/cyt_top.bit (fresh
@@ -60,7 +60,7 @@ if [ -z "$IN_NIX_SHELL" ]; then
     exec nix-shell shell.nix --run "bash '$SCRIPT' '$BASELINE_BASE'"
 fi
 
-EVAL_DIR="$(dirname "$(realpath "$0")")/../../data/effectiveness"
+EVAL_DIR="$(dirname "$(realpath "$0")")/../../data/effectiveness_2"
 mkdir -p "$EVAL_DIR"
 CSV_FILE="$EVAL_DIR/effectiveness.csv"
 LOG_DIR="$EVAL_DIR/effectiveness_logs"

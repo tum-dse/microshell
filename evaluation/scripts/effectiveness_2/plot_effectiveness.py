@@ -36,7 +36,7 @@ applications = ["Audio\nProcessing", "Digital\nSignature", "Secure\nStorage", "S
 app_keys = ["audio_processing", "digital_signature", "secure_storage",
             "signed_compression", "speech_recognition"]
 
-CSV_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "data", "effectiveness", "effectiveness.csv")
+CSV_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "data", "effectiveness_2", "effectiveness.csv")
 
 
 def load_measurements():
@@ -165,5 +165,5 @@ ax.text(0.50, 1.1, 'Higher is better ↑', transform=ax.transAxes,
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
 #plt.savefig("direct_comm_effectiveness.png", dpi=300, bbox_inches='tight')
-plt.savefig("../../plots/effectiveness/direct_comm_effectiveness.pdf", bbox_inches='tight')
+plt.savefig("../../plots/effectiveness_2/direct_comm_effectiveness.pdf", bbox_inches='tight')
 plt.show()

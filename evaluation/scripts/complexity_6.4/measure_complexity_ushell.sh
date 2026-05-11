@@ -1,7 +1,7 @@
 #!/bin/bash
 # Measure host-application complexity (LOC, comments, cyclomatic complexity)
 # for the µShell composed apps and their monolithic variants using `scc`.
-# Appends rows to evaluation/data/complexity_ushell_results.csv.
+# Appends rows to evaluation/data/complexity_6.4/complexity_ushell_results.csv.
 set -e
 
 if [ $# -eq 0 ]; then
@@ -32,7 +32,7 @@ if ! command -v jq >/dev/null 2>&1; then
     exit 1
 fi
 
-CSV_FILE="$ushell_BASE/evaluation/data/complexity_ushell_results.csv"
+CSV_FILE="$ushell_BASE/evaluation/data/complexity_6.4/complexity_ushell_results.csv"
 mkdir -p "$(dirname "$CSV_FILE")"
 if [ ! -f "$CSV_FILE" ]; then
     echo "app_name,variant,files,lines,blanks,comments,code,complexity,timestamp" > "$CSV_FILE"

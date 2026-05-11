@@ -27,7 +27,7 @@ MODULES = [
 ]
 
 
-def extract_modules(resource_usage_path="../../data/resource_usage/module_resource_usage.csv"):
+def extract_modules(resource_usage_path="../../data/resource_usage_2/module_resource_usage.csv"):
     """Per-module utilization from the 7-vFPGA resource_usage build.
 
     Reads the raw Vivado hierarchical report. Emits a wide-table layout:

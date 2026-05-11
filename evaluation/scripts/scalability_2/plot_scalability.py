@@ -34,7 +34,7 @@ resources = ["LUTs", "Registers", "BRAM", "URAM"]
 # Workflow: extract_util.tcl produces 4 raw hierarchical-utilization dumps
 # (util_1vfpga.csv … util_8vfpga.csv, ~1.5–4 MB each) in baseline's
 # examples_hw/. This script merges them into a single tiny scalability.csv
-# in evaluation/data/, then plots from the merged CSV.
+# in evaluation/data/scalability_2/, then plots from the merged CSV.
 #
 # Per-region budget is computed from each raw dump as:
 #
@@ -46,10 +46,10 @@ resources = ["LUTs", "Registers", "BRAM", "URAM"]
 # Paper numbers are kept as a per-build fallback so the figure still
 # renders even if no raw dumps are reachable.
 
-DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "scalability")
+DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "data", "scalability_2")
 SUMMARY_CSV = os.path.join(DATA, "scalability.csv")
 # Raw util CSVs live next to the bitstream they came from — i.e. inside each
-# build's own directory. Search there first; fall back to evaluation/data/
+# build's own directory. Search there first; fall back to evaluation/data/scalability_2/
 # if a user has copied them out of the build tree.
 EXAMPLES_HW = "/scratch/anubhav/baseline/microShell/examples_hw"
 RAW_PATH_TEMPLATES = [
@@ -247,7 +247,7 @@ ax.text(0.1, 1.08, 'Higher is better ↑', transform=ax.transAxes,
         ha='center', va='top')
 
 # ===== SAVE AND DISPLAY =====
-PLOTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "plots", "scalability")
+PLOTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "plots", "scalability_2")
 plt.tight_layout()
 plt.savefig(os.path.join(PLOTS, "scalability_analysis.png"), dpi=300, bbox_inches='tight')
 plt.savefig(os.path.join(PLOTS, "scalability_analysis.pdf"), bbox_inches='tight')
