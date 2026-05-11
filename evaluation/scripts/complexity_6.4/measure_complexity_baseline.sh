@@ -39,8 +39,9 @@ if [ ! -f "$CSV_FILE" ]; then
 fi
 
 run_scc() {
-    local app_name=$1
-    local app_dir="$baseline_BASE/examples_sw/apps/$app_name"
+    local app_name=$1   # canonical long name written to the CSV
+    local sub_dir=$2    # actual baseline SW dir name (short)
+    local app_dir="$baseline_BASE/examples_sw/apps/$sub_dir"
 
     if [ ! -d "$app_dir" ]; then
         echo "Warning: $app_dir not found — skipping"
@@ -85,8 +86,16 @@ echo "  base : $baseline_BASE"
 echo "  csv  : $CSV_FILE"
 echo "----"
 
+# Map canonical long names → baseline's actual short SW dir names.
+declare -A baseline_sw_dir=(
+    [audio_processing]=audio
+    [digital_signature]=digi_sign
+    [secure_storage]=secure
+    [signed_compression]=signcomp
+    [speech_recognition]=speech
+)
 for app in audio_processing digital_signature secure_storage signed_compression speech_recognition; do
-    run_scc "$app"
+    run_scc "$app" "${baseline_sw_dir[$app]}"
 done
 
 echo "----"

@@ -96,15 +96,13 @@ for short in audio digital secure signed speech; do
     fi
 done
 
-# ushell + mono (10): <microshell>/examples_hw/<app>{,_monolithic}/ → <short>_<mode>_top
+# ushell + mono (10): <microshell>/examples_hw/build_<short>_<mode>/ → <short>_<mode>_top
 for app in "${apps[@]}"; do
     short="${app_short[$app]}"
     for mode in ushell mono; do
-        cmake_target="$app"
-        [ "$mode" = "mono" ] && cmake_target="${app}_monolithic"
         pretty="${short}_${mode}"
-        src_bit="$MSHELL_BASE/examples_hw/$cmake_target/bitstreams/cyt_top.bit"
-        src_ltx="$MSHELL_BASE/examples_hw/$cmake_target/bitstreams/cyt_top.ltx"
+        src_bit="$MSHELL_BASE/examples_hw/build_${short}_${mode}/bitstreams/cyt_top.bit"
+        src_ltx="$MSHELL_BASE/examples_hw/build_${short}_${mode}/bitstreams/cyt_top.ltx"
         dst_bit="$MSHELL_BASE/bitstreams/${short}_${mode}_top.bit"
         dst_ltx="$MSHELL_BASE/bitstreams/${short}_${mode}_top.ltx"
 

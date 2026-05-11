@@ -54,6 +54,19 @@ fi
 apps=(audio digital secure signed speech)
 modes=(direct cpu)
 
+# Map short label → baseline's actual HW EXAMPLE name for each mode.
+# direct = composed pipeline on a single vFPGA (baseline's existing apps).
+# cpu    = each pipeline stage on its own vFPGA, host CPU shuttles between
+#          stages — added to baseline's examples_hw/CMakeLists.txt as
+#          *_cpu entries with N_STRM_AXI=2 (avoids the Vivado dataflow-opt
+#          segfault that N_STRM_AXI=1 triggers).
+declare -A direct_target=(
+    [audio]=audio [digital]=digi [secure]=secure [signed]=signcomp [speech]=speech
+)
+declare -A cpu_target=(
+    [audio]=audio_cpu [digital]=digi_cpu [secure]=secure_cpu [signed]=signcomp_cpu [speech]=speech_cpu
+)
+
 # Make sure all 10 build dirs exist.
 for app in "${apps[@]}"; do
     for mode in "${modes[@]}"; do
@@ -61,12 +74,17 @@ for app in "${apps[@]}"; do
     done
 done
 
-echo "Spawning 10 bitgen tmux sessions in $BASELINE_BASE"
-echo "================================================="
+echo "Spawning 10 bitgen tmux sessions (5 direct + 5 cpu) in $BASELINE_BASE"
+echo "===================================================================="
 
 for app in "${apps[@]}"; do
     for mode in "${modes[@]}"; do
         ex="${app}_${mode}"
+        if [ "$mode" = "direct" ]; then
+            cmake_target="${direct_target[$app]}"
+        else
+            cmake_target="${cpu_target[$app]}"
+        fi
         session="bitgen_${ex}"
         build_dir="$BASELINE_BASE/examples_hw/build_${ex}"
 
@@ -81,13 +99,13 @@ for app in "${apps[@]}"; do
             LOG='$build_dir/bitgen.log'
             {
                 echo '=== bitgen for $ex started '\$(date)' ==='
-                xilinx-shell -c 'cmake ../ -DEXAMPLE=$ex -DFDEV_NAME=u280 && make project && make bitgen'
+                xilinx-shell -c 'cmake ../ -DEXAMPLE=$cmake_target -DFDEV_NAME=u280 && make project && make bitgen'
                 rc=\$?
                 echo '=== bitgen for $ex ended '\$(date)' (exit '\$rc') ==='
             } 2>&1 | tee -a \"\$LOG\"
             exec bash
         "
-        echo "  launched: $session  (build dir: $build_dir)"
+        echo "  launched: $session  (build dir: $build_dir, target: $cmake_target)"
     done
 done
 
