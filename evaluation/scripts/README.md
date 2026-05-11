@@ -3,24 +3,26 @@
 Automation for the µShell vs. baseline experiments. Each script wraps the
 manual `cmake -DEXAMPLE=… && make` flow that the top-level README documents.
 
-## Layout
+## Paper section ↔ subdir
 
-Scripts are grouped into one subdirectory per paper figure / table.
-`evaluation/data/` and `evaluation/plots/` mirror the same layout —
-each script reads from `data/<same-subdir>/` and writes plots to
-`plots/<same-subdir>/`.
+Each subdir produces exactly one figure or table in the paper. `evaluation/data/`
+and `evaluation/plots/` mirror the same layout — each script reads from
+`data/<same-subdir>/` and writes plots to `plots/<same-subdir>/`.
 
-| Dir                      | What it produces |
-|--------------------------|------------------|
-| `complexity/`            | Table 5 (SLoC + CC) |
-| `e2e/`                   | Figure 11 (end-to-end throughput) |
-| `effectiveness/`         | Figure 3 (direct comm vs CPU-sync) |
-| `scalability/`           | Figure 4 (per-vFPGA budget) |
-| `efficiency/`            | resource-usage table (per-module footprints) |
-| `modularity/`            | application-modularity / correlation figures |
-| `reconfig/`              | Figure 13 (reconfiguration overhead) |
-| `scheduling/`            | Figure 12 (component-aware scheduler) |
-| `extract_util.tcl`       | Vivado helper, shared by `scalability/` and `efficiency/` |
+| Subdir              | Paper output                              | Section |
+|---------------------|-------------------------------------------|---------|
+| `modularity_2/`       | Figure 1 — Modularity of real-world apps   | §2      |
+| `composability_2/`    | Figure 2 — Composability of Vitis Vision   | §2      |
+| `effectiveness_2/`    | Figure 3 — Direct communication effectiveness | §2   |
+| `scalability_2/`      | Figure 4 — Available FPGA resources per vFPGA | §2   |
+| `resource_usage_2/`   | Figure 5 — Resource usage analysis (Vitis modules) | §2 |
+| `reconfig_2/`         | Figure 6 — Reconfiguration overhead (motivation) | §2 |
+| `e2e_6.1/`              | Figure 11 — End-to-end performance        | §6.1    |
+| `scheduling_6.2/`       | Figure 12 — Component-aware scheduling     | §6.2    |
+| `deployment_6.3/`       | Figure 13 — Application deployment overheads | §6.3 |
+| `complexity_6.4/`       | Table 5 — Programmability (SLoC + CC)     | §6.4    |
+| `efficiency_6.5/`       | Table 6 — µShell resource usage on U280   | §6.5    |
+| `extract_util.tcl`  | Vivado helper (shared by `scalability_2/` + `efficiency_6.5/`) | — |
 
 All commands below assume cwd `evaluation/scripts/`.
 
@@ -28,7 +30,7 @@ All commands below assume cwd `evaluation/scripts/`.
 
 Bitstream generation runs on **Amy** (compile-only). Hardware tests run on
 **Clara** (Vivado-programmed FPGA + driver). Bitstreams are produced on Amy
-and copied to Clara before running any `compile_sw_*.sh` script.
+and copied to Clara before running any SW-side script.
 
 ## Application names
 
@@ -46,189 +48,217 @@ Single-module bring-ups: `aes_ctr`, `fft`, `quantize`, `rle`, `rsa`, `sha256`, `
 
 The baseline repo only ships the composed apps (no `_monolithic`).
 
-## End-to-End Performance Overhead
+---
 
-### Step 1 — bitstreams (Amy)
+## §2 Motivation figures
+
+### Figure 1 — Modularity of real-world apps (`modularity_2/`)
+
+Hardcoded literature-survey breakdown of accelerator module categories across
+big-data, networking, XR, autonomous vehicles, wearables, etc. Reproduces
+the bars in Figure 1 (and Table 1) directly from paper-supplied counts.
 
 ```bash
-cd evaluation/scripts
-bash ./e2e/compile_hw_ushell.sh   /path/to/microShell   # composed + monolithic
-bash ./e2e/compile_hw_baseline.sh /path/to/baseline     # composed only
+python3 modularity_2/plot_app_modularity.py
+# → plots/modularity_2/application_modularity_analysis.{pdf,png}
 ```
 
-Each example builds in its own tmux session: `tmux attach -t build_<example>_hw`.
-Bitstream lands at `<base>/examples_hw/<example>/bitstreams/cyt_top.bit`.
+### Figure 2 — Composability of Vitis Vision (`composability_2/`)
 
-Per-example manual build:
+Function-call overlap analysis on Vitis Vision Library applications.
 
 ```bash
-cd /path/to/microShell/examples_hw && mkdir audio_processing && cd audio_processing
-xilinx-shell
-cmake ../ -DEXAMPLE=audio_processing -DFDEV_NAME=u280
-make project && make bitgen
+python3 composability_2/process_cv_files.py vision/L3/examples/   # → file_functions.txt
+python3 composability_2/analyze_functions.py                       # → similarity_matrix.csv, overlap_matrix.csv
+python3 composability_2/visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o visualization.pdf
+# → plots/composability_2/correlation_heatmap.pdf
 ```
 
-### Step 2 — run on Clara
+### Figure 3 — Direct communication effectiveness (`effectiveness_2/`)
 
+Compares two execution modes for each of the 5 paper apps:
+- **direct**: composed pipeline on a single vFPGA.
+- **cpu_sync**: each module on its own vFPGA, host CPU shuttling between stages.
+
+Bitstreams (Amy):
 ```bash
-# Per-app: copies bitstream, programs FPGA, builds SW, runs ./test, parses metrics
-./e2e/compile_sw_ushell.sh   audio_processing /path/to/audio_processing/cyt_top.bit /path/to/microShell
-./e2e/compile_sw_baseline.sh audio_processing /path/to/audio_processing/cyt_top.bit /path/to/baseline
-
-# Optional 4th arg = transfer size in bytes (default 1048576)
-./e2e/compile_sw_ushell.sh   audio_processing <bit> /path/to/microShell 65536
+bash effectiveness_2/compile_bitgen_effectiveness.sh /path/to/baseline
+# 10 tmux sessions: 5 direct + 5 cpu_sync. Review timing then:
+bash effectiveness_2/stage_bitstreams_effectiveness.sh /path/to/baseline
 ```
 
-CSV outputs:
-- `evaluation/data/e2e_ushell_results.csv`
-- `evaluation/data/e2e_baseline_results.csv`
-
-Columns: `example_name, data_size_bytes, throughput_MBps, latency_ns, timestamp`.
-
-### Plot
-
+Measure (Clara):
 ```bash
-cd evaluation/scripts && python3 e2e/plot_e2e.py
-# → evaluation/plots/e2e.{png,pdf}
+bash effectiveness_2/run_effectiveness.sh /path/to/baseline
+# Auto-enters nix-shell. Appends rows to data/effectiveness_2/effectiveness.csv.
+# Run multiple times for averaged numbers (single rep per ./test — see comment in run script).
 ```
 
-> Note: `plot_e2e.py` currently uses hardcoded numbers from the paper run.
-> Wiring it to consume the CSVs above is a known TODO.
-
-## Programmability
-
+Plot:
 ```bash
-bash ./complexity/measure_complexity_baseline.sh /path/to/baseline
-bash ./complexity/measure_complexity_ushell.sh   /path/to/microShell
-
-# Each script writes its CSV into <its repo>/evaluation/data/.
-# Point the plotter at both:
-python3 complexity/plot_complexity.py \
-    --baseline-csv /path/to/baseline/evaluation/data/complexity_baseline_results.csv \
-    --ushell-csv   /path/to/microShell/evaluation/data/complexity_ushell_results.csv
-# → evaluation/plots/complexity.{pdf,png}
+python3 effectiveness_2/plot_effectiveness.py
+# → plots/effectiveness_2/direct_comm_effectiveness.pdf
 ```
 
-The shell scripts use `scc` (LOC + cyclomatic complexity) and `jq` (parse JSON).
-Install via `nix-shell -p scc jq` if either is missing — the scripts no longer
-attempt auto-installation.
+CSV is the only source of truth — paper-baseline rows (`source=paper`) act as
+fallback when no measurements exist for a cell.
 
-CSVs:
-- `complexity_baseline_results.csv` — one row per composed app
-- `complexity_ushell_results.csv` — two rows per app (`composed` + `monolithic`)
-- columns: `app_name, variant, files, lines, blanks, comments, code, complexity, timestamp`
+### Figure 4 — Available FPGA resources per vFPGA (`scalability_2/`)
 
-`plot_app_modularity.py` is unrelated — it draws a literature-survey breakdown
-of accelerator module categories and uses hardcoded counts from the paper.
-
-## Scalability
-
-Bitstreams for vFPGA-count sweeps (`1vfpga`, `2vfpga`, `4vfpga`, `8vfpga`)
-live in the **baseline** repo (the µShell shell side):
+Bitstreams for vFPGA-count sweeps (`1vfpga`, `2vfpga`, `4vfpga`, `8vfpga`) on
+the baseline shell:
 
 ```bash
-bash ./scalability/compile_scalability.sh /path/to/baseline
+bash scalability_2/compile_scalability.sh /path/to/baseline
 ```
 
-Open each implementation checkpoint in Vivado on the build host and report
-utilization:
+Open each implementation checkpoint in Vivado and extract utilization:
 
 ```bash
-xilinx-shell
-vivado -mode tcl
+xilinx-shell; vivado -mode tcl
 > open_checkpoint /path/to/baseline/examples_hw/<n>vfpga/checkpoints/shell_routed.dcp
-> source extract_util.tcl       # writes per-hierarchy CSV
+> source extract_util.tcl
 ```
 
-Resource per vFPGA:
+Plot:
+```bash
+python3 scalability_2/plot_scalability.py
+# → plots/scalability_2/scalability_analysis.{pdf,png}
+```
 
+Per-vFPGA resource formula:
 ```
 per_vfpga = (U280_total - (inst_shell - inst_user_wrapper)) / num_vFPGAs
 ```
 
 U280 reference: 1,303,680 LUTs · 2,607,360 FFs · 2,016 BRAM (36Kb) · 960 URAM · 9,024 DSP.
 
-```bash
-python3 scalability/plot_scalability.py
-# → evaluation/plots/plot_scalability_analysis.{pdf,png}
-```
+### Figure 5 — Resource usage analysis (`resource_usage_2/`)
 
-## FPGA Acceleration Effectiveness
-
-Figure 3 (`direct_comm_effectiveness.pdf`) compares two execution modes for
-each of the 5 paper apps:
-
-- **direct**: composed pipeline on a single vFPGA (the Coyote baseline that
-  also feeds the e2e plot — modules chained directly on-chip).
-- **cpu_sync**: each module on its own vFPGA, with the host CPU sequentially
-  invoking each stage and copying intermediate buffers between them.
-
-| App                  | Modules in pipeline       |
-|----------------------|---------------------------|
-| Audio Processing     | FFT → Quantize → RLE      |
-| Digital Signature    | SHA-256 → RSA             |
-| Secure Storage       | RLE → AES-CTR             |
-| Signed Compression   | RLE → RSA                 |
-| Speech Recognition   | FFT → SVM                 |
-
-### Step 1 — bitstreams
-
-The composed (direct) bitstreams are produced by `compile_hw_baseline.sh`
-(see §End-to-End). The cpusync bitstreams are produced by:
+Vitis Vision module-sharing breakdown — how much of each app's resource
+footprint is shared with N other apps. Plot uses hardcoded paper values;
+`extract_modules.py` is the helper that produced `module_resource_usage.csv`
+from a 7-vFPGA "all modules in parallel" baseline build.
 
 ```bash
-bash ./effectiveness/compile_effectiveness_hw.sh /path/to/baseline
-# Builds: audio_processing_cpusync, digital_signature_cpusync,
-#         secure_storage_cpusync, signed_compression_cpusync,
-#         speech_recognition_cpusync
+python3 resource_usage_2/plot_resource_usage.py
+# → plots/resource_usage_2/resource_usage.{pdf,png}
 ```
 
-### Step 2 — measure on the FPGA
+### Figure 6 — Reconfiguration overhead (`reconfig_2/`)
+
+Partial-reconfiguration overhead as a function of accelerator reuse fraction
+(0% / 25% / 50% / 75% / 100%). Compares Coyote (no reuse) vs. PR-with-reuse.
 
 ```bash
-bash ./effectiveness/run_effectiveness.sh /path/to/baseline [--reps N]
+python3 reconfig_2/plot_reconf_analysis.py
+# → plots/reconfig_2/reconf_analysis.pdf
 ```
 
-For each (app, mode), the driver programs the matching bitstream, builds the
-SW once, runs `./test -r N`, parses the `Throughput: X MB/s` /
-`Total latency: Y ns` lines, and appends a row to
-`evaluation/data/effectiveness.csv` with columns
-`app,mode,throughput_MBps,latency_ns,n_reps,timestamp`.
+The values are derived from `data/reconfig_2/sched_motive.csv` (currently
+hardcoded in the script for paper reproducibility).
 
-### Step 3 — plot
+---
 
+## §6 Evaluation
+
+### §6.1 End-to-end performance — Figure 11 (`e2e_6.1/`)
+
+Bitstreams (Amy):
 ```bash
-python3 effectiveness/plot_effectiveness.py
-# → evaluation/plots/direct_comm_effectiveness.pdf
+bash e2e_6.1/compile_hw_baseline.sh /path/to/baseline       # coyote composed
+bash e2e_6.1/compile_hw_ushell.sh   /path/to/microShell     # ushell composed + monolithic
+bash e2e_6.1/stage_bitstreams_e2e.sh /path/to/baseline /path/to/microShell
 ```
 
-The plot reads `data/effectiveness.csv` if present; multiple rows per
-(app, mode) are averaged and the std-dev across rows becomes the error bar.
-If the CSV is missing or doesn't cover an (app, mode), the script falls back
-to the paper numbers so the figure still renders.
+Measure (Clara):
+```bash
+bash e2e_6.1/run_e2e.sh /path/to/baseline /path/to/microShell
+# Auto-enters nix-shell. 5 apps × 3 systems × 3 sizes = 45 cells per pass.
+# Run multiple times for averaged numbers.
+```
 
-## Scheduling Improvements
+Plot:
+```bash
+python3 e2e_6.1/plot_e2e.py
+# → plots/e2e_6.1/e2e.{pdf,png}
+```
 
-Data lives in `evaluation/data/sched_*.csv` (collected via the scheduler app
+CSV (`data/e2e_6.1/e2e.csv`) is pre-populated with `source=paper` rows so the plot
+renders before any measurement. Measured rows take precedence per cell.
+
+### §6.2 Scheduling improvements — Figure 12 (`scheduling_6.2/`)
+
+Data lives in `data/scheduling_6.2/sched_*.csv` (collected via the scheduler app
 under `examples_sw/apps/scheduler`).
 
 ```bash
-python3 scheduling/plot_sched.py
-# → evaluation/plots/sched.{png,pdf}
+python3 scheduling_6.2/plot_sched.py
+# → plots/scheduling_6.2/sched.{pdf,png}
 # Reads: sched_latency.csv, sched_reconfig.csv, sched_resp_avg.csv,
 #        sched_resp_95.csv, sched_deadline.csv
 ```
 
-`plot_reconf_analysis.py` and `plot_reconfig_overhead.py` produce supporting
-figures (sched motivation, reconfiguration cost breakdown).
+### §6.3 Application deployment overheads — Figure 13 (`deployment_6.3/`)
 
-## Vitis Vision component analysis (supplementary)
+Breakdown of µShell vs. Coyote deployment overhead across 1/2/3/4 ULs
+(object cap update + memory cap + buffer alloc + partial reconfig).
+
+Extract:
+```bash
+python3 deployment_6.3/extract_reconfig.py
+# Parses data/deployment_6.3/reconfig_{cap,pr}.log → data/deployment_6.3/reconfig_times.csv
+```
+
+Plot:
+```bash
+python3 deployment_6.3/plot_reconfig_overhead.py
+# → plots/deployment_6.3/reconfig_overhead.{pdf,png}
+```
+
+### §6.4 Programmability — Table 5 (`complexity_6.4/`)
+
+SLoC and cyclomatic complexity using `scc` (LOC + CC) and `jq` (JSON parsing).
+Install via `nix-shell -p scc jq` if missing.
 
 ```bash
-python3 modularity/process_cv_files.py vision/L3/examples/      # → file_functions.txt
-python3 modularity/analyze_functions.py                          # → similarity_matrix.csv, overlap_matrix.csv
-python3 modularity/visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o visualization.pdf
+bash complexity_6.4/measure_complexity_baseline.sh /path/to/baseline
+bash complexity_6.4/measure_complexity_ushell.sh   /path/to/microShell
+
+python3 complexity_6.4/plot_complexity.py \
+    --baseline-csv /path/to/baseline/evaluation/data/complexity_6.4/complexity_baseline_results.csv \
+    --ushell-csv   /path/to/microShell/evaluation/data/complexity_6.4/complexity_ushell_results.csv
+# → plots/complexity_6.4/complexity.{pdf,png}
 ```
+
+CSVs:
+- `complexity_baseline_results.csv` — one row per composed app
+- `complexity_ushell_results.csv` — two rows per app (`composed` + `monolithic`)
+- columns: `app_name, variant, files, lines, blanks, comments, code, complexity, timestamp`
+
+### §6.5 Resource overheads — Table 6 (`efficiency_6.5/`)
+
+µShell vs. Coyote resource usage on U280, broken down by component (CEU, MMU,
+Inter for 3/4/6/8 vFPGAs, PCIe DMA, etc.). Data comes from Vivado's
+hierarchical utilization reports.
+
+Capture (per vFPGA-count, in Vivado):
+```bash
+xilinx-shell; vivado -mode tcl
+> open_checkpoint /path/to/<shell>/checkpoints/shell_routed.dcp
+> source extract_util.tcl       # → util_<shell>.csv next to the checkpoint
+```
+
+Aggregate:
+```bash
+python3 efficiency_6.5/extract_util.py
+# Reads data/efficiency_6.5/util_{coyote,ushell,inter_4,inter_6,inter_8}.csv
+# Prints Table 6 rows to stdout
+```
+
+Table 6 has no plot — it's tabular output the paper consumes directly.
+
+---
 
 ## Troubleshooting
 

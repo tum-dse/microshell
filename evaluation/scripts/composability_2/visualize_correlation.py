@@ -61,7 +61,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Visualize lower triangle correlation matrix')
     parser.add_argument('input_csv', help='Path to similarity_matrix.csv')
     parser.add_argument('input_csv_2', help='Path to overlap_matrix.csv')
-    parser.add_argument('-o', '--output', help='Output filename', default='../../plots/modularity/correlation_heatmap.pdf')
+    parser.add_argument('-o', '--output', help='Output filename', default='../../plots/composability_2/correlation_heatmap.pdf')
     args = parser.parse_args()
     
     plot_half_correlation_matrix(args.input_csv, args.input_csv_2, args.output)

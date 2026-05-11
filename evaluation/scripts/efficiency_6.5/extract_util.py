@@ -1,5 +1,3 @@
-import os
-import sys
 import csv
 
 
@@ -160,78 +158,11 @@ def extract_util(coyote_path, ushell_path, inter_4_path, inter_6_path, inter_8_p
         print(i)
 
 
-# Per-module footprints from the resource_usage build (7 modules on 7 vFPGAs
-# in a single shell). Each row pulls the module-proper instance from inside
-# its inst_user_c0_<i> wrapper, skipping the shell glue (skid registers,
-# host_mux, debug bridge, AXI register slices, queue arbiters, credits).
-# Instance names come from each module's apps/modules/<m>/vfpga_top.svh and
-# the CMake load_apps order in baseline examples_hw/CMakeLists.txt.
-MODULES = [
-    ("FFT",      "inst_fft"),
-    ("Quantize", "inst_quant"),
-    ("RLE",      "inst_rle"),
-    ("SHA-256",  "inst_sha256"),
-    ("RSA",      "inst_rsa_c0_4"),
-    ("AES-CTR",  "inst_aes"),
-    ("SVM",      "inst_svm"),
-]
-
-
-def extract_modules(resource_usage_path="../../data/efficiency/module_resource_usage.csv"):
-    """Per-module utilization from the 7-vFPGA resource_usage build.
-
-    Reads the raw Vivado hierarchical report (default:
-    ../data/module_resource_usage.csv, sibling to the util_*.csv files
-    that extract_util() consumes). Emits the same wide-table layout —
-    header + U280 totals + one row per module, columns
-    [name, LUTs, %, FFs, %, BRAM, %, URAM, %] — so it composes with
-    the shell breakdown printed by extract_util().
-    """
-    result_table = []
-    header = ["", "LUTs", "[%]", "Flips-Flops", "[%]", "BRAM", "[%]", "URAM", "[%]"]
-    total = ["U280", 1303680, 100.0, 2607360, 100.0, 2016, 100.0, 960, 100.0]
-    result_table.append(header)
-    result_table.append(total)
-
-    # Pre-resolve which line in the report belongs to each module instance.
-    # Vivado pads Instance with leading spaces for hierarchy depth, so we
-    # match on the trimmed cell to keep the right user_c0_<i> child and
-    # avoid nested look-alikes (e.g. there's a deeper inst_aes inside aes_top).
-    wanted = {inst: name for name, inst in MODULES}
-    seen = set()
-
-    with open(resource_usage_path, "r") as f:
-        reader = csv.reader(f, delimiter="|")
-        for line in reader:
-            if len(line) < 13:
-                continue
-            for j in range(len(line)):
-                line[j] = line[j].strip()
-            inst = line[1]
-            if inst in wanted and inst not in seen:
-                entry = [wanted[inst]]
-                entry = get_data(total, entry, line)
-                result_table.append(entry)
-                seen.add(inst)
-
-    for name, inst in MODULES:
-        if inst not in seen:
-            print(f"WARN: instance {inst} ({name}) not found in {resource_usage_path}",
-                  file=sys.stderr)
-
-    for i in result_table:
-        print(i)
-
-
 if __name__ == "__main__":
-    # if len(sys.argv) != 3:
-    #     print("Usage: python3 extract_util.py <path_to_util_coyote.csv> <path_to_util_ushell.csv>")
-    #     print(sys.argv)
-    #     sys.exit(1)
-    # extract_util(sys.argv[1], sys.argv[2])
-    extract_util("../../data/efficiency/util_coyote.csv", "../../data/efficiency/util_ushell.csv", "../../data/efficiency/util_inter_4.csv", "../../data/efficiency/util_inter_6.csv", "../../data/efficiency/util_inter_8.csv")
-    print()
-    print("=== Per-module utilization (resource_usage build) ===")
-    extract_modules()
-
-# python3 extract_util.py ../data/util_coyote.csv ../data/util_ushell.csv
+    extract_util(
+        "../../data/efficiency_6.5/util_coyote.csv",
+        "../../data/efficiency_6.5/util_ushell.csv",
+        "../../data/efficiency_6.5/util_inter_4.csv",
+        "../../data/efficiency_6.5/util_inter_6.csv",
+        "../../data/efficiency_6.5/util_inter_8.csv",
+    )

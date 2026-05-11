@@ -15,7 +15,7 @@ import sys
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.normpath(os.path.join(HERE, "..", "..", "data", "complexity"))
+DATA = os.path.normpath(os.path.join(HERE, "..", "..", "data", "complexity_6.4"))
 
 APPS = [
     ("audio_processing",   "Audio Processing"),

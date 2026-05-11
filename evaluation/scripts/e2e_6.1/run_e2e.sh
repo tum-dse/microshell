@@ -82,7 +82,7 @@ if [ -z "$IN_NIX_SHELL" ]; then
     exec nix-shell shell.nix --run "bash '$SCRIPT' '$BASELINE_BASE' '$MSHELL_BASE' --sizes $SIZES_CSV"
 fi
 
-EVAL_DIR="$(dirname "$(realpath "$0")")/../../data/e2e"
+EVAL_DIR="$(dirname "$(realpath "$0")")/../../data/e2e_6.1"
 mkdir -p "$EVAL_DIR"
 CSV_FILE="$EVAL_DIR/e2e.csv"
 LOG_DIR="$EVAL_DIR/e2e_logs"
