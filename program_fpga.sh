@@ -19,11 +19,14 @@ if [[ $1 == *"rdma"* ]]; then
   if [[ $host == *"clara"* ]]; then
     echo "Installing driver for clara."
     sudo insmod driver/coyote_drv.ko ip_addr_q0=0x0a000002 mac_addr_q0=000A350E24F2
+    sudo sysctl -w vm.nr_hugepages=1024
   elif [[ $host == *"amy"* ]]; then
     echo "Installing driver for amy."
     sudo insmod driver/coyote_drv.ko ip_addr_q0=0x0a000001 mac_addr_q0=000A350E24D6
+    sudo sysctl -w vm.nr_hugepages=1024
   fi
 else 
   echo "Host bitstream."
   sudo insmod driver/coyote_drv.ko
+  sudo sysctl -w vm.nr_hugepages=1024
 fi
