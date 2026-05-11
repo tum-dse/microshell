@@ -531,3 +531,122 @@ if(EXAMPLE STREQUAL "8vfpga")
 
     create_hw()
 endif()
+
+# Figure 3 cpu_sync: each pipeline stage on its own vFPGA, host CPU shuttles
+# between them. N_STRM_AXI=2 — N=1 triggers a Vivado dataflow-opt segfault
+# in the µShell switch fabric (HOptDfg::optimizeMuxSelect2).
+if(EXAMPLE STREQUAL "audio_cpu")
+    set(EN_STRM 1)
+    set(N_REGIONS 3)
+    set(N_STRM_AXI 2)
+    set(EN_MEM 0)
+    set(EN_PR 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/fft"
+        VFPGA_C0_1 "apps/quant"
+        VFPGA_C0_2 "apps/rle"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "digi_cpu")
+    set(EN_STRM 1)
+    set(N_REGIONS 2)
+    set(N_STRM_AXI 2)
+    set(EN_MEM 0)
+    set(EN_PR 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/sha2"
+        VFPGA_C0_1 "apps/rsa"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "secure_cpu")
+    set(EN_STRM 1)
+    set(N_REGIONS 2)
+    set(N_STRM_AXI 2)
+    set(EN_MEM 0)
+    set(EN_PR 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/rle"
+        VFPGA_C0_1 "apps/aes_ctr"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "signcomp_cpu")
+    set(EN_STRM 1)
+    set(N_REGIONS 2)
+    set(N_STRM_AXI 2)
+    set(EN_MEM 0)
+    set(EN_PR 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/rle"
+        VFPGA_C0_1 "apps/rsa"
+    )
+
+    create_hw()
+endif()
+
+if(EXAMPLE STREQUAL "speech_cpu")
+    set(EN_STRM 1)
+    set(N_REGIONS 2)
+    set(N_STRM_AXI 2)
+    set(EN_MEM 0)
+    set(EN_PR 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/fft"
+        VFPGA_C0_1 "apps/svm"
+    )
+
+    create_hw()
+endif()
+
+# Figure 5 (resource_usage_2): 7 modules on 7 vFPGAs in a single shell.
+# Used by evaluation/scripts/resource_usage_2/extract_modules.py to pull
+# per-module footprints from Vivado's hierarchical utilization report —
+# the MODULES table there expects instances inst_fft / inst_quant /
+# inst_rle / inst_sha256 / inst_rsa_c0_4 / inst_aes / inst_svm. Region
+# order matches that lookup (RSA at C0_4 explains the _c0_4 suffix).
+# N_STRM_AXI=2 — N=1 triggers the same Vivado dataflow-opt segfault as
+# the cpu_sync builds.
+if(EXAMPLE STREQUAL "resource_usage")
+    set(EN_STRM 1)
+    set(N_REGIONS 7)
+    set(N_STRM_AXI 2)
+    set(EN_MEM 0)
+    set(EN_PR 0)
+
+    validation_checks_hw()
+
+    load_apps (
+        VFPGA_C0_0 "apps/fft"
+        VFPGA_C0_1 "apps/quant"
+        VFPGA_C0_2 "apps/rle"
+        VFPGA_C0_3 "apps/sha2"
+        VFPGA_C0_4 "apps/rsa"
+        VFPGA_C0_5 "apps/aes_ctr"
+        VFPGA_C0_6 "apps/svm"
+    )
+
+    create_hw()
+endif()

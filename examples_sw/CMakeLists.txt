@@ -187,3 +187,30 @@ if(EXAMPLE STREQUAL "quant")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/quant")
     message("** Example: Quant (Coyote daemon)")
 endif()
+
+# CPU-Sync versions
+if(EXAMPLE STREQUAL "audio_cpu")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/audio_cpu")
+    message("** Example: Audio Processing — CPU-sync")
+endif()
+
+if(EXAMPLE STREQUAL "digi_sign_cpu")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/digi_sign_cpu")
+    message("** Example: Digital Signature — CPU-sync")
+endif()
+
+if(EXAMPLE STREQUAL "secure_cpu")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/secure_cpu")
+    message("** Example: Secure Storage — CPU-sync")
+endif()
+
+if(EXAMPLE STREQUAL "signcomp_cpu" )
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/signcomp_cpu")
+    message("** Example: Signed Compression — CPU-sync")
+endif()
+
+if(EXAMPLE STREQUAL "speech_cpu" )
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech_cpu")
+    message("** Example: Speech Recognition — CPU-sync")
+endif()
+
