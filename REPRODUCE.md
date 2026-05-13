@@ -186,7 +186,7 @@ We use one bitstream to collect data of capability/buffer updates and another bi
 For capability/buffer updates, first programs the FPGA using the following command and then compile the [`software application`](examples_sw/apps/pipeline)
 
 ```bash
-bash ../program_fpga.sh cyt_top_ceu_3_0505
+bash ./program_fpga.sh 6_3_cap
 mkdir build_pipe_sw/ && cd build_pipe_sw/
 cmake ../examples_sw/ -DEXAMPLE=pipeline -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 ```
@@ -205,7 +205,7 @@ Now we collect the data for partial reconfiguration. For the software, we need o
 Open two terminals connected to our machine, in the one for server terminal
 
 ```bash
-bash ../program_fpga.sh cyt_top_pr_time_3_0807
+bash ./program_fpga.sh 6_3_pr
 mkdir build_perf_server_sw/ && cd build_perf_server_sw/
 cp ../bitstreams/cyt_top_pr_time_3_0807/* .
 cmake ../examples_sw/ -DEXAMPLE=perf_server -DCMAKE_POLICY_VERSION_MINIMUM=3.5
@@ -215,7 +215,7 @@ sudo ./bin/test
 
 ```bash
 
-bash ../program_fpga.sh cyt_top_pr_time_3_0807
+bash ./program_fpga.sh 6_3_pr
 mkdir build_perf_client_sw/ && cd build_perf_client_sw/
 cmake ../examples_sw/ -DEXAMPLE=perf_client -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 sudo ./bin/test -1 true
@@ -288,11 +288,11 @@ python3 plot_complexity.py \
 
 ## §6.5 Resource overheads — Figures 4–5, Table 6
 
-We obtained the resource utilization of $\mu$Shell using Vivado. Table 6 summarizes the results for six bitstreams: the Coyote baseline, $\mu$Shell configurations with 3, 4, 6, and 8 vFPGAs, and a bitstream integrating all user logic.
+We obtained the resource utilization of µShell using Vivado. Table 6 summarizes the results for six bitstreams: the Coyote baseline, µShell configurations with 3, 4, 6, and 8 vFPGAs, and a bitstream integrating all user logic.
 
-Since generating all bitstreams is time-consuming, we use the $\mu$Shell configuration with 3 vFPGAs as a representative example to demonstrate the reproduction workflow. This setup provides approximately 50% of the data required for Table 6.
+Since generating all bitstreams is time-consuming, we use the µShell configuration with 3 vFPGAs as a representative example to demonstrate the reproduction workflow. This setup provides approximately 50% of the data required for Table 6.
 
-```
+```bash
 xilinx-shell
 source /share/xilinx/Vivado/2022.1/settings64.sh
 
@@ -304,15 +304,15 @@ make project && make bitgen
 
 For the other bitstreams, the setups for them are
 
-- $\mu$Shell with 4 vFPGAs - ceu_4
-- $\mu$Shell with 6 vFPGAs - ceu_6
-- $\mu$Shell with 8 vFPGAs - ceu_8
+- µShell with 4 vFPGAs - ceu_4
+- µShell with 6 vFPGAs - ceu_6
+- µShell with 8 vFPGAs - ceu_8
 - coyote - ceu_3_strm (in coyote baseline branch)
 - user logics - all_apps
 
 To obtain resource usage csv file:
 
-```
+```bash
 bash ./extract_csv.sh
 ```
 
