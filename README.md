@@ -30,7 +30,7 @@ applications written against an unmodified Coyote shell) lives at
 <br/>
 
 <div align="center">
-  <img src="evaluation/plots/reconfig_overhead.png" width="50%"/>
+  <img src="evaluation/plots/deployment_6.3/reconfig_overhead.png" width="50%"/>
   <br/>
   <em>Figure 13 — Application-deployment overhead: µShell capability/buffer updates vs. Coyote partial-reconfiguration cost, for accelerators of 1–4 user-logic components.</em>
 </div>
