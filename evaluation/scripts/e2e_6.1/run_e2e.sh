@@ -2,7 +2,7 @@
 # Driver for the e2e end-to-end-throughput experiment (Figure 11).
 #
 # Runs each of the 5 paper apps in 3 systems × 3 sizes = 9 cells per app:
-#   - "coyote"      : composed pipeline on baseline Coyote v2 shell
+#   - "coyote"      : composed pipeline on baseline Coyote shell
 #                      (same HDL as Fig 3 "direct").
 #   - "ushell_mono" : monolithic single-vFPGA on µShell (microshell repo).
 #   - "ushell"      : composed pipeline on µShell, routed through the
@@ -34,7 +34,7 @@ set -e
 usage() {
     echo "Usage: $0 <baseline_base_dir> <microshell_base_dir> [--sizes A,B,C]"
     echo ""
-    echo "  baseline_base_dir   Path to baseline (Coyote v2) repo — supplies"
+    echo "  baseline_base_dir   Path to baseline (Coyote) repo — supplies"
     echo "                      coyote bitstreams + SW."
     echo "  microshell_base_dir Path to µShell repo — supplies ushell and"
     echo "                      ushell_mono bitstreams + SW."

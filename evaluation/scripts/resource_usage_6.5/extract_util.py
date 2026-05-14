@@ -160,9 +160,9 @@ def extract_util(coyote_path, ushell_path, inter_4_path, inter_6_path, inter_8_p
 
 if __name__ == "__main__":
     extract_util(
-        "../../data/efficiency_6.5/util_coyote.csv",
-        "../../data/efficiency_6.5/util_ushell.csv",
-        "../../data/efficiency_6.5/util_inter_4.csv",
-        "../../data/efficiency_6.5/util_inter_6.csv",
-        "../../data/efficiency_6.5/util_inter_8.csv",
+        "../../data/resource_usage_6.5/util_coyote.csv",
+        "../../data/resource_usage_6.5/util_ushell.csv",
+        "../../data/resource_usage_6.5/util_inter_4.csv",
+        "../../data/resource_usage_6.5/util_inter_6.csv",
+        "../../data/resource_usage_6.5/util_inter_8.csv",
     )

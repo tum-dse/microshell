@@ -213,6 +213,6 @@ legend = ax.legend(handles=all_handles, loc='center',
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
 plt.margins(x=0.02, tight=True)
-plt.savefig("../../plots/resource_usage_2/resource_usage.pdf", bbox_inches='tight')
-plt.savefig("../../plots/resource_usage_2/resource_usage.png", bbox_inches='tight')
+plt.savefig("../../plots/resource_usage_6.5/resource_usage.pdf", bbox_inches='tight')
+plt.savefig("../../plots/resource_usage_6.5/resource_usage.png", bbox_inches='tight')
 # plt.show()

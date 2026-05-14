@@ -16,7 +16,7 @@ applications written against an unmodified Coyote shell) lives at
 <div align="center">
   <img src="evaluation/plots/e2e_6.1/e2e.png" width="95%"/>
   <br/>
-  <em>Figure 11 — End-to-end performance: µShell vs. Coyote v2 baseline and a monolithic single-binary variant, across the five composed applications.</em>
+  <em>Figure 11 — End-to-end performance: µShell vs. Coyote baseline and a monolithic single-binary variant, across the five composed applications.</em>
 </div>
 
 <br/>
@@ -68,9 +68,27 @@ A "hello world"-equivalent run using `perf_local` — the smallest end-to-end te
 
 ### 1. Clone the repository
 
+The artifact uses **two** branches of this repo:
+
+- `master` — the µShell shell, runtime, and modular apps
+- `baseline` — the same applications written against an unmodified Coyote shell
+
+On the OSDI evaluation machine, both are already cloned and used by the
+[REPRODUCE.md](REPRODUCE.md) commands at:
+
+- `/scratch/anubhav/microShell` (master)
+- `/scratch/anubhav/baseline/microShell` (baseline)
+
+If you're setting up your own host, clone both into the same layout:
+
 ```bash
-git clone git@github.com:TUM-DSE/microShell.git microShell
+mkdir -p /scratch/anubhav/baseline
+git clone git@github.com:TUM-DSE/microShell.git /scratch/anubhav/microShell
+git clone -b baseline git@github.com:TUM-DSE/microShell.git /scratch/anubhav/baseline/microShell
 ```
+
+(Substitute another prefix if `/scratch/anubhav/` isn't writable — but then
+adjust the paths in REPRODUCE.md accordingly.)
 
 <!-- ### 2. Build the FPGA driver
 
@@ -120,48 +138,49 @@ CSV outputs — lives in [REPRODUCE.md](REPRODUCE.md). The mapping from paper ar
 
 
 
-Run the following to generate figures using existing execution data.
-
+Run the following to regenerate every figure / table from the CSVs and
+logs already shipped under `evaluation/data/`. All commands assume cwd =
+`/scratch/anubhav/microShell/evaluation/scripts/`.
 
 ### 6.1 Performance (Figure 11)
 
-This generates the end-to-end performance comparison Figure 11.
-
-```
-cd evalution/scripts/
-python3 plot_e2e.py
+```bash
+python3 e2e_6.1/plot_e2e.py
+# → evaluation/plots/e2e_6.1/e2e.{pdf,png}
 ```
 
 ### 6.2 Scheduling Improvements (Figure 12)
 
-```
-cd evalution/scripts/
-python3 plot_sched.py
+```bash
+python3 scheduling_6.2/plot_sched.py
+# → evaluation/plots/scheduling_6.2/sched.{pdf,png}
 ```
 
 ### 6.3 Application Deployment Overheads (Figure 13)
 
-```
-cd evalution/scripts/
-python3 plot_reconfig_overhead.py
+```bash
+python3 deployment_6.3/plot_reconfig_overhead.py
+# → evaluation/plots/deployment_6.3/reconfig_overhead.{pdf,png}
 ```
 
 ### 6.4 Programmability (Table 5)
 
-```
-python3 plot_complexity.py \
-    --baseline-csv ../data/complexity_baseline_results.csv \
-    --ushell-csv   ../data/complexity_ushell_results.csv
+```bash
+python3 complexity_6.4/plot_complexity.py \
+    --baseline-csv /scratch/anubhav/baseline/microShell/evaluation/data/complexity_6.4/complexity_baseline_results.csv \
+    --ushell-csv   /scratch/anubhav/microShell/evaluation/data/complexity_6.4/complexity_ushell_results.csv
+# → evaluation/plots/complexity_6.4/complexity.{pdf,png}
 ```
 
 ### 6.5 Resource Overheads (Table 6)
 
-```
-cd evalution/scripts/
-python3 extract_util.py
-```
+```bash
+python3 resource_usage_6.5/extract_util.py
+# Prints the Table 6 rows (Coyote, µShell, Inter 3/4/6/8, PCIe DMA, MMU, CEU) to stdout
 
-The table will be shown in the commandline interface.
+python3 resource_usage_6.5/extract_modules.py
+# Prints per-module utilization (Figure 5 source) to stdout
+```
 
 ## Artifact Claims
 
@@ -170,10 +189,10 @@ you reproduce the host-side measurements without re-running Vivado.
 
 <!-- | Paper section | Artifact         | Repo plot                                    | Driver scripts                                                    |
 |---------------|------------------|----------------------------------------------|-------------------------------------------------------------------|
-| §6.1          | Figure 11        | `evaluation/plots/e2e.{png,pdf}`             | `compile_hw_*.sh`, `compile_sw_*.sh` → `plot_e2e.py`              |
-| §6.2          | Figure 12 (a–e)  | `evaluation/plots/sched.{png,pdf}`           | `examples_sw/apps/scheduler` → `plot_sched.py`                    |
-| §6.3          | Figure 13        | `evaluation/plots/reconfig_overhead.{png,pdf}` | `examples_sw/apps/reconfigure_shell` → `plot_reconfig_overhead.py` |
-| §6.4          | Table 5          | `evaluation/plots/complexity.{png,pdf}`      | `measure_complexity_*.sh` → `plot_complexity.py`                  |
+| §6.1          | Figure 11        | `evaluation/plots/e2e_6.1/e2e.{pdf,png}`             | `compile_hw_*.sh`, `compile_sw_*.sh` → `plot_e2e.py`              |
+| §6.2          | Figure 12 (a–e)  | `evaluation/plots/scheduling_6.2/sched.{pdf,png}`           | `examples_sw/apps/scheduler` → `plot_sched.py`                    |
+| §6.3          | Figure 13        | `evaluation/plots/deployment_6.3/reconfig_overhead.{pdf,png}` | `examples_sw/apps/reconfigure_shell` → `plot_reconfig_overhead.py` |
+| §6.4          | Table 5          | `evaluation/plots/complexity_6.4/complexity.{pdf,png}`      | `measure_complexity_*.sh` → `plot_complexity.py`                  |
 | §6.5          | Figures 4–5, Table 6 | `evaluation/plots/{plot_scalability_analysis,resource_efficiency,direct_comm_effectiveness}.pdf` | `compile_scalability.sh`, `compile_effectiveness_*.sh` → `plot_scalability.py`, `plot_efficiency.py`, `plot_effectiveness.py` |
 
 Pre-built bitstreams under [`bitstreams/`](bitstreams/) (one folder per

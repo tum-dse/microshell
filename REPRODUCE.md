@@ -5,9 +5,11 @@ in §6 (Evaluation) of the paper. Cross-link from the top-level
 [README.md](README.md).
 
 The µShell repository (this branch) holds the modular shell, runtime, and
-example apps. The Coyote v2 baseline lives on the
-[`baseline` branch](https://github.com/TUM-DSE/microShell/tree/baseline) and is
-referenced below as `/path/to/baseline`.
+example apps; locally at `/scratch/anubhav/microShell`. The Coyote
+baseline lives on the
+[`baseline` branch](https://github.com/TUM-DSE/microShell/tree/baseline)
+and is checked out locally at `/scratch/anubhav/baseline/microShell`.
+Commands below assume these two paths.
 
 ## Contents
 
@@ -15,7 +17,9 @@ referenced below as `/path/to/baseline`.
 - [Building from source](#building-from-source)
   - [Hardware bitstreams](#hardware-bitstreams)
   - [Host software](#host-software)
+  - [Application names](#application-names)
 - [Pre-built bitstreams](#pre-built-bitstreams)
+- §2 [Motivation figures — Figures 1, 2, 3, 6](#2-motivation-figures--figures-1-2-3-6)
 - §6.1 [End-to-end performance — Figure 11](#61-end-to-end-performance--figure-11)
 - §6.2 [Scheduling improvements — Figure 12](#62-scheduling-improvements--figure-12)
 - §6.3 [Application-deployment overheads — Figure 13](#63-application-deployment-overheads--figure-13)
@@ -65,78 +69,193 @@ make
 
 Available SW `EXAMPLE` targets: see [examples_sw/CMakeLists.txt](examples_sw/CMakeLists.txt).
 
+### Application names
+
+µShell uses short, unrefactored names in both repos. The eval scripts
+translate the paper's canonical long names (kept in CSVs and plot labels)
+to whatever's in each repo's `examples_{hw,sw}/CMakeLists.txt`.
+
+| Paper name (canonical)  | Master HW       | Master SW       | Baseline HW   | Baseline SW       |
+|-------------------------|-----------------|-----------------|---------------|-------------------|
+| Audio Processing        | `audio`         | `audio`         | `audio`       | `audio`           |
+| Digital Signature       | `digi_sign`     | `digi_sign`     | **`digi`**    | `digi_sign`       |
+| Secure Storage          | `secure`        | `secure`        | `secure`      | `secure`          |
+| Signed Compression      | `signcomp`      | `signcomp`      | `signcomp`    | `signcomp`        |
+| Speech Recognition      | `speech`        | `speech`        | `speech`      | `speech`          |
+
+µShell-monolithic SW (master): `audio_mono`, `digi_sign_mono`, `secure_mono`,
+`signcomp_mono`, `speech_mono`.
+
+Fig 3 cpu_sync SW (baseline): `audio_cpu`, `digi_sign_cpu`, `secure_cpu`,
+`signcomp_cpu`, `speech_cpu`. Matching HW EXAMPLE entries on baseline
+(`audio_cpu`, `digi_cpu`, `secure_cpu`, `signcomp_cpu`, `speech_cpu`) bitgen
+a multi-vFPGA bitstream with one module per region.
+
+Single-module bring-ups (both repos): `aes_ctr`, `fft`, `quant`, `rle`,
+`rsa`, `sha2`, `svm`.
+
 ## Pre-built bitstreams
 
-If a Vivado run fails or you want to skip the 3–4 h bitgen step, the
-[`bitstreams/`](bitstreams/) directory ships known-good bitstreams from the
-paper run, organised one folder per `EXAMPLE` target:
+If a Vivado run fails or you want to skip the 3–4 h bitgen step,
+[`bitstreams/`](bitstreams/) ships known-good bitstreams from the paper
+run as flat labelled files (one `.bit` + matching `.ltx` per label):
 
 ```
-bitstreams/
-├── audio_processing/{cyt_top.bit, cyt_top.ltx}
-├── audio_processing_monolithic/...
-├── digital_signature/...
-├── ...
-├── perf_local/...
-├── aes_ctr/  fft/  quantize/  rle/  rsa/  sha256/  svm/
-└── static/
+/scratch/anubhav/microShell/bitstreams/
+├── audio_ushell_top.{bit,ltx}      audio_mono_top.{bit,ltx}
+├── digital_ushell_top.{bit,ltx}    digital_mono_top.{bit,ltx}
+├── secure_ushell_top.{bit,ltx}     secure_mono_top.{bit,ltx}
+├── signed_ushell_top.{bit,ltx}     signed_mono_top.{bit,ltx}
+└── speech_ushell_top.{bit,ltx}     speech_mono_top.{bit,ltx}
+
+/scratch/anubhav/baseline/microShell/bitstreams/
+├── audio_coyote_top.{bit,ltx}      audio_direct_top.{bit,ltx}    audio_cpu_top.{bit,ltx}
+├── digital_coyote_top.{bit,ltx}    digital_direct_top.{bit,ltx}  digital_cpu_top.{bit,ltx}
+├── secure_coyote_top.{bit,ltx}     secure_direct_top.{bit,ltx}   secure_cpu_top.{bit,ltx}
+├── signed_coyote_top.{bit,ltx}     signed_direct_top.{bit,ltx}   signed_cpu_top.{bit,ltx}
+└── speech_coyote_top.{bit,ltx}     speech_direct_top.{bit,ltx}   speech_cpu_top.{bit,ltx}
 ```
 
-To program a pre-built bitstream:
+To program a labelled bitstream (the eval scripts do this automatically;
+shown here for manual use):
 
 ```bash
-cp bitstreams/<example>/cyt_top.bit bitstreams/cyt_top.bit
-cp bitstreams/<example>/cyt_top.ltx bitstreams/cyt_top.ltx   # if present
-sudo bash ./program_fpga.sh cyt_top
+cd /scratch/anubhav/microShell   # or /scratch/anubhav/baseline/microShell
+sudo bash ./program_fpga.sh <label>      # e.g. audio_ushell_top
 sudo sysctl -w vm.nr_hugepages=1024
 ```
 
-The `compile_sw_*.sh` scripts under [`evaluation/scripts/`](evaluation/scripts/)
-already accept a bitstream path as their second argument, so you can point
-them straight at `bitstreams/<example>/cyt_top.bit` without copying.
+`program_fpga.sh` resolves `<label>` → `bitstreams/<label>.bit` at the
+repo root.
+
+---
+
+## §2 Motivation figures — Figures 1, 2, 3, 6
+
+Background figures used in §2. Most are paper-driven (literature survey or
+hardcoded counts); Figure 3 requires fresh bitstreams + measurements.
+Figure 4 and Figure 5 share data with §6.5 and are covered there.
+
+All commands assume cwd = `/scratch/anubhav/microShell/evaluation/scripts/`.
+
+### Figure 1 — Modularity of real-world apps
+
+Literature-survey breakdown of accelerator module categories.
+
+```bash
+python3 modularity_2/plot_app_modularity.py
+# → evaluation/plots/modularity_2/application_modularity_analysis.{pdf,png}
+```
+
+### Figure 2 — Composability of Vitis Vision
+
+Function-call overlap analysis on Vitis Vision Library applications.
+
+```bash
+python3 composability_2/process_cv_files.py vision/L3/examples/   # → file_functions.txt
+python3 composability_2/analyze_functions.py                       # → similarity_matrix.csv, overlap_matrix.csv
+python3 composability_2/visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o visualization.pdf
+# → evaluation/plots/composability_2/correlation_heatmap.pdf
+```
+
+### Figure 3 — Direct communication effectiveness
+
+Compares two execution modes per app: **direct** (composed on one vFPGA)
+vs. **cpu_sync** (one module per vFPGA, host CPU shuttling between stages).
+
+Bitstreams (build host):
+```bash
+bash effectiveness_2/compile_bitgen_effectiveness.sh /scratch/anubhav/baseline/microShell
+# 10 tmux sessions: 5 direct + 5 cpu_sync. Review timing, then:
+bash effectiveness_2/stage_bitstreams_effectiveness.sh /scratch/anubhav/baseline/microShell
+```
+
+Measure (FPGA host):
+```bash
+bash effectiveness_2/run_effectiveness.sh /scratch/anubhav/baseline/microShell
+# Auto-enters nix-shell. Appends rows to data/effectiveness_2/effectiveness.csv.
+```
+
+Plot:
+```bash
+python3 effectiveness_2/plot_effectiveness.py
+# → evaluation/plots/effectiveness_2/direct_comm_effectiveness.pdf
+```
+
+CSV is the only source of truth — paper rows (`source=paper`) act as the
+fallback when no measurements exist for a cell.
+
+### Figure 6 — Reconfiguration overhead (motivation)
+
+Partial-reconfiguration overhead as a function of accelerator reuse
+fraction (0% / 25% / 50% / 75% / 100%). Hardcoded paper values.
+
+```bash
+python3 reconfig_2/plot_reconf_analysis.py
+# → evaluation/plots/reconfig_2/reconf_analysis.pdf
+```
 
 ---
 
 ## §6.1 End-to-end performance — Figure 11
 
 Compares throughput and latency of the five composed applications across
-three configurations: Coyote v2 baseline, µShell, and a single-binary
-monolithic variant on µShell.
+three systems: Coyote baseline (`coyote`), µShell composed (`ushell`),
+and a single-vFPGA monolithic variant on µShell (`ushell_mono`). Three
+transfer sizes per cell: 8 KB / 256 KB / 1 MB.
+
+All commands assume cwd = `/scratch/anubhav/microShell/evaluation/scripts/`.
 
 ### Step 1 — bitstreams (build host)
 
 ```bash
-cd evaluation/scripts
-bash ./compile_hw_ushell.sh   /path/to/microShell   # composed + monolithic
-bash ./compile_hw_baseline.sh /path/to/baseline     # composed only
+bash e2e_6.1/compile_hw_baseline.sh /scratch/anubhav/baseline/microShell   # coyote (composed)
+bash e2e_6.1/compile_hw_ushell.sh   /scratch/anubhav/microShell            # ushell + monolithic
 ```
 
-Builds run in parallel tmux sessions; attach with `tmux attach -t build_<example>_hw`.
+15 tmux sessions in total (5 baseline + 10 µShell). Each runs
+`xilinx-shell -c 'cmake ... && make project && make bitgen'` and tees to
+`<build_dir>/bitgen.log`. Attach with `tmux attach -t bitgen_<short>_<system>`.
+Bitgen takes ~3–4 h per session.
+
+After reviewing timing reports, promote to labelled locations:
+
+```bash
+bash e2e_6.1/stage_bitstreams_e2e.sh \
+    /scratch/anubhav/baseline/microShell \
+    /scratch/anubhav/microShell
+```
+
+Pre-built bitstreams ship in [`bitstreams/`](bitstreams/) and at
+`/scratch/anubhav/baseline/microShell/bitstreams/`, so this step can be
+skipped if you trust the shipped artefacts.
 
 ### Step 2 — measure on the FPGA host
 
 ```bash
-./compile_sw_ushell.sh   audio_processing /path/to/audio_processing/cyt_top.bit /path/to/microShell
-./compile_sw_baseline.sh audio_processing /path/to/audio_processing/cyt_top.bit /path/to/baseline
-# repeat for: digital_signature, secure_storage, signed_compression, speech_recognition
-# add the µShell *_monolithic variants for the third bar in Figure 11
+bash e2e_6.1/run_e2e.sh /scratch/anubhav/baseline/microShell /scratch/anubhav/microShell
 ```
 
-CSVs:
-- `evaluation/data/e2e_ushell_results.csv`
-- `evaluation/data/e2e_baseline_results.csv`
+Auto-enters `nix-shell` at the baseline root. For each (app, system, size)
+cell — 45 cells per pass — programs the FPGA, builds the SW (incremental),
+runs `./test`, and appends one row to `evaluation/data/e2e_6.1/e2e.csv`
+with `source=measured`.
 
-Columns: `example_name, data_size_bytes, throughput_MBps, latency_ns, timestamp`.
+Run multiple times (≥3) to get stddev error bars; `plot_e2e.py` averages
+across the measured rows per cell.
+
+CSV columns: `app, system, size_bytes, throughput_MBps, latency_ns, n_reps, stddev_MBps, source, timestamp`.
 
 ### Step 3 — plot
 
 ```bash
-python3 plot_e2e.py
-# → evaluation/plots/e2e.{png,pdf}
+python3 e2e_6.1/plot_e2e.py
+# → evaluation/plots/e2e_6.1/e2e.{pdf,png}
 ```
 
-> Note: `plot_e2e.py` currently uses hardcoded paper-run numbers. Wiring it to
-> consume the CSVs above is a known TODO.
+`e2e.csv` ships pre-populated with `source=paper` rows so the plot renders
+before any measurement. Measured rows take precedence per cell; cells with
+no measurement fall back to paper.
 
 ---
 
@@ -165,10 +284,10 @@ The runs deploy 8, 12, and 16 application instances every 20 ms.
 ### Step 2 — plot
 
 ```bash
-cd evaluation/scripts
-python3 plot_sched.py
-# Reads: evaluation/data/sched_{latency,reconfig,resp_avg,resp_95,deadline}.csv
-# → evaluation/plots/sched.{png,pdf}
+cd /scratch/anubhav/microShell/evaluation/scripts
+python3 scheduling_6.2/plot_sched.py
+# Reads: evaluation/data/scheduling_6.2/sched_{latency,reconfig,resp_avg,resp_95,deadline}.csv
+# → evaluation/plots/scheduling_6.2/sched.{pdf,png}
 ```
 
 ---
@@ -195,7 +314,7 @@ Then run the application and generate the log file.
 
 ```bash
 sudo ./bin/test >> reconfig_cap.log
-cp reconfig_cap.log ../evaluation/data/
+cp reconfig_cap.log /scratch/anubhav/microShell/evaluation/data/deployment_6.3/
 ```
 
 ### Step 2 — collect data for partial reconfiguration
@@ -226,7 +345,7 @@ The execution log were written into system journal. Save the log into a file and
 ```bash
 
 journalctl -n 100 > reconfig_pr.log
-cp reconfig_pr.log ../evaluation/data/
+cp reconfig_pr.log /scratch/anubhav/microShell/evaluation/data/deployment_6.3/
 ```
 
 
@@ -236,13 +355,12 @@ cp reconfig_pr.log ../evaluation/data/
 Now combine the data from the two logs and make the plots. 
 
 ```bash
-cd evaluation/scripts
-# this generates the data file reconfig_times.csv
-python3 extract_reconfig.py 
-# → evaluation/plots/reconfig_overhead.{png,pdf}
+cd /scratch/anubhav/microShell/evaluation/scripts
+# Parses data/deployment_6.3/reconfig_{cap,pr}.log → data/deployment_6.3/reconfig_times.csv
+python3 deployment_6.3/extract_reconfig.py
 
-python3 plot_reconfig_overhead.py    # supplementary breakdown
-# → evaluation/plots/reconfig_overhead.{png,pdf}
+python3 deployment_6.3/plot_reconfig_overhead.py
+# → evaluation/plots/deployment_6.3/reconfig_overhead.{pdf,png}
 ```
 
 ---
@@ -250,73 +368,157 @@ python3 plot_reconfig_overhead.py    # supplementary breakdown
 ## §6.4 Programmability — Table 5
 
 Source lines of code (SLoC) and cyclomatic complexity (CC) of the host
-applications, baseline vs. µShell. Table 5 in the paper; this repo also
-produces a grouped bar chart of the same data.
+applications, baseline vs. µShell composed vs. µShell monolithic. Table 5
+in the paper; the repo also produces a grouped bar chart of the same data.
 
-### Step 1 — measure
+All commands assume cwd = `/scratch/anubhav/microShell/evaluation/scripts/`.
 
-Requires `scc` and `jq`. Both are available via Nix:
-`nix-shell -p scc jq`.
+### Step 1 — install tools
 
 ```bash
-cd evaluation/scripts
-bash ./measure_complexity_baseline.sh /path/to/baseline
-bash ./measure_complexity_ushell.sh   /path/to/microShell
+nix-shell -p scc jq
 ```
 
-CSVs:
-- `/path/to/baseline/evaluation/data/complexity_baseline_results.csv`
-- `/path/to/microShell/evaluation/data/complexity_ushell_results.csv`
+`scc` computes LOC and cyclomatic complexity; `jq` parses its JSON output.
+
+### Step 2 — measure
+
+```bash
+bash complexity_6.4/measure_complexity_baseline.sh /scratch/anubhav/baseline/microShell
+bash complexity_6.4/measure_complexity_ushell.sh   /scratch/anubhav/microShell
+```
+
+CSVs land in each repo's `evaluation/data/complexity_6.4/`:
+
+- `/scratch/anubhav/baseline/microShell/evaluation/data/complexity_6.4/complexity_baseline_results.csv` — one row per composed app
+- `/scratch/anubhav/microShell/evaluation/data/complexity_6.4/complexity_ushell_results.csv` — two rows per app (`composed` + `monolithic`)
 
 Columns: `app_name, variant, files, lines, blanks, comments, code, complexity, timestamp`.
-The µShell CSV has two rows per app (`composed` and `monolithic`).
 
-### Step 2 — plot
+### Step 3 — plot
 
 ```bash
-python3 plot_complexity.py \
-    --baseline-csv /path/to/baseline/evaluation/data/complexity_baseline_results.csv \
-    --ushell-csv   /path/to/microShell/evaluation/data/complexity_ushell_results.csv
-# → evaluation/plots/complexity.{png,pdf}
+python3 complexity_6.4/plot_complexity.py \
+    --baseline-csv /scratch/anubhav/baseline/microShell/evaluation/data/complexity_6.4/complexity_baseline_results.csv \
+    --ushell-csv   /scratch/anubhav/microShell/evaluation/data/complexity_6.4/complexity_ushell_results.csv
+# → evaluation/plots/complexity_6.4/complexity.{pdf,png}
 ```
 
-> `plot_app_modularity.py` is unrelated supplementary material — it draws a
-> literature-survey breakdown of accelerator module categories with hardcoded
-> counts from the paper, not from these CSVs.
+> `modularity_2/plot_app_modularity.py` is unrelated supplementary material
+> (Figure 1) — it draws a literature-survey breakdown of accelerator module
+> categories from hardcoded paper counts, not from these CSVs.
 
 ---
 
 ## §6.5 Resource overheads — Figures 4–5, Table 6
 
-We obtained the resource utilization of µShell using Vivado. Table 6 summarizes the results for six bitstreams: the Coyote baseline, µShell configurations with 3, 4, 6, and 8 vFPGAs, and a bitstream integrating all user logic.
+Resource utilization of µShell vs. Coyote on the U280, plus the per-module
+breakdown that drives Figure 5. Numbers come from Vivado hierarchical
+utilization reports of six bitstreams:
 
-Since generating all bitstreams is time-consuming, we use the µShell configuration with 3 vFPGAs as a representative example to demonstrate the reproduction workflow. This setup provides approximately 50% of the data required for Table 6.
+- **Coyote baseline**: built on the `baseline` branch with one of the
+  per-vFPGA-count shells.
+- **µShell with 3 / 4 / 6 / 8 vFPGAs**: scalability sweep, built on
+  `master` HW CMakeLists as `ceu_3`, `ceu_4`, `ceu_6`, `ceu_8`.
+- **All-modules bitstream** (Figure 5 data source): built on the `baseline`
+  branch as the `resource_usage` target — 7 modules on 7 vFPGAs in one
+  shell.
+
+Bitgen all six is ~24 h. The flow below uses the smallest configuration
+(`ceu_3` or `1vfpga`) as a representative example; the rest are identical
+recipes with different `EXAMPLE` names.
+
+### Step 1 — bitgen the µShell vFPGA-count sweep (master branch)
+
+```bash
+cd /scratch/anubhav/microShell/examples_hw
+mkdir build_ushell_3 && cd build_ushell_3
+xilinx-shell -c "cmake ../ -DEXAMPLE=ceu_3 -DFDEV_NAME=u280 && make project && make bitgen"
+```
+
+Repeat with `EXAMPLE=ceu_4`, `EXAMPLE=ceu_6`, `EXAMPLE=ceu_8` for the
+other three µShell shells.
+
+### Step 2 — bitgen the Coyote baseline shell (baseline branch)
+
+```bash
+cd /scratch/anubhav/baseline/microShell/examples_hw
+mkdir build_3vfpga && cd build_3vfpga
+xilinx-shell -c "cmake ../ -DEXAMPLE=3vfpga -DFDEV_NAME=u280 && make project && make bitgen"
+```
+
+`1vfpga`, `2vfpga`, `4vfpga`, `8vfpga` are also defined; use whichever
+matches the µShell vFPGA count you want to compare against.
+
+The four-config sweep can be kicked off in parallel via:
+```bash
+cd /scratch/anubhav/microShell/evaluation/scripts
+bash scalability_2/compile_scalability.sh /scratch/anubhav/baseline/microShell
+```
+
+### Step 3 — bitgen the all-modules bitstream (baseline branch, Figure 5)
+
+```bash
+cd /scratch/anubhav/baseline/microShell/examples_hw
+mkdir build_resource_usage && cd build_resource_usage
+xilinx-shell -c "cmake ../ -DEXAMPLE=resource_usage -DFDEV_NAME=u280 && make project && make bitgen"
+```
+
+This is the 7-vFPGA build with one module per region (fft, quant, rle,
+sha2, rsa, aes_ctr, svm).
+
+### Step 4 — extract hierarchical utilization (in Vivado)
+
+For each build, open the routed checkpoint and run the TCL helper:
+
 
 ```bash
 xilinx-shell
-source /share/xilinx/Vivado/2022.1/settings64.sh
-
-git checkout master
-mkdir build_ushell_3_hw && cd build_ushell_3_hw
-cmake ../hw/ -DFDEV_NAME=u280 -DEXAMPLE=ceu_3
-make project && make bitgen
+vivado -mode tcl
+> source /scratch/anubhav/microShell/evaluation/scripts/extract_util.tcl <build_dir_name>
 ```
 
-For the other bitstreams, the setups for them are
+`extract_util.tcl` opens `<build_dir_name>/checkpoints/shell_routed.dcp`
+and writes `<build_dir_name>/util_<build_dir_name>.csv`.
 
-- µShell with 4 vFPGAs - ceu_4
-- µShell with 6 vFPGAs - ceu_6
-- µShell with 8 vFPGAs - ceu_8
-- coyote - ceu_3_strm (in coyote baseline branch)
-- user logics - all_apps
-
-To obtain resource usage csv file:
+Copy the CSVs into the µShell repo:
 
 ```bash
-bash ./extract_csv.sh
+cp /scratch/anubhav/baseline/microShell/examples_hw/build_*vfpga/util_*.csv \
+   /scratch/anubhav/microShell/evaluation/data/resource_usage_6.5/
+cp /scratch/anubhav/baseline/microShell/examples_hw/build_resource_usage/util_resource_usage.csv \
+   /scratch/anubhav/microShell/evaluation/data/resource_usage_6.5/module_resource_usage.csv
 ```
 
-Copy the generated csv file into /evaluation/data/. Then run the `extract_util.py` to generate data for the table. 
+A pre-generated `module_resource_usage.csv` is already shipped at
+`evaluation/data/resource_usage_6.5/module_resource_usage.csv` so you can
+skip Step 3 + the second copy above if you only want Table 6 numbers.
+
+### Step 5 — aggregate
+
+Per-shell summary (Table 6):
+```bash
+cd /scratch/anubhav/microShell/evaluation/scripts
+python3 resource_usage_6.5/extract_util.py
+# Prints the Table 6 rows (Coyote, µShell, Inter 3/4/6/8, PCIe DMA, MMU, CEU)
+```
+
+Per-module summary (Figure 5 — Vitis Vision sharing analysis is hardcoded
+in `resource_usage_6.5/plot_resource_usage.py`; `extract_modules.py`
+generates the per-module footprint table from the all-modules bitstream):
+```bash
+python3 resource_usage_6.5/extract_modules.py
+# Prints per-module utilization (FFT / Quantize / RLE / SHA-256 / RSA / AES-CTR / SVM)
+
+python3 resource_usage_6.5/plot_resource_usage.py
+# → evaluation/plots/resource_usage_6.5/resource_usage.{pdf,png}  (Figure 5)
+```
+
+Per-vFPGA budget (Figure 4):
+```bash
+python3 scalability_2/plot_scalability.py --baseline /scratch/anubhav/baseline/microShell
+# → evaluation/plots/scalability_2/scalability_analysis.{pdf,png}  (Figure 4)
+```
 
 
 
