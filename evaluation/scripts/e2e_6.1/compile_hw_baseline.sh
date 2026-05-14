@@ -1,6 +1,6 @@
 #!/bin/bash
 # Spawn 5 parallel tmux sessions to bitgen Figure 11's `coyote` bitstreams in
-# the baseline (Coyote v2) repo. Same HDL as Figure 3's "direct" mode, but
+# the baseline (Coyote) repo. Same HDL as Figure 3's "direct" mode, but
 # built in a Figure 11-specific build dir (build_<short>_coyote/) and staged
 # under a Figure 11-specific label so the two figures' artifacts don't alias.
 #
