@@ -73,22 +73,17 @@ The artifact uses **two** branches of this repo:
 - `master` — the µShell shell, runtime, and modular apps
 - `baseline` — the same applications written against an unmodified Coyote shell
 
-On the OSDI evaluation machine, both are already cloned and used by the
+<!-- On the OSDI evaluation machine, both are already cloned and used by the
 [REPRODUCE.md](REPRODUCE.md) commands at:
 
 - `/scratch/anubhav/microShell` (master)
-- `/scratch/anubhav/baseline/microShell` (baseline)
+- `/scratch/anubhav/baseline/microShell` (baseline) -->
 
-If you're setting up your own host, clone both into the same layout:
+Clone the repo
 
 ```bash
-mkdir -p /scratch/anubhav/baseline
-git clone git@github.com:TUM-DSE/microShell.git /scratch/anubhav/microShell
-git clone -b baseline git@github.com:TUM-DSE/microShell.git /scratch/anubhav/baseline/microShell
+git clone git@github.com:TUM-DSE/microShell.git 
 ```
-
-(Substitute another prefix if `/scratch/anubhav/` isn't writable — but then
-adjust the paths in REPRODUCE.md accordingly.)
 
 <!-- ### 2. Build the FPGA driver
 
@@ -108,25 +103,25 @@ make KERNELDIR=$(nix-build -E '(import <nixpkgs> {}).linuxPackages_6_8.kernel.de
 
 ```bash
 cd microShell
-cp bitstreams/perf_local/cyt_top.bit bitstreams/cyt_top.bit
-bash ./program_fpga.sh cyt_top
-sudo sysctl -w vm.nr_hugepages=1024
+bash ./program_fpga.sh perf_local
 ```
+
+If you see error `rmmod: ERROR: Module coyote_drv is not currently loaded` while the script is running, this is OK and the error can be ignored. 
 
 ### 3. Compile perf_local software
 
 ```bash
 nix-shell shell.nix
-cd examples_sw && mkdir build_perf_local && cd build_perf_local
-cmake ../ -DEXAMPLE=perf_local
+mkdir build_perf_local_sw && cd build_perf_local_sw
+cmake ../examples_sw/ -DEXAMPLE=perf_local
 make
 ```
 
 ### 3. Run the host application
+Assuming you are already in `build_perf_local_sw`
 
 ```bash
-cd examples_sw/build_perf_local/bin
-sudo ./test
+sudo ./bin/test
 ```
 
 The application reports average throughput across two vFPGAs.
@@ -219,10 +214,13 @@ microShell/
 
 ## Troubleshooting
 
+- **Driver rmmod error** - `rmmod: ERROR: Module coyote_drv is not currently loaded`. This is OK if the script ends with `vm.nr_hugepages = 1024`.
 - **Driver won't load** — `sudo rmmod coyote_drv && sudo insmod driver/coyote_drv.ko`. If that fails, reboot and retry; stuck driver state usually clears.
 - **FPGA programming fails** — verify `bitstreams/cyt_top.bit` exists before running `program_fpga.sh`. Check `sudo dmesg | tail -50` for PCIe / programming errors.
 - **Hugepage shortage** — `cat /proc/sys/vm/nr_hugepages` should be ≥ 1024. Re-run the `sysctl` command if the number resets after reboot.
 - **Test process hangs** — `sudo pkill -9 test`, then re-program the FPGA before retrying.
+- **bThread could not be obtained, vfid: 0** — This error means the driver is not installed correctly. A reboot is usually needed. 
+
 
 ## License
 
