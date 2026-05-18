@@ -19,6 +19,9 @@
 
 set -e
 
+exit 0
+: <<'EOF'
+
 usage() {
     echo "Usage: $0 <baseline_base_dir> <microshell_base_dir>"
     echo ""
@@ -126,3 +129,5 @@ echo "Bitstreams now at:"
 echo "  $BASELINE_BASE/bitstreams/<short>_coyote_top.{bit,ltx}"
 echo "  $MSHELL_BASE/bitstreams/<short>_ushell_top.{bit,ltx}"
 echo "  $MSHELL_BASE/bitstreams/<short>_mono_top.{bit,ltx}"
+
+EOF

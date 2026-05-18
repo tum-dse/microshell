@@ -14,6 +14,9 @@
 
 set -e
 
+exit 0
+: <<'EOF'
+
 if [ -z "$1" ]; then
     echo "Usage: $0 <path_to_baseline_directory>"
     exit 1
@@ -79,3 +82,5 @@ echo "After each session reports 'bitgen ... ended (exit 0)' and you've"
 echo "reviewed the timing reports, open the routed checkpoint in Vivado"
 echo "and run \`source extract_util.tcl\` to produce util_<n>vfpga.csv."
 echo "Then: python3 plot_scalability.py"
+
+EOF

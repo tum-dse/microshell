@@ -10,6 +10,9 @@
 
 set -e
 
+exit 0
+: <<'EOF'
+
 usage() {
     echo "Usage: $0 <baseline_base_dir>"
     echo ""
@@ -63,3 +66,5 @@ done
 echo ""
 echo "Done: $staged staged, $missing missing."
 echo "Bitstreams now at: $BASELINE_BASE/bitstreams/<label>_top.{bit,ltx}"
+
+EOF

@@ -15,6 +15,9 @@
 
 set -e
 
+exit 0
+: <<'EOF'
+
 usage() {
     echo "Usage: $0 <baseline_base_dir>"
     echo ""
@@ -120,3 +123,5 @@ echo ""
 echo "After all sessions report 'bitgen ... ended (exit 0)' and you've"
 echo "reviewed the timing reports, run:"
 echo "  bash stage_bitstreams_effectiveness.sh $BASELINE_BASE"
+
+EOF
