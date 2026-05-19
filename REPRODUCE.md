@@ -137,12 +137,9 @@ repo root.
 
 ## §6.1 End-to-end performance — Figure 11
 
-Compares throughput and latency of the five composed applications across
-three systems: Coyote baseline (`coyote`), µShell composed (`ushell`),
-and a single-vFPGA monolithic variant on µShell (`ushell_mono`). Three
-transfer sizes per cell: 8 KB / 256 KB / 1 MB.
+Compares throughput and latency of the five composed applications across three systems: Coyote baseline (`coyote`), µShell composed (`ushell`), and a single-vFPGA monolithic variant on µShell (`ushell_mono`). Three transfer sizes per cell: 8 KB / 256 KB / 1 MB.
 
-All commands assume cwd = `/scratch/anubhav/microShell/evaluation/scripts/`.
+<!-- All commands assume cwd = `/scratch/anubhav/microShell/evaluation/scripts/`. -->
 
 ### Step 1 — bitstreams (build host)
 
@@ -150,7 +147,7 @@ All commands assume cwd = `/scratch/anubhav/microShell/evaluation/scripts/`.
 <summary>Generating bitstream from source</summary>
 
 ```bash
-bash e2e_6.1/compile_hw_baseline.sh /path/to/baseline   # coyote (composed)
+bash e2e_6.1/compile_hw_baseline.sh ~/microShell_base   # coyote (composed)
 bash e2e_6.1/compile_hw_ushell.sh   ~/microShell        # ushell + monolithic
 ```
 
@@ -163,7 +160,7 @@ After reviewing timing reports, promote to labelled locations:
 
 ```bash
 bash e2e_6.1/stage_bitstreams_e2e.sh \
-    /path/to/baseline \
+    ~/microShell_base \
     ~/microShell
 ```
 
@@ -175,7 +172,8 @@ Pre-built bitstreams can be found in [`bitstreams/`](bitstreams/), so this step 
 ### Step 2 — measure on the FPGA host
 
 ```bash
-bash e2e_6.1/run_e2e.sh /path/to/baseline /scratch/anubhav/microShell
+cd evaluation/scripts/
+bash e2e_6.1/run_e2e.sh ~/microShell_base ~/microShell
 ```
 
 Auto-enters `nix-shell` at the baseline root. For each (app, system, size)
@@ -210,23 +208,46 @@ average response time, 95% tail response time, deadline misses.
 
 ### Step 1 — collect data
 
-The scheduler experiment lives in
-[`examples_sw/apps/scheduler/`](examples_sw/apps/scheduler/). Build it like
-any other example:
+First program FPGA with the provided bitstream
 
 ```bash
-cd examples_sw && mkdir build_scheduler && cd build_scheduler
-cmake ../ -DEXAMPLE=scheduler
-make
-cd bin && ./test    # writes the sched_*.csv files into evaluation/data/
+bash ./program_fpga.sh 6_2_sched
 ```
 
-The runs deploy 8, 12, and 16 application instances every 20 ms.
+Build the software application
+
+```bash
+cd ~/microShell
+nix-shell shell.nix # this can be skipped if you are already in the nix-shell 
+mkdir build_sched_sw && cd build_sched_sw
+cmake ../examples_sw/ -DEXAMPLE=scheduler_client
+make
+```
+
+Copy some bash scripts that help to run the application from `evaluation/scripts`. Assuming you are already in `build_sched_sw`:
+
+```bash
+cp ../evaluation/scripts/scheduling_6.2/*.sh .
+```
+
+Then run the following commands to perform the experiments:
+
+```bash
+bash ./init_csv.sh
+bash ./run_coyote.sh
+bash ./run_ushell.sh
+```
+
+Now copy the generated data back to evaluation folder
+
+```bash
+cp *.csv ../evaluation/data/scheduling_6.2/
+```
 
 ### Step 2 — plot
 
 ```bash
-cd /scratch/anubhav/microShell/evaluation/scripts
+cd ~/microShell/evaluation/scripts
 python3 scheduling_6.2/plot_sched.py
 # Reads: evaluation/data/scheduling_6.2/sched_{latency,reconfig,resp_avg,resp_95,deadline}.csv
 # → evaluation/plots/scheduling_6.2/sched.{pdf,png}

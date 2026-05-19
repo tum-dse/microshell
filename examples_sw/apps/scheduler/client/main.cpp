@@ -7,15 +7,16 @@
 #include <random>
 #include <cmath> 
 
-#include "worker_pool.hpp"
+#include "virtual_worker.hpp"
 #define HW_TEST
-// #define DEBUG
+#define DEBUG
 
 
 
 int n_regions = 4;                  // Number of vFPGAs
+int n_real_regions = 8;             // Number of actual vFPGAs without PR
 int def_policy = 0;                 // default FIFO policy
-int def_tasks = 8;                 // default FIFO policy
+int def_tasks = 8;                  // default FIFO policy
 
 
 /* Signal handler */
@@ -48,7 +49,13 @@ struct TaskInfo {
     double deadline;
 };
 
-
+// component to vFPGA mapping
+std::unordered_map<int, std::vector<uint32_t>> app_vFPGA_mapping = {
+    {1, {0, 5}},    // RLE
+    {2, {1, 3}},    // RSA
+    {3, {2, 6}},    // SHA256
+    {4, {4, 7}}     // FFT
+};
 
 
 std::vector<std::unique_ptr<cThread<std::any>>> cthread; // Coyote threads
@@ -56,6 +63,7 @@ void* hMem[8];
 sgEntry sg[8];
 
 WorkerPool pool(8);
+VirtualWorkerManager vwm(pool);
 
 uint32_t reconfiguration_count = 0;
 
@@ -65,6 +73,7 @@ std::vector<std::vector<TaskInfo>> tasks_arrays(3);
 // simulating the vFPGAs, storing currently running tasks
 std::vector<TaskInfo> current_tasks;
 std::vector<TaskInfo> tasks_scheduled;
+std::vector<TaskInfo> vFPGA_status;
 
 std::vector<uint32_t> find_overlap(const std::vector<uint32_t>& arr1, const std::vector<uint32_t>& arr2) {
     std::vector<uint32_t> overlap;
@@ -133,9 +142,21 @@ int select_task(std::vector<TaskInfo>& tasks,
 }
 
 
-int32_t schedule_vfpga(TaskInfo& task, uint32_t n_regions, bool new_task, uint32_t policy) {
+int schedule_oid_vFPGA(int oid_to_schedule) {
+    int choosen_vid;
+    for (auto& vid : app_vFPGA_mapping[oid_to_schedule]) {
+        // if (pool.is_busy(vid) == false) {
+        if (vwm.is_actual_free(vid)) {
+            choosen_vid = vid;
+            break;
+        }
+    } 
+    return choosen_vid;
+}
 
-    std::vector<bool> region_used(n_regions, false);
+// the main function to schedule applications
+int32_t schedule_vfpga(TaskInfo& task, bool new_task, uint32_t policy) {
+
     TaskInfo choosen_task;
     // if there's new task to schedule
     if (new_task)
@@ -159,14 +180,23 @@ int32_t schedule_vfpga(TaskInfo& task, uint32_t n_regions, bool new_task, uint32
         std::cout << tasks[i].oids[0] << ", " << tasks[i].oids[1] << ". time: " << tasks[i].time << std::endl;
     }
 
+#ifdef DEBUG
+    std::cout << "actual vFPGA status" << std::endl; 
+    for (int i = 0; i < vFPGA_status.size(); ++i) {
+        std::cout << "vFPGA " << i << ": " << vFPGA_status[i].oids[0] << ". busy: " << vwm.is_actual_busy(i) << std::endl;
+    }
+#endif
+
     std::vector<uint32_t> current_oid;
+    // store free virtual vFPGAs last executed components
     std::vector<uint32_t> empty_vFPGA;
+    // store index of free virtual vFPGAs
     std::vector<uint32_t> empty_vFPGA_index;
 
     // stores currently executing task component IDs
     for (int i = 0; i < current_tasks.size(); ++i) {
         current_oid.push_back(current_tasks[i].oids[0]);
-    } 
+    }
 
     std::cout << "empty vfpga" << std::endl;
 
@@ -174,12 +204,22 @@ int32_t schedule_vfpga(TaskInfo& task, uint32_t n_regions, bool new_task, uint32
     // std::cout << "check vfPGA 0, module " << (pool.is_busy(0) == false) << std::endl;
     for (int i = 0; i < current_tasks.size(); ++i) {
         // if (current_tasks[i].oids[0] == 0 || current_tasks[i].time == 0) {
-        if (current_tasks[i].oids[0] == 0 || pool.is_busy(i) == false) {
+        // if (current_tasks[i].oids[0] == 0 || pool.is_busy(i) == false) {
+        if (current_tasks[i].oids[0] == 0 || vwm.is_free(i)) {
             empty_vFPGA.push_back(current_tasks[i].oids[0]);
             empty_vFPGA_index.push_back(i);
             std::cout << "free vFPGA " << i << ", module " << current_tasks[i].oids[0] << std::endl;
         }
     }
+
+    // // custom scheduling algorithm
+    // int next = select_task(tasks, empty_vFPGA);
+
+    // if (policy == 0) {
+    //     // default scheduling algorithm
+    //     next = 0;
+    // }   
+
 
     // default scheduling algorithm
     int next = 0;
@@ -236,6 +276,8 @@ int32_t schedule_vfpga(TaskInfo& task, uint32_t n_regions, bool new_task, uint32
                     std::this_thread::sleep_for(std::chrono::milliseconds(34));
                 }
 #ifdef HW_TEST 
+                cthread[id]->memCap(MemCapa::BASE_ADDRESS, MemCapa::END_ADDRESS, MemCapa::ALL_PASS);
+                cthread[id]->ioSwitch(IODevs::Inter_6_TO_HOST_0);
                 for(int i = 0; i < 32; i++) {
                     cthread[id]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[id], {true, true, false});
                     while(cthread[id]->checkCompleted(CoyoteOper::LOCAL_WRITE) != 1) 
@@ -259,6 +301,7 @@ int32_t schedule_vfpga(TaskInfo& task, uint32_t n_regions, bool new_task, uint32
             };
         };
 
+        int choose_vFPGA_id = 0;
         // deploy the task by updating the current_tasks vector
         // deside how to deploy the tasks
         for (int i = 0; i < choosen_task.coverage.size(); ++i) {
@@ -266,7 +309,8 @@ int32_t schedule_vfpga(TaskInfo& task, uint32_t n_regions, bool new_task, uint32
             // search if component exists, the component needs to finish execution
             for (int j = 0; j < empty_vFPGA_index.size(); j++) {
                 // if (current_tasks[empty_vFPGA_index[j]].oids[0] == choosen_task.coverage[i] && current_tasks[empty_vFPGA_index[j]].time == 0) {
-                if (current_tasks[empty_vFPGA_index[j]].oids[0] == choosen_task.coverage[i] && pool.is_busy(empty_vFPGA_index[j]) == false) {
+                // if (current_tasks[empty_vFPGA_index[j]].oids[0] == choosen_task.coverage[i] && pool.is_busy(empty_vFPGA_index[j]) == false) {
+                if (current_tasks[empty_vFPGA_index[j]].oids[0] == choosen_task.coverage[i] && vwm.is_free(empty_vFPGA_index[j])) {
                     // updating component time as it's new
                     // current_tasks[empty_vFPGA_index[j]].time = choosen_task.time;
                     found = empty_vFPGA_index[j];
@@ -277,8 +321,9 @@ int32_t schedule_vfpga(TaskInfo& task, uint32_t n_regions, bool new_task, uint32
                     // }
                     std::cout << "reusing vFPGA " << found << ", module: " << choosen_task.coverage[i] << std::endl;
                     TaskInfo task_copy = choosen_task;
-                    pool.assign_task(found, create_task(found, task_copy, tasks_scheduled, tasks_mutex, 0));
-                    // pool.assign_task(found, create_task(choosen_task.coverage[i], 0));
+                    // pool.assign_task(found, create_task(found, task_copy, tasks_scheduled, tasks_mutex, 0));
+                    vwm.map(found, found);
+                    vwm.assign_task(found, create_task(found, task_copy, tasks_scheduled, tasks_mutex, 0));
                     empty_vFPGA_index.erase(empty_vFPGA_index.begin() + j);
 
                     break;
@@ -293,13 +338,17 @@ int32_t schedule_vfpga(TaskInfo& task, uint32_t n_regions, bool new_task, uint32
             if (empty_vFPGA_index.size() > 0) {
                 std::cout << "need to reconfigure" << std::endl;
                 std::cout << "vFPGA index " << empty_vFPGA_index[0] << ", module: " << oids_no_overlap[i] << std::endl;
+                choose_vFPGA_id = schedule_oid_vFPGA(oids_no_overlap[i]);
+                std::cout << "with PR, vFPGA index " << choose_vFPGA_id << ", module: " << oids_no_overlap[i] << std::endl;
                 current_tasks[empty_vFPGA_index[0]].oids[0] = oids_no_overlap[i];
                 // current_tasks[empty_vFPGA_index[0]].time = choosen_task.time;
                 // reconfigure(empty_vFPGA[0]);
                 // std::this_thread::sleep_for(std::chrono::milliseconds(17));
                 TaskInfo task_copy = choosen_task;
-                pool.assign_task(empty_vFPGA_index[0], create_task(empty_vFPGA_index[0], task_copy, tasks_scheduled, tasks_mutex, 1));
-                // pool.assign_task(empty_vFPGA_index[0], create_task(oids_no_overlap[i], 1));
+                // pool.assign_task(empty_vFPGA_index[0], create_task(empty_vFPGA_index[0], task_copy, tasks_scheduled, tasks_mutex, 1));
+                vwm.map(empty_vFPGA_index[0], choose_vFPGA_id);
+                vwm.assign_task(empty_vFPGA_index[0], create_task(choose_vFPGA_id, task_copy, tasks_scheduled, tasks_mutex, 1));
+                // pool.assign_task(choose_vFPGA_id, create_task(choose_vFPGA_id, task_copy, tasks_scheduled, tasks_mutex, 1));
                 empty_vFPGA_index.erase(empty_vFPGA_index.begin() + 0);
                 reconfiguration_count += 1;
             }
@@ -448,31 +497,6 @@ int main(int argc, char* argv[])
         std::cout << "Policy:             " << "FIFO" << std::endl;
     std::cout << std::endl;
 
-
-    // // Task generator
-    // auto create_task = [](int id) {
-    //     return [id] {
-    //         std::cout << "****" << id << "****\n";
-    //         std::cout << "Worker " << id << " starting task\n";
-    //         std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    //         std::cout << "Worker " << id << " completed task\n";
-    //     };
-    // };
-
-    // if (pool.is_completed(0)) {
-    //     std::cout << "is complete" << std::endl;
-    // }
-    // else {
-    //     std::cout << "not complete" << std::endl;
-    // }
-
-    // if (pool.is_busy(0)) {
-    //     std::cout << "is busy" << std::endl;
-    // }
-    // else {
-    //     std::cout << "not busy" << std::endl;
-    // }
-
     
     // ---------------------------------------------------------------
     // Init 
@@ -490,7 +514,7 @@ int main(int argc, char* argv[])
     // sgEntry sg[n_regions];
     
     // Obtain resources
-    for (int i = 0; i < n_regions; i++) {
+    for (int i = 0; i < n_real_regions; i++) {
         cthread.emplace_back(new cThread<std::any>(i, getpid(), cs_dev));
         hMem[i] = mapped ? (cthread[i]->getMem({huge ? CoyoteAlloc::HPF : CoyoteAlloc::REG, max_size})) 
                          : (huge ? (mmap(NULL, max_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0))
@@ -498,31 +522,37 @@ int main(int argc, char* argv[])
     }
 
 
-    for(int i = 0; i < n_regions; i++) {
+    for(int i = 0; i < n_real_regions; i++) {
         // SG entries
         memset(&sg[i], 0, sizeof(localSg));
         sg[i].local.src_addr = hMem[i]; sg[i].local.src_len = curr_size; sg[i].local.src_stream = stream;
         sg[i].local.dst_addr = hMem[i]; sg[i].local.dst_len = curr_size; sg[i].local.dst_stream = stream;
     }
 
-    for (int j = 0; j < n_regions; j++) {
+    for (int j = 0; j < n_real_regions; j++) {
         for (int i = 0; i < max_size / 8; i++) {
             ((uint32_t *)hMem[j])[i] = 0;
         }
     }
-
-    std::unordered_map<int, std::vector<uint32_t>> vFPGA_mapping = {
-        {1, {0, 5}},
-        {2, {1, 3}},
-        {3, {2, 6}},
-        {4, {4, 7}}
-    };
-
 #endif
 
+    std::unordered_map<int, int> vFPGA_app_mapping = {
+        {0, 1},    // RLE
+        {1, 2},    // RSA
+        {2, 3},    // SHA256
+        {3, 2},    // RSA
+        {4, 4},    // FFT
+        {5, 1},    // RLE
+        {6, 3},    // SHA256
+        {7, 4},    // FFT
+    };
+
     std::unordered_map<int, std::vector<uint32_t>> app_mapping = {
+        // signed compression (RLE, RSA)
         {1, {1, 2}},
+        // digital signature (SHA256, RSA)
         {2, {3, 2}},
+        // audio processing (FFT, RLE)
         {3, {4, 1}}
     };
 
@@ -584,12 +614,22 @@ int main(int argc, char* argv[])
         current_tasks.push_back(task);
     }
 
+    // store empty tasks into the vector
+    for (int i = 0; i < n_real_regions; i++) {
+        TaskInfo task;
+        task.oids.push_back(vFPGA_app_mapping.at(i));
+        task.time = 0;
+        vFPGA_status.push_back(task);
+    }
+
     // Start total time benchmark
     auto sched_begin = std::chrono::high_resolution_clock::now();
     int32_t result = 0;
     uint32_t cycle = 0;
 
-#ifdef HW_TEST   
+#ifdef HW_TEST
+    cthread[0]->memCap(MemCapa::BASE_ADDRESS, MemCapa::END_ADDRESS, MemCapa::ALL_PASS);
+    cthread[0]->ioSwitch(IODevs::Inter_6_TO_HOST_0);
     for(int i = 0; i < 32; i++) {
         cthread[0]->invoke(CoyoteOper::LOCAL_TRANSFER, &sg[0], {true, true, false});
         while(cthread[0]->checkCompleted(CoyoteOper::LOCAL_WRITE) != 1) 
@@ -601,7 +641,6 @@ int main(int argc, char* argv[])
     duration_middle = (std::chrono::duration_cast<std::chrono::microseconds>(sched_middle - sched_begin).count() / 1000.0);
     std::cout<< "Experiment current (ms): " << duration_middle << std::endl;
 #endif
-    // exit(1);
 
     sched_begin = std::chrono::high_resolution_clock::now();
     int limit = 0;
@@ -614,22 +653,23 @@ int main(int argc, char* argv[])
         tasks_to_schedule[0].start_time = std::chrono::high_resolution_clock::now();
         std::cout << "starting time: " << (std::chrono::duration_cast<std::chrono::microseconds>(tasks_to_schedule[0].start_time - sched_begin).count() / 1000.0) << std::endl;
 
-        result = schedule_vfpga(tasks_to_schedule[0], n_regions, true, policy);
+        result = schedule_vfpga(tasks_to_schedule[0], true, policy);
 
         tasks_to_schedule.erase(tasks_to_schedule.begin() + 0);
         if (result >= 0) {
             std::cout << "scheduling some task " << result << std::endl;
-            // pool.assign_task(result, create_task(result));
         }
         // limit++;
         // if (limit > 10) {
         //     std::cout << "can't finish scheduling" << std::endl;
         //     break;
         // }
+#ifdef HW_TEST 
 #ifdef DEBUG
         sched_middle = std::chrono::high_resolution_clock::now();
         duration_middle = (std::chrono::duration_cast<std::chrono::microseconds>(sched_middle - sched_begin).count() / 1000.0);
         std::cout<< "Experiment current (ms): " << duration_middle << std::endl;
+#endif
 #endif
         std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
@@ -648,7 +688,7 @@ int main(int argc, char* argv[])
         std::cout << "scheduling remain tasks " << remain_task << std::endl;
         cycle++;
 
-        result = schedule_vfpga(task_empty, n_regions, false, policy);
+        result = schedule_vfpga(task_empty, false, policy);
 
         if (result >= 0) {
             std::cout << "scheduling some task " << result << std::endl;
@@ -662,12 +702,14 @@ int main(int argc, char* argv[])
         for (int i = 0; i < tasks_arrays.size(); ++i) {
             remain_task += tasks_arrays[i].size();
         }
+#ifdef HW_TEST 
 #ifdef DEBUG
         sched_middle = std::chrono::high_resolution_clock::now();
         duration_middle = 0.0;
         duration_middle = (std::chrono::duration_cast<std::chrono::microseconds>(sched_middle - sched_begin).count() / 1000.0);
         std::cout<< "Experiment current (ms): " << duration_middle << std::endl;
 
+#endif
 #endif
         std::this_thread::sleep_for(std::chrono::milliseconds(20));
         std::cout << "in schedule remain end" << std::endl;
@@ -680,10 +722,11 @@ int main(int argc, char* argv[])
     while (true) {
         all_completed = true;
         // Check for completed workers
-        for (int i = 0; i < 4; ++i) {
-            if (pool.is_busy(i)) {
+        for (int i = 0; i < n_real_regions; ++i) {
+            // if (pool.is_busy(i)) {
+            if (vwm.is_busy(i)) {
                 all_completed = false;
-                // std::cout << "Busy vFPGA: " << i << std::endl;
+                std::cout << "Busy vFPGA: " << i << std::endl;
             }
         }
         if (all_completed) break;
@@ -740,7 +783,7 @@ int main(int argc, char* argv[])
     std::cout << "Reconfiguration count: " << reconfiguration_count << std::endl;
 
     std::cout << "Average response time: " << average << std::endl;
-    
+
     std::cout << "Response time (95%): " << response_time[static_cast<int>(std::ceil(n_tasks/20))] << std::endl;
 
     std::cout << "Deadline misses: " << deadline_miss_count << std::endl;
@@ -758,6 +801,30 @@ int main(int argc, char* argv[])
     std::cout << deadline_miss_count << std::endl;
 
     std::cout << "--------------------------------------------------" << std::endl;
+
+    std::string policy_name = (policy == 0) ? "Coyote" :
+                            (policy == 1) ? "uShell" :
+                            "Unknown";
+
+    // File name + value to write
+    std::vector<std::pair<std::string, double>> outputs = {
+        {"sched_deadline.csv",  deadline_miss_count},
+        {"sched_latency.csv",   durationMs_final},
+        {"sched_reconfig.csv",  reconfiguration_count},
+        {"sched_resp_95.csv",   response_time[static_cast<int>(std::ceil(n_tasks/20))]},
+        {"sched_resp_avg.csv",  average}
+    };
+
+    for (const auto& [filename, value] : outputs) {
+        std::ofstream file(filename, std::ios::app);
+
+        if (file.is_open()) {
+            file << n_tasks << ","
+                << value << ","
+                << policy_name << "\n";
+        }
+    }
+
     
     return (EXIT_SUCCESS);
 }

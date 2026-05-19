@@ -603,7 +603,7 @@ void bThread::freeMem(void* vaddr) {
 void bThread::ioSwitch(IODevs io_dev) {
 	#ifdef EN_AVX
 	if(fcnfg.en_avx){
-        std::cout << "in en_avx ioSwitch: " << static_cast<int>(io_dev) << std::endl;
+        // std::cout << "in en_avx ioSwitch: " << static_cast<int>(io_dev) << std::endl;
 		cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)] = _mm256_set_epi64x(0, 0, 0, static_cast<uint16_t>(io_dev));
 	}
 	else

@@ -71,6 +71,13 @@ if(EXAMPLE STREQUAL "perf_fpga")
     message("** Example: FPGA perf benchmark")
 endif()
 
+# scheduler app
+if(EXAMPLE STREQUAL "scheduler_client")
+    set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/scheduler/client")
+    message("** HLL Streaming test client")
+    include_directories(${TARGET_DIR}/../include ${TARGET_DIR}/include)
+endif()
+
 # Streaming services example
 if(EXAMPLE STREQUAL "streaming_server")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/streaming_service/server")
