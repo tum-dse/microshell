@@ -158,9 +158,14 @@ int main(int argc, char *argv[])
     // Obtain resources
     for (int i = 0; i < n_regions; i++) {
         cthread.emplace_back(new cThread<std::any>(i, getpid(), cs_dev));
+
+        auto mem_begin_time = chrono::high_resolution_clock::now();
         hMem[i] = mapped ? (cthread[i]->getMem({huge ? CoyoteAlloc::HPF : CoyoteAlloc::REG, max_size})) 
                          : (huge ? (mmap(NULL, max_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0))
                                  : (malloc(max_size)));
+        auto mem_end_time = chrono::high_resolution_clock::now();
+        double mem_time = chrono::duration_cast<std::chrono::microseconds>(mem_end_time - mem_begin_time).count();
+        std::cout << "Mem allocation done in " << mem_time << " µs" << std::endl;
     }
 
     sgEntry sg[n_regions];
@@ -178,12 +183,24 @@ int main(int argc, char *argv[])
     // for cyt_top_dtu_3_0122
     sg[0].local.offset_r = 0;
     sg[0].local.offset_w = 0;
+    auto begin_time = chrono::high_resolution_clock::now();
     cthread[0]->ioSwitch(IODevs::Inter_2_TO_HOST_0);
-    cthread[0]->ioSwDbg();
+    // cthread[0]->ioSwDbg();
+    if (cthread[0]->ioSwChk(IODevs::Inter_2_TO_HOST_0)) {
+        auto end_time = chrono::high_resolution_clock::now();
+        double time = chrono::duration_cast<std::chrono::microseconds>(end_time - begin_time).count();
+        std::cout << "Object capability done in " << time << " µs" << std::endl;
+    }
     sg[1].local.offset_r = 0;
     sg[1].local.offset_w = 0;
+    auto begin_time_1 = chrono::high_resolution_clock::now();
     cthread[1]->ioSwitch(IODevs::Inter_2_TO_HOST_1);
-    cthread[1]->ioSwDbg();
+    // cthread[1]->ioSwDbg();
+    if (cthread[1]->ioSwChk(IODevs::Inter_2_TO_HOST_1)) {
+        auto end_time_1 = chrono::high_resolution_clock::now();
+        double time_1 = chrono::duration_cast<std::chrono::microseconds>(end_time_1 - begin_time_1).count();
+        std::cout << "Object capability done in " << time_1 << " µs" << std::endl;
+    }
     // sg[2].local.offset_r = 0;
     // sg[2].local.offset_w = 0;
     // cthread[2]->ioSwitch(IODevs::Inter_3_TO_HOST_2);
@@ -191,9 +208,23 @@ int main(int argc, char *argv[])
 
 #endif
 
+    begin_time = chrono::high_resolution_clock::now();
     cthread[0]->memCap(MemCapa::BASE_ADDRESS, MemCapa::END_ADDRESS, MemCapa::ALL_PASS);
-    cthread[1]->memCap(MemCapa::BASE_ADDRESS, MemCapa::END_ADDRESS, MemCapa::ALL_PASS);
+    if (cthread[0]->memCapChk(MemCapa::BASE_ADDRESS, MemCapa::END_ADDRESS, MemCapa::ALL_PASS)) {
+        auto end_time = chrono::high_resolution_clock::now();
+        double time = chrono::duration_cast<std::chrono::microseconds>(end_time - begin_time).count();
+        std::cout << "Memory capability done in " << time << " µs" << std::endl;
+    }
 
+    begin_time = chrono::high_resolution_clock::now();
+    cthread[1]->memCap(MemCapa::BASE_ADDRESS, MemCapa::END_ADDRESS, MemCapa::ALL_PASS);
+    if (cthread[1]->memCapChk(MemCapa::BASE_ADDRESS, MemCapa::END_ADDRESS, MemCapa::ALL_PASS)) {
+        auto end_time = chrono::high_resolution_clock::now();
+        double time = chrono::duration_cast<std::chrono::microseconds>(end_time - begin_time).count();
+        std::cout << "Memory capability done in " << time << " µs" << std::endl;
+    }
+
+    exit(1);
 #ifdef EN_INTER_2_TESTS
 
     // from vFPGA 0 to vFPGA 1

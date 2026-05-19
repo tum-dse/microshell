@@ -4,9 +4,9 @@ import csv
 from pathlib import Path
 from statistics import mean
 
-PR_LOG = Path("../../data/deployment_6.3/reconfig_pr.log")
-CAP_LOG = Path("../../data/deployment_6.3/reconfig_cap.log")
-OUT_CSV = Path("../../data/deployment_6.3/reconfig_times.csv")
+PR_LOG = Path("../data/deployment_6.3/reconfig_pr.log")
+CAP_LOG = Path("../data/deployment_6.3/reconfig_cap.log")
+OUT_CSV = Path("../data/deployment_6.3/reconfig_times.csv")
 
 patterns = {
     "reconfig_time_us": re.compile(r"Reconfiguration done in\s+([0-9.]+)\s*µ?s"),

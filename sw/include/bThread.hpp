@@ -171,7 +171,11 @@ public:
 
 	void memCap(MemCapa base_addr, MemCapa top_addr, MemCapa permission);
 	
+	bool memCapChk(MemCapa base_addr, MemCapa top_addr, MemCapa permission);
+
 	void ioSwDbg();
+
+	bool ioSwChk(IODevs io_dev);
 
 	/**
 	 * @brief Get user data

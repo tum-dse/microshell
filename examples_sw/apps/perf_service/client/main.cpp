@@ -82,104 +82,107 @@ int main(int argc, char *argv[])
     if(commandLineArgs.count("three") > 0) runThree = commandLineArgs["three"].as<bool>();
     if(commandLineArgs.count("four") > 0) runFour = commandLineArgs["four"].as<bool>();
 
+    // send the request 5 times
+    for (int i = 0; i < 5; i++) {
+        //
+        // HyperLogLog operator
+        //
+        if(runOne) {
+            // Connect to service
+            cLib<double, uint64_t, uint32_t> clib_perf_1("/tmp/coyote-daemon-vfid-0-streaming", fid_perf_1); 
+            // cLib<double, uint64_t, uint32_t> clib_perf_1("/tmp/coyote-daemon-vfid-1-streaming", fid_perf_1); 
 
-    //
-    // HyperLogLog operator
-    //
-    if(runOne) {
-        // Connect to service
-        cLib<double, uint64_t, uint32_t> clib_perf_1("/tmp/coyote-daemon-vfid-0-streaming", fid_perf_1); 
-        // cLib<double, uint64_t, uint32_t> clib_perf_1("/tmp/coyote-daemon-vfid-1-streaming", fid_perf_1); 
+            // Let's get some buffers and fill it with some random data ...
+            uint32_t* dMem = (uint32_t*) memalign(axiDataWidth, size);
 
-        // Let's get some buffers and fill it with some random data ...
-        uint32_t* dMem = (uint32_t*) memalign(axiDataWidth, size);
+            for (int i = 0; i < size / 8; i++) {
+                dMem[i] = 0;
+            }
+            
+            // Execute the HLL
+            // This is the only place of interaction with Coyote ...
+            double cmpl_ev = clib_perf_1.task(opPriority, (uint64_t)dMem, size);
 
-        for (int i = 0; i < size / 8; i++) {
-            dMem[i] = 0;
+            PR_HEADER("perf_local_1");
+            std::cout << std::fixed << std::setprecision(2) << std::dec;
+            std::cout << "Estimation completed, run time: " << cmpl_ev << " us" << std::endl;
+            
+            free(dMem);
         }
         
-        // Execute the HLL
-        // This is the only place of interaction with Coyote ...
-        double cmpl_ev = clib_perf_1.task(opPriority, (uint64_t)dMem, size);
+        //
+        // Decision trees operator
+        //
+        if(runTwo) {
+            // Connect to service
+            cLib<double, uint64_t, uint32_t> clib_perf_2("/tmp/coyote-daemon-vfid-0-streaming", fid_perf_2);
+            // cLib<double, uint64_t, uint32_t> clib_perf_2("/tmp/coyote-daemon-vfid-1-streaming", fid_perf_2);
 
-        PR_HEADER("perf_local_1");
-        std::cout << std::fixed << std::setprecision(2) << std::dec;
-        std::cout << "Estimation completed, run time: " << cmpl_ev << " us" << std::endl;
-        
-        free(dMem);
-    }
-    
-    //
-    // Decision trees operator
-    //
-    if(runTwo) {
-        // Connect to service
-        cLib<double, uint64_t, uint32_t> clib_perf_2("/tmp/coyote-daemon-vfid-0-streaming", fid_perf_2);
-        // cLib<double, uint64_t, uint32_t> clib_perf_2("/tmp/coyote-daemon-vfid-1-streaming", fid_perf_2);
+            // Let's get some buffers and fill it with some random data ...
+            uint32_t* dMem = (uint32_t*) memalign(axiDataWidth, size);
 
-        // Let's get some buffers and fill it with some random data ...
-        uint32_t* dMem = (uint32_t*) memalign(axiDataWidth, size);
+            for (int i = 0; i < size / 8; i++) {
+                dMem[i] = 0;
+            }
+            
+            // Execute the HLL
+            // This is the only place of interaction with Coyote ...
+            double cmpl_ev = clib_perf_2.task(opPriority, (uint64_t)dMem, size);
 
-        for (int i = 0; i < size / 8; i++) {
-            dMem[i] = 0;
+            PR_HEADER("perf_local_2");
+            std::cout << std::fixed << std::setprecision(2) << std::dec;
+            std::cout << "Estimation completed, run time: " << cmpl_ev << " us" << std::endl;
+            
+            free(dMem);
+        }
+
+        if(runThree) {
+            // Connect to service
+            cLib<double, uint64_t, uint32_t> clib_perf_3("/tmp/coyote-daemon-vfid-0-streaming", fid_perf_3);
+            // cLib<double, uint64_t, uint32_t> clib_perf_2("/tmp/coyote-daemon-vfid-1-streaming", fid_perf_2);
+
+            // Let's get some buffers and fill it with some random data ...
+            uint32_t* dMem = (uint32_t*) memalign(axiDataWidth, size);
+
+            for (int i = 0; i < size / 8; i++) {
+                dMem[i] = 0;
+            }
+            
+            // Execute the HLL
+            // This is the only place of interaction with Coyote ...
+            double cmpl_ev = clib_perf_3.task(opPriority, (uint64_t)dMem, size);
+
+            PR_HEADER("perf_local_3");
+            std::cout << std::fixed << std::setprecision(2) << std::dec;
+            std::cout << "Estimation completed, run time: " << cmpl_ev << " us" << std::endl;
+            
+            free(dMem);
         }
         
-        // Execute the HLL
-        // This is the only place of interaction with Coyote ...
-        double cmpl_ev = clib_perf_2.task(opPriority, (uint64_t)dMem, size);
 
-        PR_HEADER("perf_local_2");
-        std::cout << std::fixed << std::setprecision(2) << std::dec;
-        std::cout << "Estimation completed, run time: " << cmpl_ev << " us" << std::endl;
-        
-        free(dMem);
-    }
+        if(runFour) {
+            // Connect to service
+            cLib<double, uint64_t, uint32_t> clib_perf_4("/tmp/coyote-daemon-vfid-0-streaming", fid_perf_4);
+            // cLib<double, uint64_t, uint32_t> clib_perf_2("/tmp/coyote-daemon-vfid-1-streaming", fid_perf_2);
 
-    if(runThree) {
-        // Connect to service
-        cLib<double, uint64_t, uint32_t> clib_perf_3("/tmp/coyote-daemon-vfid-0-streaming", fid_perf_3);
-        // cLib<double, uint64_t, uint32_t> clib_perf_2("/tmp/coyote-daemon-vfid-1-streaming", fid_perf_2);
+            // Let's get some buffers and fill it with some random data ...
+            uint32_t* dMem = (uint32_t*) memalign(axiDataWidth, size);
 
-        // Let's get some buffers and fill it with some random data ...
-        uint32_t* dMem = (uint32_t*) memalign(axiDataWidth, size);
+            for (int i = 0; i < size / 8; i++) {
+                dMem[i] = 0;
+            }
+            
+            // Execute the HLL
+            // This is the only place of interaction with Coyote ...
+            double cmpl_ev = clib_perf_4.task(opPriority, (uint64_t)dMem, size);
 
-        for (int i = 0; i < size / 8; i++) {
-            dMem[i] = 0;
+            PR_HEADER("perf_local_4");
+            std::cout << std::fixed << std::setprecision(2) << std::dec;
+            std::cout << "Estimation completed, run time: " << cmpl_ev << " us" << std::endl;
+            
+            free(dMem);
         }
-        
-        // Execute the HLL
-        // This is the only place of interaction with Coyote ...
-        double cmpl_ev = clib_perf_3.task(opPriority, (uint64_t)dMem, size);
-
-        PR_HEADER("perf_local_3");
-        std::cout << std::fixed << std::setprecision(2) << std::dec;
-        std::cout << "Estimation completed, run time: " << cmpl_ev << " us" << std::endl;
-        
-        free(dMem);
     }
-    
 
-    if(runFour) {
-        // Connect to service
-        cLib<double, uint64_t, uint32_t> clib_perf_4("/tmp/coyote-daemon-vfid-0-streaming", fid_perf_4);
-        // cLib<double, uint64_t, uint32_t> clib_perf_2("/tmp/coyote-daemon-vfid-1-streaming", fid_perf_2);
-
-        // Let's get some buffers and fill it with some random data ...
-        uint32_t* dMem = (uint32_t*) memalign(axiDataWidth, size);
-
-        for (int i = 0; i < size / 8; i++) {
-            dMem[i] = 0;
-        }
-        
-        // Execute the HLL
-        // This is the only place of interaction with Coyote ...
-        double cmpl_ev = clib_perf_4.task(opPriority, (uint64_t)dMem, size);
-
-        PR_HEADER("perf_local_4");
-        std::cout << std::fixed << std::setprecision(2) << std::dec;
-        std::cout << "Estimation completed, run time: " << cmpl_ev << " us" << std::endl;
-        
-        free(dMem);
-    }
     return (EXIT_SUCCESS);
 }

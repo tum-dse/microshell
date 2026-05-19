@@ -73,16 +73,14 @@ The artifact uses **two** branches of this repo:
 - `master` — the µShell shell, runtime, and modular apps
 - `baseline` — the same applications written against an unmodified Coyote shell
 
-<!-- On the OSDI evaluation machine, both are already cloned and used by the
-[REPRODUCE.md](REPRODUCE.md) commands at:
-
-- `/scratch/anubhav/microShell` (master)
-- `/scratch/anubhav/baseline/microShell` (baseline) -->
+Both branches need to be cloned and they are used by the [REPRODUCE.md](REPRODUCE.md) commands.
 
 Clone the repo
 
 ```bash
+cd ~
 git clone git@github.com:TUM-DSE/microShell.git 
+git clone -b baseline git@github.com:TUM-DSE/microShell.git microShell_base
 ```
 
 <!-- ### 2. Build the FPGA driver
@@ -163,17 +161,17 @@ python3 deployment_6.3/plot_reconfig_overhead.py
 ### 6.4 Programmability (Table 5)
 
 ```bash
-python3 complexity_6.4/plot_complexity.py \
+python3 complexity_6.4/extract_complexity.py \
     --baseline-csv ../data/complexity_6.4/complexity_baseline_results.csv \
     --ushell-csv   ../data/complexity_6.4/complexity_ushell_results.csv
-# → evaluation/plots/complexity_6.4/complexity.{pdf,png}
+# Prints Table rows to stdout
 ```
 
 ### 6.5 Resource Overheads (Table 6)
 
 ```bash
 python3 resource_usage_6.5/extract_util.py
-# Prints the Table 6 rows (Coyote, µShell, Inter 3/4/6/8, PCIe DMA, MMU, CEU) to stdout
+# Prints Table 6 rows (Coyote, µShell, Inter 3/4/6/8, PCIe DMA, MMU, CEU) to stdout
 
 python3 resource_usage_6.5/extract_modules.py
 # Prints per-module utilization (Figure 5 source) to stdout

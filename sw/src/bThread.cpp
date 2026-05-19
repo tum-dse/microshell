@@ -603,7 +603,7 @@ void bThread::freeMem(void* vaddr) {
 void bThread::ioSwitch(IODevs io_dev) {
 	#ifdef EN_AVX
 	if(fcnfg.en_avx){
-        // std::cout << "in en_avx ioSwitch: " << static_cast<int>(io_dev) << std::endl;
+        std::cout << "in en_avx ioSwitch: " << static_cast<int>(io_dev) << std::endl;
 		cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)] = _mm256_set_epi64x(0, 0, 0, static_cast<uint16_t>(io_dev));
 	}
 	else
@@ -617,25 +617,50 @@ void bThread::ioSwitch(IODevs io_dev) {
  * @param io_dev - target IO device
  */
 void bThread::memCap(MemCapa base_addr, MemCapa top_addr, MemCapa permission) {
-	#ifdef EN_AVX
-	if(fcnfg.en_avx){
+#ifdef EN_AVX
+    if(fcnfg.en_avx){
+        // std::cout << "in memCap base: " << static_cast<uint32_t>(base_addr) << std::endl;
+        // std::cout << "in memCap top: " << static_cast<uint32_t>(top_addr) << std::endl;
         // std::cout << "in en_avx ioSwitch: " << static_cast<int>(io_dev) << std::endl;
-		cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::USER_DATA_REG)] = _mm256_set_epi64x(0, 0, static_cast<uint64_t>(top_addr), static_cast<uint64_t>(base_addr));
-	}
-	else
+        cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::USER_DATA_REG)] = _mm256_set_epi64x(0, 0, static_cast<uint64_t>(top_addr), static_cast<uint64_t>(base_addr));
+    }
+    else
 #endif
-		cnfg_reg[static_cast<uint32_t>(CnfgLegRegs::USER_DATA_REG)] = static_cast<uint32_t>(base_addr);
+        cnfg_reg[static_cast<uint32_t>(CnfgLegRegs::USER_DATA_REG)] = static_cast<uint32_t>(base_addr);
 };
 
+
+bool bThread::memCapChk(MemCapa base_addr, MemCapa top_addr, MemCapa permission) {
+#ifdef EN_AVX
+    if(fcnfg.en_avx){
+        // std::cout << "in memCapChk base: " << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::USER_DATA_REG)], 0x0) << std::endl;
+        // std::cout << "in memCapChk top: " << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::USER_DATA_REG)], 0x1) << std::endl;
+        // std::cout << "in memCapChk top: " << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::USER_DATA_REG)], 0x2) << std::endl;
+        // std::cout << "in memCapChk top: " << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::USER_DATA_REG)], 0x3) << std::endl;
+        return _mm256_extract_epi64(
+                cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::USER_DATA_REG)], 0x0
+            ) == static_cast<uint64_t>(base_addr) &&
+            _mm256_extract_epi64(
+                cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::USER_DATA_REG)], 0x1
+            ) == static_cast<uint64_t>(top_addr);
+    }
+#endif
+
+}
+
 void bThread::ioSwDbg() {
-	std::cout << "IO switch register: " << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x3) 
-		<< _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x2)
-		<< _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x1)
-		<< _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x0) << std::endl;
-	// std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x3) << std::endl;
-	// std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x2) << std::endl;
-	// std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x1) << std::endl;
-	// std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x0) << std::endl;
+    std::cout << "IO switch register: " << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x3) 
+        << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x2)
+        << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x1)
+        << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x0) << std::endl;
+    // std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x3) << std::endl;
+    // std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x2) << std::endl;
+    // std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x1) << std::endl;
+    // std::cout << _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x0) << std::endl;
+}
+
+bool bThread::ioSwChk(IODevs io_dev) {
+	return _mm256_extract_epi64(cnfg_reg_avx[static_cast<uint32_t>(CnfgAvxRegs::IO_SWITCH_REG)], 0x0) == static_cast<uint32_t>(io_dev);
 }
 
 void bThread::userData() {
