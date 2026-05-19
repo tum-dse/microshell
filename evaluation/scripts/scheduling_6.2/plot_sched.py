@@ -30,11 +30,11 @@ hatch1 = "//"   # Coyote
 hatch2 = "\\\\"  # uShell
 
 # ===== DATA LOADING =====
-data1 = pandas.read_csv("../../data/scheduling_6.2/sched_latency.csv")
-data2 = pandas.read_csv("../../data/scheduling_6.2/sched_reconfig.csv")
-data3 = pandas.read_csv("../../data/scheduling_6.2/sched_resp_avg.csv")
-data4 = pandas.read_csv("../../data/scheduling_6.2/sched_resp_95.csv")
-data5 = pandas.read_csv("../../data/scheduling_6.2/sched_deadline.csv")
+data1 = pandas.read_csv("../data/scheduling_6.2/sched_latency.csv")
+data2 = pandas.read_csv("../data/scheduling_6.2/sched_reconfig.csv")
+data3 = pandas.read_csv("../data/scheduling_6.2/sched_resp_avg.csv")
+data4 = pandas.read_csv("../data/scheduling_6.2/sched_resp_95.csv")
+data5 = pandas.read_csv("../data/scheduling_6.2/sched_deadline.csv")
 
 # ===== PERCENTAGE CALCULATION FUNCTIONS =====
 def latency_percentage(data):
@@ -243,6 +243,6 @@ fig.text(0.78, -0.065, "Lower is better ↓",
          ha='center', va='bottom')
 
 # ===== SAVE AND DISPLAY =====
-plt.savefig("../../plots/scheduling_6.2/sched.png", dpi=300, bbox_inches='tight')
-plt.savefig("../../plots/scheduling_6.2/sched.pdf", bbox_inches='tight')
-plt.show()
+plt.savefig("../plots/scheduling_6.2/sched.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/scheduling_6.2/sched.pdf", bbox_inches='tight')
+print("Figures generated at ../plots/scheduling_6.2/sched.png and ../plots/scheduling_6.2/sched.pdf")

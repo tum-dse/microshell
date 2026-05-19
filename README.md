@@ -128,14 +128,16 @@ The application reports average throughput across two vFPGAs.
 
 ## Detailed Instructions: Reproducing the paper results
 
-All the figures and tables from the paper can be generated using the collected execution data in `evaluation/data/`. The detailed step-by-step flow — bitstream generation, host-side measurements,
-CSV outputs — lives in [REPRODUCE.md](REPRODUCE.md). The mapping from paper artifacts to repo scripts:
+All the figures and tables from the paper can be generated using the collected execution data in `evaluation/data/`. The detailed step-by-step flow — bitstream generation, host-side measurements, CSV outputs — lives in [REPRODUCE.md](REPRODUCE.md). 
 
+Assuming your repo is cloned at `~/microShell`, run the following command to set up the environment:
 
+```bash
+cd ~\microShell
+nix-shell shell.nix
+cd evaluation/scripts/
+```
 
-Run the following to regenerate every figure / table from the CSVs and
-logs already shipped under `evaluation/data/`. All commands assume cwd =
-`/scratch/anubhav/microShell/evaluation/scripts/`.
 
 ### 6.1 Performance (Figure 11)
 
@@ -162,8 +164,8 @@ python3 deployment_6.3/plot_reconfig_overhead.py
 
 ```bash
 python3 complexity_6.4/plot_complexity.py \
-    --baseline-csv /scratch/anubhav/baseline/microShell/evaluation/data/complexity_6.4/complexity_baseline_results.csv \
-    --ushell-csv   /scratch/anubhav/microShell/evaluation/data/complexity_6.4/complexity_ushell_results.csv
+    --baseline-csv ../data/complexity_6.4/complexity_baseline_results.csv \
+    --ushell-csv   ../data/complexity_6.4/complexity_ushell_results.csv
 # → evaluation/plots/complexity_6.4/complexity.{pdf,png}
 ```
 

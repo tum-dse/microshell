@@ -247,6 +247,7 @@ fig.suptitle('Higher is better ↑', fontsize=ANNOTATION_SIZE, color='navy',
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.1)
-plt.savefig("../../plots/e2e_6.1/e2e.png", dpi=300, bbox_inches='tight')
-plt.savefig("../../plots/e2e_6.1/e2e.pdf", bbox_inches='tight')
-plt.show()
+plt.savefig("../plots/e2e_6.1/e2e.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/e2e_6.1/e2e.pdf", bbox_inches='tight')
+print("Figures generated at ../plots/e2e_6.1/e2e.png and ../plots/e2e_6.1/e2e.pdf")
+# plt.show()

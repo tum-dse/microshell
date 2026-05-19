@@ -40,7 +40,7 @@ x_positions = np.arange(len(vFPGA_count))
 # object_alloc = [3.6, 3.6*2, 3.6*3, 3.6*4]
 # mem_values = [2, 2*2, 2*3, 2*4]
 
-CSV_FILE = "../../data/deployment_6.3/reconfig_times.csv"
+CSV_FILE = "../data/deployment_6.3/reconfig_times.csv"
 
 df = pd.read_csv(CSV_FILE)
 
@@ -180,6 +180,7 @@ plt.subplots_adjust(wspace=0, hspace=0.05)
 plt.margins(x=0.0, tight=True)
 
 # Save figure
-plt.savefig("../../plots/deployment_6.3/reconfig_overhead.png", dpi=300, bbox_inches='tight')
-plt.savefig("../../plots/deployment_6.3/reconfig_overhead.pdf", bbox_inches='tight')
-plt.show()
+plt.savefig("../plots/deployment_6.3/reconfig_overhead.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/deployment_6.3/reconfig_overhead.pdf", bbox_inches='tight')
+print("Figures generated at ../plots/deployment_6.3/reconfig_overhead.png and ../plots/deployment_6.3/reconfig_overhead.pdf")
+
