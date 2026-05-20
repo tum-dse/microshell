@@ -523,13 +523,16 @@ The followings are scripts to generate background figures used in §2. These are
 Figure 4 and Figure 5 share data with §6.5 and are covered there.
 
 
-All commands assume cwd = `/scratch/anubhav/microShell/evaluation/scripts/`.
+<!-- All commands assume cwd = `/scratch/anubhav/microShell/evaluation/scripts/`. -->
 
 ### Figure 1 — Modularity of real-world apps
 
 Literature-survey breakdown of accelerator module categories.
 
 ```bash
+cd ~/microShell
+nix-shell shell.nix # this can be skipped if you are already in the nix-shell 
+cd evaluation/scripts
 python3 modularity_2/plot_app_modularity.py
 # → evaluation/plots/modularity_2/application_modularity_analysis.{pdf,png}
 ```
@@ -539,9 +542,12 @@ python3 modularity_2/plot_app_modularity.py
 Function-call overlap analysis on Vitis Vision Library applications.
 
 ```bash
-python3 composability_2/process_cv_files.py vision/L3/examples/   # → file_functions.txt
+cd ~/microShell
+nix-shell shell.nix # this can be skipped if you are already in the nix-shell 
+cd evaluation/scripts
+python3 composability_2/process_cv_files.py ../data/composability_2/vision/L3/examples/   # → file_functions.txt
 python3 composability_2/analyze_functions.py                       # → similarity_matrix.csv, overlap_matrix.csv
-python3 composability_2/visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o visualization.pdf
+python3 composability_2/visualize_correlation.py similarity_matrix.csv overlap_matrix.csv -o ../plots/composability_2
 # → evaluation/plots/composability_2/correlation_heatmap.pdf
 ```
 
@@ -550,16 +556,18 @@ python3 composability_2/visualize_correlation.py similarity_matrix.csv overlap_m
 Compares two execution modes per app: **direct** (composed on one vFPGA)
 vs. **cpu_sync** (one module per vFPGA, host CPU shuttling between stages).
 
-Bitstreams (build host):
+Building FPGA bitstreams (build host):
 ```bash
-bash effectiveness_2/compile_bitgen_effectiveness.sh /scratch/anubhav/baseline/microShell
+cd ~/microShell
+cd evaluation/scripts
+bash effectiveness_2/compile_bitgen_effectiveness.sh ~/microShell_base
 # 10 tmux sessions: 5 direct + 5 cpu_sync. Review timing, then:
-bash effectiveness_2/stage_bitstreams_effectiveness.sh /scratch/anubhav/baseline/microShell
+bash effectiveness_2/stage_bitstreams_effectiveness.sh ~/microShell_base
 ```
 
 Measure (FPGA host):
 ```bash
-bash effectiveness_2/run_effectiveness.sh /scratch/anubhav/baseline/microShell
+bash effectiveness_2/run_effectiveness.sh ~/microShell_base
 # Auto-enters nix-shell. Appends rows to data/effectiveness_2/effectiveness.csv.
 ```
 

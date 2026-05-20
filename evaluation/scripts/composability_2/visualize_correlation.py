@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot_half_correlation_matrix(csv_path, csv_path_2, output_file='correlation_heatmap_half.png'):
+def plot_half_correlation_matrix(csv_path, csv_path_2, output_path='.'):
     # Read and process data
     df = pd.read_csv(csv_path, index_col=0)
     matrix = df.values.astype(float)
@@ -52,9 +52,13 @@ def plot_half_correlation_matrix(csv_path, csv_path_2, output_file='correlation_
     plt.plot([-0.5, n-0.5], [-0.5, n-0.5], color='gray', linestyle='--')
     
     plt.tight_layout()
-    plt.savefig(output_file, dpi=300, bbox_inches='tight')
-    print(f"Saved half-matrix visualization to {output_file}")
-    plt.show()
+    # plt.savefig(output_file, dpi=300, bbox_inches='tight')
+    plt.savefig(output_path+"/correlation_heatmap_half.png", dpi=300, bbox_inches='tight')
+    plt.savefig(output_path+"/correlation_heatmap_half.pdf", bbox_inches='tight')
+    print(f"Figures generated at {output_path}/correlation_heatmap_half.png and {output_path}/correlation_heatmap_half.pdf")
+
+    # print(f"Saved half-matrix visualization to {output_file}")
+    # plt.show()
 
 if __name__ == "__main__":
     import argparse
