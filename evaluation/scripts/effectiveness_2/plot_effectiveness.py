@@ -164,6 +164,7 @@ ax.text(0.50, 1.1, 'Higher is better ↑', transform=ax.transAxes,
 
 # ===== SAVE AND DISPLAY =====
 plt.tight_layout()
-#plt.savefig("direct_comm_effectiveness.png", dpi=300, bbox_inches='tight')
-plt.savefig("../../plots/effectiveness_2/direct_comm_effectiveness.pdf", bbox_inches='tight')
-plt.show()
+plt.savefig("../plots/effectiveness_2/direct_comm_effectiveness.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/effectiveness_2/direct_comm_effectiveness.pdf", bbox_inches='tight')
+print("Figures generated at ../plots/effectiveness_2/direct_comm_effectiveness.png and ../plots/effectiveness_2/direct_comm_effectiveness.pdf")
+# plt.show()

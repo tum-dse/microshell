@@ -126,6 +126,7 @@ ax.text(0.1, 1.08, 'Lower is better ↓', transform=ax.transAxes,
         ha='center', va='top')
 
 plt.tight_layout()
-# fig.savefig("reconf_analysis.png", bbox_inches="tight")
-plt.savefig("../../plots/reconfig_2/reconf_analysis.pdf", bbox_inches="tight")
-plt.show()
+plt.savefig("../plots/reconfig_2/reconf_analysis.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/reconfig_2/reconf_analysis.pdf", bbox_inches="tight")
+print("Figures generated at ../plots/reconfig_2/reconf_analysis.png and ../plots/reconfig_2/reconf_analysis.pdf")
+

@@ -131,6 +131,8 @@ plt.tight_layout()
 plt.margins(x=0.015, y=0.0, tight=True)
 
 # Save figure
-plt.savefig("../../plots/modularity_2/application_modularity_analysis.pdf", bbox_inches='tight')
-plt.savefig("../../plots/modularity_2/application_modularity_analysis.png", dpi=300, bbox_inches='tight')
+plt.savefig("../plots/modularity_2/application_modularity_analysis.pdf", bbox_inches='tight')
+plt.savefig("../plots/modularity_2/application_modularity_analysis.png", dpi=300, bbox_inches='tight')
+print("Figures generated at ../plots/modularity_2/application_modularity_analysis.png and ../plots/modularity_2/application_modularity_analysis.pdf")
+
 # plt.show()

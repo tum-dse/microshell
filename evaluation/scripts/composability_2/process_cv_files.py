@@ -31,6 +31,8 @@ def process_repo(repo_dir):
             except Exception as e:
                 print(f"Error processing {cpp_file}: {e}", file=sys.stderr)
 
+    print("Generated file_functions.txt")
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python process_files.py <repository_directory>")
