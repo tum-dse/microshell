@@ -101,21 +101,6 @@ if(EXAMPLE STREQUAL "tcp_iperf")
     message("**  Example: TCP - iperf")
 endif()
 
-#
-# Create build targets
-#
-set(EXEC test)
-add_executable(${EXEC} ${TARGET_DIR}/main.cpp)
-target_link_libraries(${EXEC} PUBLIC Coyote)
-target_link_directories(${EXEC} PUBLIC /usr/local/lib)
-
-if(EN_GPU)
-    set(AMD_GPU "gfx908" CACHE STRING "AMD GPU device to use")
-    set_property(TARGET ${EXEC} PROPERTY HIP_ARCHITECTURES ${AMD_GPU})
-    set_target_properties(${EXEC} PROPERTIES LINKER_LANGUAGE CXX)
-    target_link_libraries(${EXEC} PUBLIC hip::device  numa pthread drm drm_amdgpu rt dl hsa-runtime64 hsakmt)
-endif()
-
 #Speech
 if(EXAMPLE STREQUAL "speech")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/speech")
@@ -144,6 +129,21 @@ endif()
 if(EXAMPLE STREQUAL "audio")
     set(TARGET_DIR "${CYT_DIR}/examples_sw/apps/audio")
     message("** Example: Audio Compression (Coyote daemon)")
+endif()
+
+#
+# Create build targets
+#
+set(EXEC test)
+add_executable(${EXEC} ${TARGET_DIR}/main.cpp)
+target_link_libraries(${EXEC} PUBLIC Coyote)
+target_link_directories(${EXEC} PUBLIC /usr/local/lib)
+
+if(EN_GPU)
+    set(AMD_GPU "gfx908" CACHE STRING "AMD GPU device to use")
+    set_property(TARGET ${EXEC} PROPERTY HIP_ARCHITECTURES ${AMD_GPU})
+    set_target_properties(${EXEC} PROPERTIES LINKER_LANGUAGE CXX)
+    target_link_libraries(${EXEC} PUBLIC hip::device  numa pthread drm drm_amdgpu rt dl hsa-runtime64 hsakmt)
 endif()
 
 #AES-CTR 
