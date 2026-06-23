@@ -1514,50 +1514,66 @@ void DFG::release_resources(Capability* cap) {
     // Set stalled state to prevent new operations
     stalled.store(true);
     
-    // Free buffer memory with proper error handling
+    // Quiesce every node (clear completion counters). This MUST iterate
+    // every node, but it doesn't touch any per-buffer state.
     if (!nodes.empty()) {
         for (const auto& node_pair : nodes) {
             auto node = node_pair.second;
             if (!node) continue;
-            
+
             std::string node_id = node->get_id();
             std::string node_cap_id = node_id + "_cap";
             Capability* node_cap = find_capability(node_cap_id, cap);
-            
+
             if (!node_cap) {
                 std::cerr << "Warning: Could not find capability for node " << node_id << " during cleanup" << std::endl;
                 continue;
             }
-            
-            // First ensure the node is idle
+
             try {
                 node->clear_completed(node_cap);
             } catch (const std::exception& e) {
-                std::cerr << "Exception clearing completion for node " << node_id 
+                std::cerr << "Exception clearing completion for node " << node_id
                           << ": " << e.what() << std::endl;
             }
-            
-            // Free buffer memory associated with this node
+        }
+    }
+
+    // Free each buffer's device memory EXACTLY ONCE. The previous nested
+    // (nodes × buffers) loop called free_mem on every (node, buffer) pair,
+    // which freed the same pointer N times for N nodes — glibc detected the
+    // second free and aborted the process with `free(): invalid pointer`.
+    // free_mem is per-thread bookkeeping; any node's thread can release a
+    // buffer's mapping. Pick the first node as the owner for all buffers.
+    if (!nodes.empty() && !buffers.empty()) {
+        auto owner_node = nodes.begin()->second;
+        Capability* owner_cap = nullptr;
+        if (owner_node) {
+            std::string owner_cap_id = owner_node->get_id() + "_cap";
+            owner_cap = find_capability(owner_cap_id, cap);
+        }
+
+        if (owner_node && owner_cap) {
             for (auto& buffer_pair : buffers) {
                 auto buffer = buffer_pair.second;
                 if (!buffer) continue;
-                
+
                 std::string buffer_id = buffer->get_id();
                 std::string buffer_cap_id = buffer_id + "_cap";
                 Capability* buffer_cap = find_capability(buffer_cap_id, cap);
-                
+
                 if (!buffer_cap) {
                     std::cerr << "Warning: Could not find capability for buffer " << buffer_id << " during cleanup" << std::endl;
                     continue;
                 }
-                
+
                 try {
                     void* memory = buffer->get_memory(buffer_cap);
                     if (memory) {
-                        node->free_mem(memory, node_cap);
+                        owner_node->free_mem(memory, owner_cap);
                     }
                 } catch (const std::exception& e) {
-                    std::cerr << "Exception freeing memory for buffer " << buffer_id 
+                    std::cerr << "Exception freeing memory for buffer " << buffer_id
                               << ": " << e.what() << std::endl;
                 }
             }

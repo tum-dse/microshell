@@ -740,31 +740,33 @@ void Dataflow::execute(size_t current_size) {
         }
     }
     
-    // Auto data transfer: host -> device buffers using dfg factory functions
+    // Auto data transfer: host -> device buffers using dfg factory functions.
+    // Each buffer may have a different size — clamp the per-buffer write to
+    // that buffer's capacity so intermediate buffers (e.g. SHA hash = 32 B)
+    // don't overflow when current_size is the much-larger input size.
     for (auto& buffer : buffers) {
         if (buffer->get_internal_buffer()) {
-            // FIXED: Use dfg factory function for buffer write
-            dfg::write_buffer(buffer->get_internal_buffer(), 
-                             buffer->get_host_ptr(), 
-                             current_size > 0 ? current_size : buffer->get_size());
+            size_t buf_size = buffer->get_size();
+            size_t write_size = current_size > 0
+                ? std::min(current_size, buf_size)
+                : buf_size;
+            dfg::write_buffer(buffer->get_internal_buffer(),
+                             buffer->get_host_ptr(),
+                             write_size);
         }
     }
-    
+
     // Clear completion counters
     clear_completed();
-    
+
     // Create scatter-gather entries
     std::vector<dfg::sgEntry> sg(nodes.size());
-    
-    // Initialize SG entries
+
+    // Initialize SG entries. The default src/dst lengths get set per-buffer
+    // below; don't pre-populate with current_size here (would override
+    // smaller intermediate-buffer lengths).
     for (size_t i = 0; i < nodes.size(); i++) {
         memset(&sg[i], 0, sizeof(dfg::sgEntry));
-        
-        if (current_size > 0) {
-            sg[i].local.src_len = current_size;
-            sg[i].local.dst_len = current_size;
-        }
-        
         sg[i].local.src_stream = 1; // HOST_STREAM
         sg[i].local.dst_stream = 1; // HOST_STREAM
     }
@@ -794,29 +796,36 @@ void Dataflow::execute(size_t current_size) {
             }
         }
         
-        // Configure SG entry with buffer information using dfg factory functions
+        // Configure SG entry with buffer information using dfg factory functions.
+        // src/dst lengths are clamped to each buffer's capacity so a stage that
+        // consumes much less than current_size (e.g. RSA input = 32 B hash)
+        // doesn't try to DMA current_size bytes through a tiny buffer.
         if (!input_buffer_name.empty()) {
             auto buffer_it = raw_buffers.find(input_buffer_name);
-            
+
             if (buffer_it != raw_buffers.end()) {
-                // FIXED: Use dfg factory function to get buffer memory
                 void* buffer_memory = dfg::read_buffer(buffer_it->second);
                 if (buffer_memory) {
+                    size_t buf_size = buffer_map[input_buffer_name]->get_size();
                     sg[i].local.src_addr = buffer_memory;
-                    sg[i].local.src_len = current_size > 0 ? current_size : buffer_map[input_buffer_name]->get_size();
+                    sg[i].local.src_len = current_size > 0
+                        ? std::min(current_size, buf_size)
+                        : buf_size;
                 }
             }
         }
-        
+
         if (!output_buffer_name.empty()) {
             auto buffer_it = raw_buffers.find(output_buffer_name);
-            
+
             if (buffer_it != raw_buffers.end()) {
-                // FIXED: Use dfg factory function to get buffer memory
                 void* buffer_memory = dfg::read_buffer(buffer_it->second);
                 if (buffer_memory) {
+                    size_t buf_size = buffer_map[output_buffer_name]->get_size();
                     sg[i].local.dst_addr = buffer_memory;
-                    sg[i].local.dst_len = current_size > 0 ? current_size : buffer_map[output_buffer_name]->get_size();
+                    sg[i].local.dst_len = current_size > 0
+                        ? std::min(current_size, buf_size)
+                        : buf_size;
                 }
             }
         }
@@ -863,13 +872,20 @@ void Dataflow::execute(size_t current_size) {
         }
     }
     
-    // Auto data transfer: device -> host buffers using dfg factory functions
+    // Auto data transfer: device -> host buffers using dfg factory functions.
+    // Clamp per-buffer like the host->device write loop above. Without this,
+    // small intermediates (e.g. SHA hash = 32 B) overflow when current_size
+    // is the much-larger input size — the resulting heap overflow shows up
+    // as a SIGSEGV at 256 K / 1 MB inputs, or as silent corruption that
+    // surfaces later in the cleanup free().
     for (auto& buffer : buffers) {
         if (buffer->get_internal_buffer()) {
-            // FIXED: Use dfg factory function to read buffer data
             void* device_memory = dfg::read_buffer(buffer->get_internal_buffer());
             if (device_memory) {
-                size_t transfer_size = current_size > 0 ? current_size : buffer->get_size();
+                size_t buf_size = buffer->get_size();
+                size_t transfer_size = current_size > 0
+                    ? std::min(current_size, buf_size)
+                    : buf_size;
                 memcpy(buffer->get_host_ptr(), device_memory, transfer_size);
             }
         }
